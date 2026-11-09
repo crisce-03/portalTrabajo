@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Publicar nueva oferta · PortalTrabajo</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/estilos.css" rel="stylesheet">
+</head>
+<!-- MOD-03-POST-JOB · Empresa / Empleador -->
+<body data-usuario="empresa" data-activo="publicar">
+  <header id="navbar" class="container-xl pt-3"></header>
+
+  <main class="container-xl py-4">
+    <nav aria-label="Ruta">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">PortalTrabajo</a></li>
+        <li class="breadcrumb-item"><a href="panel-empresa.html">Módulo empresarial</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Publicar empleos</li>
+      </ol>
+    </nav>
+    <h1 class="titulo-pagina">Publicar nueva oferta</h1>
+    <p class="text-secondary">Completa los datos de la vacante y revisa su presentación antes de publicarla.</p>
+
+    <div class="row g-4">
+      <!-- Formulario de la vacante -->
+      <section class="col-lg-8">
+        <form id="form-oferta" class="neo-card p-4 needs-validation" novalidate data-exito="Oferta publicada correctamente.">
+          <span class="badge-neo badge-neo-ocean mb-3">Nueva vacante</span>
+          <div class="row g-3 mb-3">
+            <div class="col-12">
+              <label class="form-label" for="o-titulo">Título del trabajo *</label>
+              <input id="o-titulo" name="titulo" class="form-control" value="Ingeniero de Desarrollo de Software" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="o-ubicacion">Ubicación *</label>
+              <input id="o-ubicacion" name="ubicacion" class="form-control" value="San Salvador, El Salvador" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="o-modalidad">Modalidad *</label>
+              <select id="o-modalidad" name="modalidad" class="form-select" required>
+                <option>Presencial</option>
+                <option selected>Híbrido</option>
+                <option>Remoto</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="o-contrato">Tipo de contrato *</label>
+              <select id="o-contrato" name="contrato" class="form-select" required>
+                <option selected>Tiempo completo</option>
+                <option>Medio tiempo</option>
+                <option>Por proyecto</option>
+                <option>Pasantía</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="o-experiencia">Experiencia requerida</label>
+              <select id="o-experiencia" name="experiencia" class="form-select">
+                <option>Sin experiencia</option>
+                <option>Junior (0 a 2 años)</option>
+                <option selected>Intermedio (2 a 4 años)</option>
+                <option>Senior (5 años o más)</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="o-salario">Rango salarial (USD)</label>
+              <input id="o-salario" name="salario" class="form-control" value="$1,200 – $1,800">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="o-correo">Correo de contacto *</label>
+              <input id="o-correo" name="correo" type="email" class="form-control" value="talento@innovatech.com" required>
+              <div class="invalid-feedback">Escribe un correo válido.</div>
+            </div>
+          </div>
+
+          <div class="neo-subbox p-3 mb-3">
+            <label class="form-label" for="o-descripcion">Descripción del puesto *</label>
+            <textarea id="o-descripcion" name="descripcion" class="form-control" rows="3" required>Buscamos a un profesional apasionado por el desarrollo de aplicaciones web, la colaboración técnica y la mejora continua de nuestros productos.</textarea>
+          </div>
+          <div class="neo-subbox p-3 mb-3">
+            <label class="form-label" for="o-requisitos">Requisitos *</label>
+            <textarea id="o-requisitos" name="requisitos" class="form-control" rows="3" required>• Experiencia con JavaScript y bases de datos.
+• Conocimiento de APIs REST y control de versiones.
+• Habilidades de comunicación y trabajo en equipo.</textarea>
+          </div>
+          <div class="neo-subbox p-3 mb-4">
+            <label class="form-label" for="o-beneficios">Beneficios</label>
+            <textarea id="o-beneficios" name="beneficios" class="form-control" rows="2">Seguro médico, capacitaciones, horario flexible y oportunidades de crecimiento.</textarea>
+          </div>
+
+          <div class="d-flex flex-wrap align-items-center gap-2">
+            <button type="button" class="btn btn-neo-secondary px-4" data-aviso="Borrador guardado.">Guardar borrador</button>
+            <button type="submit" class="btn btn-neo-primary px-4">Publicar oferta</button>
+            <span role="status" class="small fw-bold ms-2"></span>
+          </div>
+        </form>
+      </section>
+
+      <div class="col-lg-4 d-flex flex-column gap-4">
+        <!-- Vista previa en vivo -->
+        <section class="neo-card p-4" aria-live="polite">
+          <span class="badge-neo badge-neo-ocean mb-2">Vista previa</span>
+          <h2 class="h5 mb-1" data-espejo="titulo" data-vacio="Título del trabajo">Ingeniero de Desarrollo de Software</h2>
+          <p class="fw-bold small mb-1">InnovaTech S.A.</p>
+          <p class="small text-secondary mb-1"><span data-espejo="ubicacion">San Salvador, El Salvador</span> · <span data-espejo="modalidad">Híbrido</span></p>
+          <p class="fw-bold text-mar" data-espejo="salario" data-vacio="Salario a convenir">$1,200 – $1,800</p>
+          <button type="button" class="btn btn-neo-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-vista">Vista previa</button>
+        </section>
+
+        <section class="neo-card p-4">
+          <h2 class="h6">Antes de publicar</h2>
+          <ul class="list-unstyled small text-secondary mb-0 d-grid gap-1">
+            <li><i class="bi bi-check2 text-mar" aria-hidden="true"></i> Título claro y específico.</li>
+            <li><i class="bi bi-check2 text-mar" aria-hidden="true"></i> Requisitos comprensibles.</li>
+            <li><i class="bi bi-check2 text-mar" aria-hidden="true"></i> Datos de contacto actualizados.</li>
+            <li><i class="bi bi-check2 text-mar" aria-hidden="true"></i> Beneficios y modalidad definidos.</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- Vista previa completa: así verán la oferta los candidatos -->
+  <div class="modal fade" id="modal-vista" tabindex="-1" aria-labelledby="t-modal-vista" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="t-modal-vista" class="modal-title h5">Vista previa de la oferta</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="neo-card p-4">
+            <h3 class="h4 mb-1" data-espejo="titulo" data-vacio="Título del trabajo">Ingeniero de Desarrollo de Software</h3>
+            <p class="text-secondary mb-2">InnovaTech S.A. · <span data-espejo="ubicacion">San Salvador, El Salvador</span> · Contacto: <span data-espejo="correo">talento@innovatech.com</span></p>
+            <div class="d-flex flex-wrap gap-2 mb-3">
+              <span class="badge-neo badge-neo-neutral" data-espejo="modalidad">Híbrido</span>
+              <span class="badge-neo badge-neo-neutral" data-espejo="contrato">Tiempo completo</span>
+              <span class="badge-neo badge-neo-warning" data-espejo="experiencia">Intermedio (2 a 4 años)</span>
+              <span class="badge-neo badge-neo-salary" data-espejo="salario" data-vacio="Salario a convenir">$1,200 – $1,800</span>
+            </div>
+            <h4 class="h6">Descripción del puesto</h4>
+            <p class="small text-secondary" style="white-space:pre-line" data-espejo="descripcion"></p>
+            <h4 class="h6">Requisitos</h4>
+            <p class="small text-secondary" style="white-space:pre-line" data-espejo="requisitos"></p>
+            <h4 class="h6">Beneficios</h4>
+            <p class="small text-secondary mb-0" style="white-space:pre-line" data-espejo="beneficios" data-vacio="Sin beneficios indicados."></p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-neo-secondary" data-bs-dismiss="modal">Seguir editando</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer id="pie"></footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/comun.js"></script>
+  <script>actualizarEspejos(); // llena la vista previa con los valores iniciales</script>
+</body>
+</html>

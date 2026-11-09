@@ -1,0 +1,261 @@
+/* Sistema de diseño "Azul Mar" (Soft Neo-Brutalism) sobre Bootstrap 5.3 */
+:root {
+  --bg-canvas: #FAF8F5;
+  --surface-card: #FFFFFF;
+  --ink-main: #1E293B;
+  --ink-muted: #64748B;
+  --color-primary: #0369A1;
+  --color-primary-hover: #075985;
+  --color-primary-soft: #E0F2FE;
+  --color-secondary: #1E3A8A;
+  --color-secondary-soft: #DBEAFE;
+  --color-success: #0F766E;
+  --color-success-soft: #CCFBF1;
+  --color-warning: #D97706;
+  --color-warning-soft: #FEF3C7;
+  --color-danger: #B91C1C;
+  --color-danger-soft: #FEE2E2;
+  --color-callout: #F0F9FF;
+
+  --border-neo: 1.5px solid var(--ink-main);
+  --shadow-neo-lg: 3px 3px 0 var(--ink-main);
+  --shadow-neo-sm: 2px 2px 0 var(--ink-main);
+  --radius-neo: 8px;
+
+  /* Bootstrap toma estos valores */
+  --bs-body-bg: var(--bg-canvas);
+  --bs-body-color: var(--ink-main);
+  --bs-body-font-family: 'Roboto', sans-serif;
+  --bs-body-font-size: 14px;
+  --bs-secondary-rgb: 100, 116, 139;
+  --bs-secondary-color: var(--ink-muted);
+  --bs-border-color: #CBD5E1;
+  --bs-link-color-rgb: 3, 105, 161;
+  --bs-link-hover-color-rgb: 7, 89, 133;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.45;
+}
+main { flex: 1; }
+
+h1, h2, h3, h4, h5, h6, .font-inter {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  color: var(--ink-main);
+  letter-spacing: -0.015em;
+}
+.titulo-pagina { font-size: 1.65rem; margin-bottom: .2rem; }
+.subtitulo { display: block; font-size: 12px; color: var(--ink-muted); }
+.text-ocean { color: var(--color-primary) !important; }
+.text-navy { color: var(--color-secondary) !important; }
+.text-mar { color: var(--color-success) !important; }
+
+/* Migas de pan */
+.breadcrumb { --bs-breadcrumb-divider: '›'; font-size: 12px; margin-bottom: .35rem; }
+.breadcrumb a { color: var(--ink-muted); text-decoration: none; }
+.breadcrumb a:hover { color: var(--color-primary); }
+.breadcrumb-item.active { color: var(--ink-muted); }
+
+/* Tarjetas */
+.neo-card, .neo-card-sm, .neo-subbox {
+  border: var(--border-neo);
+  border-radius: var(--radius-neo);
+}
+.neo-card { background: var(--surface-card); box-shadow: var(--shadow-neo-lg); }
+.neo-card-sm { background: var(--surface-card); box-shadow: var(--shadow-neo-sm); }
+.neo-subbox { background: var(--bg-canvas); box-shadow: var(--shadow-neo-sm); }
+.neo-border { border: var(--border-neo) !important; }
+
+/* Navbar */
+.navbar-neo {
+  background: var(--surface-card);
+  border: var(--border-neo);
+  border-radius: var(--radius-neo);
+  box-shadow: var(--shadow-neo-lg);
+}
+.navbar-neo .navbar-brand { font-family: 'Inter', sans-serif; font-weight: 700; color: var(--ink-main); }
+.logo-neo {
+  width: 30px; height: 30px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--color-primary); color: #fff;
+  border: var(--border-neo); border-radius: 6px;
+}
+.navbar-neo .nav-link {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-main);
+  padding: .35rem .55rem;
+  border-radius: 6px;
+  border: 1.5px solid transparent;
+  white-space: nowrap;
+}
+.navbar-neo .nav-link:hover { color: var(--color-primary); }
+.navbar-neo .nav-link.active {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  border: var(--border-neo);
+  box-shadow: var(--shadow-neo-sm);
+  font-weight: 700;
+}
+.navbar-neo .navbar-toggler { border: var(--border-neo); }
+
+/* Botones: se definen con las variables de Bootstrap para que :hover/:active no los vuelva transparentes */
+.btn {
+  --bs-btn-font-family: 'Roboto', sans-serif;
+  --bs-btn-font-weight: 500;
+  --bs-btn-font-size: 13px;
+  --bs-btn-padding-y: .4rem;
+  --bs-btn-padding-x: .85rem;
+  --bs-btn-border-width: 1.5px;
+  --bs-btn-border-radius: var(--radius-neo);
+  --bs-btn-border-color: var(--ink-main);
+  --bs-btn-hover-border-color: var(--ink-main);
+  --bs-btn-active-border-color: var(--ink-main);
+  --bs-btn-disabled-border-color: var(--ink-main);
+  box-shadow: var(--shadow-neo-sm);
+}
+.btn:active { transform: translate(2px, 2px); box-shadow: none; }
+.btn-sm { --bs-btn-font-size: 12px; --bs-btn-padding-y: .3rem; --bs-btn-padding-x: .65rem; }
+.btn-neo-primary {
+  --bs-btn-bg: var(--color-primary); --bs-btn-color: #fff;
+  --bs-btn-hover-bg: var(--color-primary-hover); --bs-btn-hover-color: #fff;
+  --bs-btn-active-bg: var(--color-primary-hover); --bs-btn-active-color: #fff;
+  --bs-btn-disabled-bg: var(--color-primary); --bs-btn-disabled-color: #fff;
+}
+.btn-neo-secondary {
+  --bs-btn-bg: #fff; --bs-btn-color: var(--ink-main);
+  --bs-btn-hover-bg: var(--color-primary-soft); --bs-btn-hover-color: var(--ink-main);
+  --bs-btn-active-bg: var(--color-primary-soft); --bs-btn-active-color: var(--color-primary);
+}
+.btn-check:checked + .btn-neo-secondary { font-weight: 700; }
+.btn-neo-accent {
+  --bs-btn-bg: var(--color-secondary); --bs-btn-color: #fff;
+  --bs-btn-hover-bg: #172E6E; --bs-btn-hover-color: #fff;
+  --bs-btn-active-bg: #172E6E; --bs-btn-active-color: #fff;
+}
+.btn-neo-danger {
+  --bs-btn-bg: var(--color-danger); --bs-btn-color: #fff;
+  --bs-btn-hover-bg: #991B1B; --bs-btn-hover-color: #fff;
+  --bs-btn-active-bg: #991B1B; --bs-btn-active-color: #fff;
+}
+
+/* Formularios */
+.form-label { font-size: 12px; font-weight: 700; color: var(--ink-muted); margin-bottom: .25rem; }
+.form-control, .form-select {
+  background-color: #fff;
+  border: var(--border-neo);
+  border-radius: var(--radius-neo);
+  box-shadow: var(--shadow-neo-sm);
+  font-size: 13px;
+  padding: .45rem .7rem;
+}
+.form-select { padding-right: 2.25rem; } /* espacio para la flecha */
+.form-check-input { border: var(--border-neo); box-shadow: 1px 1px 0 var(--ink-main); }
+.form-check-input:checked { background-color: var(--color-primary); border-color: var(--ink-main); }
+.form-switch { padding-left: 2.9em; }
+.form-switch .form-check-input { width: 2.3em; height: 1.25em; margin-left: -2.9em; }
+.form-switch .form-check-input:checked { background-color: var(--color-success); }
+.dropzone-neo {
+  display: block;
+  border: 2px dashed var(--color-primary);
+  background: var(--color-primary-soft);
+  border-radius: var(--radius-neo);
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+}
+.dropzone-neo:focus-within { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+/* Insignias */
+.badge-neo {
+  font-weight: 500;
+  font-size: 11.5px;
+  border: var(--border-neo);
+  box-shadow: var(--shadow-neo-sm);
+  padding: .25rem .6rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.badge-neo-ocean { background: var(--color-primary-soft); color: var(--color-primary); }
+.badge-neo-community { background: var(--color-secondary-soft); color: var(--color-secondary); }
+.badge-neo-salary { background: var(--color-success-soft); color: var(--color-success); }
+.badge-neo-warning { background: var(--color-warning-soft); color: #92400E; }
+.badge-neo-danger { background: var(--color-danger-soft); color: var(--color-danger); }
+.badge-neo-neutral { background: #fff; color: var(--ink-main); }
+
+/* Menú lateral */
+.nav-pills-neo .nav-link {
+  color: var(--ink-main);
+  border-radius: var(--radius-neo);
+  font-weight: 500;
+  font-size: 13px;
+  padding: .55rem .75rem;
+  border: 1.5px solid transparent;
+  margin-bottom: .25rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.nav-pills-neo .nav-link:hover { background: var(--color-primary-soft); }
+.nav-pills-neo .nav-link.disabled { color: var(--ink-muted); opacity: .6; }
+.nav-pills-neo .nav-link.active {
+  background: var(--color-primary);
+  color: #fff;
+  border: var(--border-neo);
+  box-shadow: var(--shadow-neo-sm);
+}
+
+/* Tablas */
+.table-neo { --bs-table-bg: #fff; margin-bottom: 0; }
+.table-neo thead th {
+  background: var(--bg-canvas);
+  font-family: 'Inter', sans-serif;
+  font-size: 11.5px;
+  text-transform: uppercase;
+  border-bottom: var(--border-neo);
+  padding: .65rem .75rem;
+  white-space: nowrap;
+}
+.table-neo tbody td { padding: .65rem .75rem; vertical-align: middle; font-size: 13px; }
+
+/* Métricas */
+.metrica { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1.6rem; line-height: 1.1; display: block; }
+
+/* Chips que funcionan como checkbox (input.btn-check + label.badge-neo) */
+.btn-check + .badge-neo { cursor: pointer; }
+.btn-check:checked + .badge-neo-salary { background: var(--color-success); color: #fff; }
+.btn-check:focus-visible + label { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+/* Valoración con estrellas (radios .btn-check + label) */
+.estrellas { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; border: 0; padding: 0; margin: 0; }
+.estrellas label { font-size: 1.75rem; line-height: 1; color: var(--color-warning); cursor: pointer; border-radius: 4px; }
+
+/* Menús desplegables y ventanas modales */
+.dropdown-menu { border: var(--border-neo); border-radius: var(--radius-neo); box-shadow: var(--shadow-neo-lg); }
+#form-login { width: 290px; }
+.modal-content { border: var(--border-neo); border-radius: var(--radius-neo); box-shadow: 6px 6px 0 var(--ink-main); background: var(--bg-canvas); }
+.modal-header, .modal-footer { border-color: var(--ink-main); }
+
+/* Gráfico de barras simple */
+.grafico { display: flex; align-items: flex-end; gap: .75rem; height: 160px; }
+.grafico > div { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; font-size: 11.5px; }
+.grafico .barra { display: block; width: 100%; background: var(--color-primary); border: 1px solid var(--ink-main); border-radius: 4px 4px 0 0; }
+
+/* Bootstrap usa display con !important (d-flex, row); esto mantiene funcionando el atributo hidden */
+[hidden] { display: none !important; }
+
+/* Pie */
+.pie-neo {
+  background: var(--color-callout);
+  border-top: var(--border-neo);
+  font-size: 12px;
+  color: var(--ink-muted);
+}

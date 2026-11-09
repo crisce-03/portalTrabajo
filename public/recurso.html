@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artículo / tutorial · PortalTrabajo</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/estilos.css" rel="stylesheet">
+</head>
+<!-- MOD-02-RESOURCE · Todos los usuarios -->
+<body data-usuario="visitante" data-activo="recursos">
+  <header id="navbar" class="container-xl pt-3"></header>
+
+  <main class="container-xl py-4">
+    <nav class="mb-3" aria-label="Secciones de recursos">
+      <ul class="nav nav-pills nav-pills-neo gap-2">
+        <li class="nav-item"><a class="nav-link" href="recursos.html">Centro de recursos</a></li>
+        <li class="nav-item"><a class="nav-link active" aria-current="page" href="recurso.html">Artículo / tutorial</a></li>
+        <li class="nav-item"><a class="nav-link" href="noticias.html">Noticias laborales</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Ruta">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="recursos.html">Recursos profesionales</a></li>
+        <li id="miga-categoria" class="breadcrumb-item active" aria-current="page"></li>
+      </ol>
+    </nav>
+
+    <div class="row g-4">
+      <!-- Contenido del recurso -->
+      <article class="col-lg-8">
+        <div class="neo-card p-4">
+          <span id="r-tipo" class="mb-2"></span>
+          <h1 id="r-titulo" class="titulo-pagina"></h1>
+          <p id="r-lectura" class="small text-secondary"></p>
+          <div id="material" class="neo-subbox p-5 text-center mb-4">
+            <i id="r-icono" class="fs-1 text-ocean" aria-hidden="true"></i>
+            <p id="r-resumen" class="fw-bold mb-0 mt-2"></p>
+          </div>
+          <div id="r-secciones"></div>
+        </div>
+      </article>
+
+      <!-- Más recursos -->
+      <aside class="col-lg-4 d-flex flex-column gap-4">
+        <section id="otros-recursos" class="neo-card p-4">
+          <h2 class="h6">Otros recursos</h2>
+          <ul id="lista-otros" class="list-unstyled d-grid gap-2 mb-0"></ul>
+        </section>
+        <section id="aplicar" class="neo-card p-4" style="background:var(--color-callout);">
+          <h2 class="h6">Pon en práctica lo aprendido</h2>
+          <p class="small text-secondary">Actualiza tu currículum y postúlate a ofertas que se ajusten a tu perfil.</p>
+          <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-neo-primary btn-sm" href="resultados.html">Buscar empleos</a>
+            <a class="btn btn-neo-secondary btn-sm" href="noticias.html">Ver noticias</a>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <footer id="pie"></footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/comun.js"></script>
+  <script>
+    const recurso = RECURSOS.find(r => r.id === parametro('id')) ?? RECURSOS[0];
+    document.title = `${recurso.titulo} · PortalTrabajo`;
+    document.getElementById('miga-categoria').textContent = recurso.categoria;
+    const tipo = document.getElementById('r-tipo');
+    tipo.className = `badge-neo badge-neo-${recurso.clase} mb-2`;
+    tipo.innerHTML = `<i class="bi bi-${recurso.icono}" aria-hidden="true"></i> ${esc(recurso.tipo)}`;
+    document.getElementById('r-titulo').textContent = recurso.titulo;
+    document.getElementById('r-lectura').textContent = recurso.lectura;
+    document.getElementById('r-icono').className = `bi bi-${recurso.icono} fs-1 text-ocean`;
+    document.getElementById('r-resumen').textContent = recurso.resumen;
+    document.getElementById('r-secciones').innerHTML = recurso.secciones.map(s => `
+      <section class="mb-4">
+        <h2 class="h5">${esc(s.titulo)}</h2>
+        <p class="text-secondary">${esc(s.texto)}</p>
+        ${s.puntos.length ? `<ul class="text-secondary">${s.puntos.map(p => `<li>${esc(p)}</li>`).join('')}</ul>` : ''}
+      </section>`).join('');
+    document.getElementById('lista-otros').innerHTML = RECURSOS.filter(r => r.id !== recurso.id).map(r => `
+      <li class="neo-subbox p-3">
+        <span class="badge-neo badge-neo-${r.clase} mb-2">${esc(r.categoria)}</span>
+        <a class="d-block fw-bold" href="recurso.html?id=${r.id}">${esc(r.titulo)}</a>
+        <span class="small text-secondary">${esc(r.lectura)}</span>
+      </li>`).join('');
+  </script>
+</body>
+</html>

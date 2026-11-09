@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Postulación enviada · PortalTrabajo</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/estilos.css" rel="stylesheet">
+</head>
+<!-- MOD-01-APPLY-OK · Candidato registrado -->
+<body data-usuario="candidato" data-activo="busqueda">
+  <header id="navbar" class="container-xl pt-3"></header>
+
+  <main class="container-xl py-4">
+    <nav aria-label="Ruta">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Búsqueda de trabajo</a></li>
+        <li class="breadcrumb-item"><a id="miga-oferta" href="detalle-oferta.html">Detalle de oferta</a></li>
+        <li class="breadcrumb-item"><a id="miga-postulacion" href="postulacion.html">Postulación</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Confirmación</li>
+      </ol>
+    </nav>
+    <h1 class="titulo-pagina mb-3">Confirmación de postulación</h1>
+
+    <section id="confirmacion" class="neo-card p-4">
+      <span class="badge-neo badge-neo-salary fs-6 py-2 px-3 mb-3"><i class="bi bi-check-lg" aria-hidden="true"></i> Postulación enviada correctamente</span>
+      <h2 class="h3">¡Tu candidatura fue enviada!</h2>
+      <p id="mensaje" class="text-secondary"></p>
+
+      <div id="resumen" class="neo-subbox p-3 mb-4">
+        <h3 class="h6 mb-3">Resumen de tu postulación</h3>
+        <p id="linea-vacante" class="small mb-2"></p>
+        <p id="linea-candidato" class="small mb-2"></p>
+        <p id="linea-estado" class="small fw-bold text-mar mb-0"></p>
+      </div>
+
+      <div id="siguientes-pasos" class="d-flex flex-wrap gap-2">
+        <a class="btn btn-neo-primary px-4" href="perfil-usuario.html#solicitudes">Ir a mis postulaciones</a>
+        <a class="btn btn-neo-secondary px-4" href="resultados.html">Volver a buscar empleos</a>
+      </div>
+    </section>
+  </main>
+
+  <footer id="pie"></footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/comun.js"></script>
+  <script>
+    const oferta = OFERTAS.find(o => o.id === Number(parametro('id'))) ?? OFERTAS[0];
+    const enviadas = guardados('postulaciones');
+    const enviada = enviadas.findLast(p => p.oferta === oferta.id)
+      ?? { candidato: 'Héctor Alejandro García Guevara', cv: 'Hector_Garcia_CV.pdf' };
+    const seguimiento = `POST-${String(enviadas.length || 1).padStart(3, '0')}`;
+
+    document.getElementById('miga-oferta').href = `detalle-oferta.html?id=${oferta.id}`;
+    document.getElementById('miga-postulacion').href = `postulacion.html?id=${oferta.id}`;
+    document.getElementById('mensaje').textContent = `${oferta.empresa} ha recibido tu solicitud para la vacante ${oferta.titulo}. Ahora podrás consultar el estado desde tu perfil de candidato.`;
+    document.getElementById('linea-vacante').textContent = `Vacante: ${oferta.titulo} · Empresa: ${oferta.empresa}`;
+    document.getElementById('linea-candidato').textContent = `Candidato: ${enviada.candidato} · CV: ${enviada.cv}`;
+    document.getElementById('linea-estado').textContent = `Estado inicial: Recibida · Número de seguimiento: ${seguimiento}`;
+  </script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Descripción del trabajo · PortalTrabajo</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/estilos.css" rel="stylesheet">
+</head>
+<!-- MOD-01-JOB-DETAIL · Visitante / Candidato -->
+<body data-usuario="visitante" data-activo="busqueda">
+  <header id="navbar" class="container-xl pt-3"></header>
+
+  <main class="container-xl py-4">
+    <nav aria-label="Ruta">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Búsqueda de trabajo</a></li>
+        <li class="breadcrumb-item"><a href="resultados.html">Resultados</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Detalle de oferta</li>
+      </ol>
+    </nav>
+    <h1 class="titulo-pagina mb-3">Descripción del trabajo</h1>
+
+    <!-- Información de la oferta -->
+    <section id="info-oferta" class="neo-card p-4 mb-4">
+      <div class="d-flex align-items-center gap-3 mb-2">
+        <span class="badge-neo badge-neo-salary"><i class="bi bi-check-lg" aria-hidden="true"></i> Vacante Verificada</span>
+        <span id="o-id" class="small text-secondary"></span>
+      </div>
+      <h2 id="o-titulo" class="h3 mb-1"></h2>
+      <p id="o-meta" class="text-secondary mb-3"></p>
+      <div class="d-flex flex-wrap align-items-center gap-2">
+        <span id="o-etiquetas" class="d-flex flex-wrap gap-2"></span>
+        <button type="button" class="btn btn-neo-secondary ms-sm-2" data-bs-toggle="button" aria-pressed="false"><i class="bi bi-bookmark me-1" aria-hidden="true"></i>Guardar oferta</button>
+        <a id="o-aplicar" class="btn btn-neo-primary px-4" href="postulacion.html">Aplicar al Trabajo</a>
+      </div>
+    </section>
+
+    <div class="row g-4 mb-4">
+      <!-- Descripción detallada -->
+      <section id="descripcion" class="col-lg-8">
+        <div class="neo-card p-4 h-100">
+          <h2 class="h5">Descripción detallada del trabajo</h2>
+          <p id="o-descripcion" class="text-secondary"></p>
+          <div class="neo-subbox p-3 mb-3">
+            <h3 class="h6">Responsabilidades</h3>
+            <ul id="o-responsabilidades" class="small text-secondary mb-0"></ul>
+          </div>
+          <div class="neo-subbox p-3 mb-3">
+            <h3 class="h6">Requisitos</h3>
+            <ul id="o-requisitos" class="small text-secondary mb-0"></ul>
+          </div>
+          <div class="neo-subbox p-3">
+            <h3 class="h6">Beneficios</h3>
+            <ul id="o-beneficios" class="small text-secondary mb-0"></ul>
+          </div>
+        </div>
+      </section>
+
+      <div class="col-lg-4 d-flex flex-column gap-4">
+        <!-- Información de la empresa -->
+        <section id="empresa" class="neo-card p-4">
+          <h2 class="h5">Información de la empresa</h2>
+          <p class="fw-bold mb-2"><i class="bi bi-building me-1" aria-hidden="true"></i><span id="e-nombre"></span></p>
+          <p class="small text-secondary mb-2">Sector: <span id="e-sector"></span></p>
+          <p class="small mb-2">Contacto: <span id="e-contacto"></span></p>
+          <p class="small mb-2">Ubicación: <span id="e-ubicacion"></span></p>
+          <p class="small text-secondary mb-3">Sitio web: <span id="e-web"></span></p>
+          <a id="e-perfil" class="btn btn-neo-secondary btn-sm" href="valoraciones.html">Ver perfil de la empresa</a>
+        </section>
+
+        <!-- Valoración promedio -->
+        <section id="valoracion" class="neo-card p-4">
+          <h2 class="h5">Valoración de la empresa</h2>
+          <p id="e-promedio" class="fw-bold mb-2" style="color:var(--color-warning);"></p>
+          <p class="small text-secondary">Conoce las experiencias compartidas por otros profesionales.</p>
+          <a class="btn btn-neo-secondary" href="#comentarios">Ver comentarios</a>
+        </section>
+      </div>
+    </div>
+
+    <!-- Comentarios y valoraciones -->
+    <section id="comentarios" class="neo-card p-4">
+      <h2 class="h5 mb-1">Comentarios y valoraciones de la empresa</h2>
+      <p class="small text-secondary">Opiniones de exempleados y profesionales. Los candidatos pueden leer y dejar valoraciones.</p>
+      <div id="lista-comentarios" class="row g-3 mb-3"></div>
+      <a id="e-comentar" class="btn btn-neo-primary px-4" href="perfil-usuario.html#valoraciones">Dejar comentario</a>
+    </section>
+  </main>
+
+  <footer id="pie"></footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/comun.js"></script>
+  <script>
+    // shortcut: busca la oferta en los datos de ejemplo; con la API, GET /api/ofertas/:id
+    const oferta = OFERTAS.find(o => o.id === Number(parametro('id'))) ?? OFERTAS[0];
+    const empresa = EMPRESAS.find(e => e.nombre === oferta.empresa);
+    const texto = (id, valor) => document.getElementById(id).textContent = valor;
+    const lista = (id, elementos) => document.getElementById(id).innerHTML = elementos.map(e => `<li>${esc(e)}</li>`).join('');
+
+    document.title = `${oferta.titulo} · PortalTrabajo`;
+    texto('o-id', `ID: #JOB-${oferta.id}`);
+    texto('o-titulo', oferta.titulo);
+    texto('o-meta', `${oferta.empresa} · ${oferta.ubicacion} · Contacto: ${oferta.contacto}`);
+    document.getElementById('o-etiquetas').innerHTML = `
+      <span class="badge-neo badge-neo-neutral">${esc(oferta.modalidad)}</span>
+      <span class="badge-neo badge-neo-neutral">${esc(oferta.contrato)}</span>
+      <span class="badge-neo badge-neo-ocean">${esc(oferta.sector)}</span>
+      <span class="badge-neo badge-neo-salary">${formatoSalario(oferta)}</span>`;
+    document.getElementById('o-aplicar').href = `postulacion.html?id=${oferta.id}`;
+    texto('o-descripcion', oferta.descripcion);
+    lista('o-responsabilidades', oferta.responsabilidades);
+    lista('o-requisitos', oferta.requisitos);
+    lista('o-beneficios', oferta.beneficios);
+
+    texto('e-nombre', empresa.nombre);
+    texto('e-sector', empresa.sector);
+    texto('e-contacto', empresa.contacto);
+    texto('e-ubicacion', empresa.ubicacion);
+    texto('e-web', empresa.web);
+    document.getElementById('e-perfil').href = `valoraciones.html#${empresa.id}`;
+    document.getElementById('e-promedio').innerHTML = `${estrellas(empresa.promedio)} ${empresa.promedio} / 5 · ${empresa.opiniones} opiniones`;
+    document.getElementById('lista-comentarios').innerHTML = empresa.resenas.slice(0, 2).map(r => `
+      <div class="col-md-6">
+        <div class="neo-subbox p-3 h-100">
+          <p class="fw-bold small mb-1">${esc(r.autor)} <span class="ms-2"><i class="bi bi-star-fill" aria-hidden="true"></i> ${r.calificacion}/5</span></p>
+          <p class="small text-secondary mb-0">“${esc(r.texto)}”</p>
+        </div>
+      </div>`).join('');
+    document.getElementById('e-comentar').href = `perfil-usuario.html?empresa=${encodeURIComponent(empresa.nombre)}#valoraciones`;
+  </script>
+</body>
+</html>

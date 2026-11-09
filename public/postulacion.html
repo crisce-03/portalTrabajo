@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Postularme a esta oferta · PortalTrabajo</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/estilos.css" rel="stylesheet">
+</head>
+<!-- MOD-01-APPLY · Candidato registrado (si es visitante se le pide iniciar sesión) -->
+<body data-usuario="visitante" data-activo="busqueda" data-tras-login="aqui">
+  <header id="navbar" class="container-xl pt-3"></header>
+
+  <main class="container-xl py-4">
+    <nav aria-label="Ruta">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">Búsqueda de trabajo</a></li>
+        <li class="breadcrumb-item"><a id="miga-oferta" href="detalle-oferta.html">Detalle de oferta</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Postulación</li>
+      </ol>
+    </nav>
+    <h1 class="titulo-pagina">Postularme a esta oferta</h1>
+    <p class="text-secondary">Completa tus datos para enviar tu candidatura a <span class="nombre-empresa"></span>.</p>
+
+    <div id="aviso-sesion" class="neo-card p-3 mb-4 d-flex flex-wrap align-items-center gap-2" style="background:var(--color-warning-soft);" hidden>
+      <i class="bi bi-person-lock fs-4" aria-hidden="true"></i>
+      <span class="me-auto">Para enviar tu postulación necesitas iniciar sesión con una cuenta de candidato.</span>
+      <a class="btn btn-neo-primary btn-sm" href="index.html" data-abrir-login>Iniciar sesión</a>
+      <a class="btn btn-neo-secondary btn-sm" href="registro.html">Crear cuenta</a>
+    </div>
+
+    <!-- Etapas de la postulación -->
+    <section id="etapas" class="neo-card p-3 mb-4" aria-label="Etapas de la postulación">
+      <ol class="list-unstyled d-flex flex-wrap gap-2 mb-2">
+        <li class="badge-neo badge-neo-ocean">1 · Información personal</li>
+        <li class="badge-neo badge-neo-ocean">2 · Currículum y presentación</li>
+        <li class="badge-neo badge-neo-neutral">3 · Confirmar envío</li>
+      </ol>
+      <p class="small text-secondary mb-0">Tu información será revisada por el equipo de reclutamiento de la empresa.</p>
+    </section>
+
+    <div class="row g-4">
+      <!-- Formulario del candidato -->
+      <section class="col-lg-8">
+        <form id="form-postulacion" class="neo-card p-4 needs-validation" novalidate>
+          <div id="datos-candidato">
+            <h2 class="h5 mb-1">Información del candidato</h2>
+            <p class="small text-secondary">Revisa tus datos antes de enviar la postulación.</p>
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label class="form-label" for="c-nombre">Nombre</label>
+                <input id="c-nombre" name="nombre" class="form-control" value="Héctor Alejandro" autocomplete="given-name" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="c-apellido">Apellido</label>
+                <input id="c-apellido" name="apellido" class="form-control" value="García Guevara" autocomplete="family-name" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="c-correo">Correo electrónico</label>
+                <input id="c-correo" name="correo" type="email" class="form-control" value="hg@unicaes.edu.sv" autocomplete="email" required>
+                <div class="invalid-feedback">Escribe un correo válido.</div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="c-telefono">Teléfono de contacto</label>
+                <input id="c-telefono" name="telefono" type="tel" class="form-control" value="+503 7000-0000" autocomplete="tel" required>
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="c-ubicacion">Ubicación actual</label>
+                <input id="c-ubicacion" name="ubicacion" class="form-control" value="Santa Ana, El Salvador">
+              </div>
+            </div>
+          </div>
+
+          <div id="cv-presentacion">
+            <div class="neo-subbox p-3 mb-3">
+              <h3 class="h6">Currículum vitae (CV)</h3>
+              <p class="small mb-1">Archivo seleccionado: <span id="c-cv-nombre">Hector_Garcia_CV.pdf</span></p>
+              <p class="small text-secondary">Formatos sugeridos: PDF o DOCX · Tamaño máximo: 5 MB</p>
+              <label class="btn btn-neo-secondary btn-sm" for="c-cv">Cargar archivo</label>
+              <input id="c-cv" name="cv" type="file" accept=".pdf,.docx" class="visually-hidden" data-muestra="c-cv-nombre">
+              <div class="invalid-feedback">El archivo supera 5 MB.</div>
+            </div>
+
+            <label class="form-label" for="c-mensaje">Mensaje de presentación</label>
+            <textarea id="c-mensaje" name="mensaje" class="form-control" rows="4" maxlength="1500" aria-describedby="c-mensaje-ayuda"></textarea>
+            <p id="c-mensaje-ayuda" class="small text-secondary mt-1">Puedes explicar brevemente por qué tu perfil es adecuado para la vacante.</p>
+          </div>
+
+          <div id="confirmar-envio">
+            <div class="neo-subbox p-3 mb-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="c-confirmo" name="confirmo" required>
+                <label class="form-check-label small" for="c-confirmo">Confirmo que la información proporcionada es correcta.</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="c-acepto" name="acepto" required>
+                <label class="form-check-label small" for="c-acepto">Acepto que <span class="nombre-empresa"></span> revise mi CV y datos de contacto para esta postulación.</label>
+              </div>
+            </div>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+              <a id="volver-oferta" class="btn btn-neo-secondary" href="detalle-oferta.html"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Volver al empleo</a>
+              <button type="submit" class="btn btn-neo-primary px-4">Enviar postulación</button>
+              <span role="status" class="small text-danger ms-2"></span>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <div class="col-lg-4 d-flex flex-column gap-4">
+        <!-- Resumen de la oferta -->
+        <section id="resumen-oferta" class="neo-card p-4">
+          <span class="badge-neo badge-neo-salary mb-2"><i class="bi bi-check-lg" aria-hidden="true"></i> Vacante Verificada</span>
+          <h2 id="r-titulo" class="h5 mb-1"></h2>
+          <p class="fw-bold small mb-2 nombre-empresa"></p>
+          <ul id="r-detalles" class="list-unstyled small text-secondary mb-0 d-grid gap-1"></ul>
+        </section>
+        <section id="antes-enviar" class="neo-card p-4">
+          <h2 class="h6">Antes de enviar tu solicitud</h2>
+          <ul class="small text-secondary mb-0">
+            <li>Verifica tu correo y teléfono.</li>
+            <li>Adjunta un currículum actualizado.</li>
+            <li>Personaliza tu mensaje para la empresa.</li>
+            <li>Confirma que cumples los requisitos.</li>
+          </ul>
+        </section>
+        <section id="proteccion" class="neo-card p-4">
+          <h2 class="h6">Protección de datos</h2>
+          <p class="small text-secondary mb-0">El empleador podrá consultar la información enviada únicamente para evaluar tu candidatura.</p>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer id="pie"></footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/comun.js"></script>
+  <script>
+    const oferta = OFERTAS.find(o => o.id === Number(parametro('id'))) ?? OFERTAS[0];
+    const formPostulacion = document.getElementById('form-postulacion');
+    const enlaceOferta = `detalle-oferta.html?id=${oferta.id}`;
+
+    document.getElementById('miga-oferta').href = enlaceOferta;
+    document.getElementById('volver-oferta').href = enlaceOferta;
+    document.querySelectorAll('.nombre-empresa').forEach(e => e.textContent = oferta.empresa);
+    document.getElementById('r-titulo').textContent = oferta.titulo;
+    document.getElementById('r-detalles').innerHTML = [oferta.ubicacion, `Modalidad: ${oferta.modalidad}`,
+      `Jornada: ${oferta.contrato}`, `Salario: ${formatoSalario(oferta)}`, `ID de vacante: #JOB-${oferta.id}`]
+      .map(d => `<li>${esc(d)}</li>`).join('');
+    formPostulacion.mensaje.value = `Estimado equipo de ${oferta.empresa}:\nMe interesa la vacante de ${oferta.titulo}. Cuento con experiencia relacionada y me gustaría contribuir a sus proyectos.`;
+
+    // Flujo de navegación: para aplicar hay que tener sesión de candidato
+    const esCandidato = usuario === 'candidato';
+    document.getElementById('aviso-sesion').hidden = esCandidato;
+    if (esCandidato) formPostulacion.dataset.destino = `postulacion-enviada.html?id=${oferta.id}`;
+
+    // shortcut: guarda la postulación en sessionStorage; con la API, POST /api/postulaciones (con el CV)
+    formPostulacion.addEventListener('enviado', () => {
+      if (!esCandidato) {
+        avisar(formPostulacion, 'Inicia sesión como candidato para enviar tu postulación.');
+        document.querySelector('#aviso-sesion [data-abrir-login]').click();
+        return;
+      }
+      guardarEn('postulaciones', {
+        oferta: oferta.id, fecha: new Date().toISOString().slice(0, 10),
+        candidato: `${formPostulacion.nombre.value.trim()} ${formPostulacion.apellido.value.trim()}`,
+        cv: document.getElementById('c-cv-nombre').textContent,
+      });
+    });
+  </script>
+</body>
+</html>

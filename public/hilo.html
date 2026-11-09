@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hilo de discusión · PortalTrabajo</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/estilos.css" rel="stylesheet">
+</head>
+<!-- MOD-02-THREAD · Candidato registrado / Profesional -->
+<body data-usuario="candidato" data-activo="foros">
+  <header id="navbar" class="container-xl pt-3"></header>
+
+  <main class="container-xl py-4">
+    <nav aria-label="Ruta">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="foros.html">Foros</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Hilo de discusión</li>
+      </ol>
+    </nav>
+
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <!-- Publicación original -->
+        <article id="publicacion" class="neo-card p-4 mb-4">
+          <div id="h-etiquetas" class="d-flex flex-wrap gap-2 mb-3"></div>
+          <h1 id="h-titulo" class="h3"></h1>
+          <p id="h-autor" class="small text-secondary"></p>
+          <p id="h-contenido" class="mb-0"></p>
+        </article>
+
+        <!-- Respuestas -->
+        <section id="respuestas" class="mb-4" aria-labelledby="t-respuestas">
+          <h2 id="t-respuestas" class="h5 mb-3"></h2>
+          <ul id="lista-respuestas" class="list-unstyled d-grid gap-3 mb-0"></ul>
+        </section>
+
+        <!-- Responder -->
+        <section id="responder" aria-labelledby="t-responder">
+          <form id="form-respuesta" class="neo-card p-4 needs-validation" novalidate>
+            <h2 id="t-responder" class="h5">Responder al hilo</h2>
+            <label class="form-label" for="r-texto">Tu respuesta *</label>
+            <textarea id="r-texto" name="texto" class="form-control mb-3" rows="4" minlength="5" maxlength="2000" required placeholder="Comparte tu experiencia o consejo..."></textarea>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+              <button type="submit" class="btn btn-neo-accent px-4">Publicar respuesta</button>
+              <span role="status" class="small text-mar fw-bold"></span>
+            </div>
+          </form>
+        </section>
+      </div>
+
+      <!-- Información lateral -->
+      <aside class="col-lg-4 d-flex flex-column gap-4">
+        <section id="reglas" class="neo-card p-4">
+          <h2 class="h6">Normas de la comunidad</h2>
+          <ul class="small text-secondary mb-0">
+            <li>Respeta a los demás profesionales.</li>
+            <li>No compartas datos personales de terceros.</li>
+            <li>Evita publicidad y enlaces sospechosos.</li>
+            <li>Usa «Reportar» si algo incumple estas normas.</li>
+          </ul>
+        </section>
+        <section id="relacionados" class="neo-card p-4">
+          <h2 class="h6">Otros temas</h2>
+          <ul id="otros-hilos" class="list-unstyled small d-grid gap-2 mb-3"></ul>
+          <a class="btn btn-neo-secondary btn-sm" href="foros.html"><i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Volver a los foros</a>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <footer id="pie"></footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/comun.js"></script>
+  <script>
+    const hilos = [...guardados('hilos').reverse(), ...HILOS];
+    const hilo = hilos.find(h => h.id === Number(parametro('id'))) ?? hilos.find(h => h.id === 1);
+    const claveRespuestas = `respuestas-${hilo.id}`;
+    const respuestas = [...hilo.comentarios, ...guardados(claveRespuestas)];
+
+    document.title = `${hilo.titulo} · PortalTrabajo`;
+    document.getElementById('h-etiquetas').innerHTML = hilo.etiquetas
+      .map(([color, icono, texto]) => `<span class="badge-neo badge-neo-${color}"><i class="bi bi-${icono}" aria-hidden="true"></i> ${esc(texto)}</span>`).join('');
+    document.getElementById('h-titulo').textContent = hilo.titulo;
+    document.getElementById('h-autor').textContent = `Publicado por ${hilo.autor} (${hilo.cargo}) · ${hilo.fecha}`;
+    document.getElementById('h-contenido').textContent = hilo.contenido;
+    document.getElementById('otros-hilos').innerHTML = hilos.filter(h => h.id !== hilo.id).slice(0, 3)
+      .map(h => `<li><a href="hilo.html?id=${h.id}">${esc(h.titulo)}</a></li>`).join('');
+
+    function pintarRespuestas() {
+      // el contador del foro incluye respuestas que no se cargan aquí; se suman las nuevas
+      const total = hilo.respuestas + guardados(claveRespuestas).length;
+      document.getElementById('t-respuestas').textContent = `${total} respuestas · mostrando ${respuestas.length}`;
+      document.getElementById('lista-respuestas').innerHTML = respuestas.map(r => `
+        <li class="neo-card-sm p-3">
+          <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-1">
+            <span class="small"><strong>${esc(r.autor)}</strong> · ${esc(r.cargo)} · <span class="text-secondary">${esc(r.fecha)}</span></span>
+            <button type="button" class="btn btn-neo-secondary btn-sm py-0" data-reportar><i class="bi bi-flag me-1" aria-hidden="true"></i>Reportar</button>
+          </div>
+          <p class="mb-0">${esc(r.texto)}</p>
+        </li>`).join('') || '<li class="text-secondary">Todavía no hay respuestas. ¡Sé el primero en responder!</li>';
+    }
+
+    // shortcut: el reporte solo cambia el botón; con la API, hacer POST a la bandeja de moderación
+    document.getElementById('lista-respuestas').addEventListener('click', evento => {
+      const boton = evento.target.closest('[data-reportar]');
+      if (!boton) return;
+      boton.disabled = true;
+      boton.innerHTML = '<i class="bi bi-flag-fill me-1" aria-hidden="true"></i>Reportada';
+    });
+
+    const formRespuesta = document.getElementById('form-respuesta');
+    formRespuesta.addEventListener('enviado', () => {
+      const nueva = { autor: 'Héctor García', cargo: 'Candidato', fecha: 'Ahora', texto: formRespuesta.texto.value.trim() };
+      guardarEn(claveRespuestas, nueva);
+      respuestas.push(nueva);
+      formRespuesta.reset();
+      pintarRespuestas();
+      setTimeout(() => avisar(formRespuesta, 'Respuesta publicada.'));
+    });
+
+    pintarRespuestas();
+  </script>
+</body>
+</html>

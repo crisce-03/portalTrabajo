@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Postulaciones recibidas · PortalTrabajo</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/estilos.css" rel="stylesheet">
+</head>
+<!-- MOD-03-APPLICANTS · Empresa / Empleador -->
+<body data-usuario="empresa">
+  <header id="navbar" class="container-xl pt-3"></header>
+
+  <main class="container-xl py-4">
+    <nav aria-label="Ruta">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html">PortalTrabajo</a></li>
+        <li class="breadcrumb-item"><a href="panel-empresa.html">Módulo empresarial</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Postulaciones</li>
+      </ol>
+    </nav>
+    <h1 class="titulo-pagina">Postulaciones recibidas</h1>
+    <p class="text-secondary">Consulta los candidatos de cada oferta y realiza el seguimiento de su evaluación.</p>
+
+    <!-- Oferta seleccionada -->
+    <section id="oferta-seleccionada" class="neo-card p-3 mb-4 d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <div>
+        <h2 class="h6 mb-1">Oferta seleccionada</h2>
+        <p class="fw-bold small mb-0">Arquitecto de Software Cloud · #JOB-302 · InnovaTech S.A.</p>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <a class="btn btn-neo-secondary btn-sm" href="detalle-oferta.html?id=302">Ver oferta publicada</a>
+        <span class="badge-neo badge-neo-salary">Activa</span>
+      </div>
+    </section>
+
+    <!-- Indicadores (se calculan de la lista) -->
+    <section id="indicadores" class="row g-3 mb-4" aria-label="Indicadores de postulaciones">
+      <div class="col-6 col-lg-3"><div class="neo-card p-3 h-100"><span class="small text-secondary">Total de candidatos</span><span id="i-total" class="metrica my-1"></span><span class="small text-ocean">Para esta oferta</span></div></div>
+      <div class="col-6 col-lg-3"><div class="neo-card p-3 h-100"><span class="small text-secondary">Pendientes</span><span id="i-pendiente" class="metrica my-1"></span><span class="small text-ocean">Sin revisión</span></div></div>
+      <div class="col-6 col-lg-3"><div class="neo-card p-3 h-100"><span class="small text-secondary">En evaluación</span><span id="i-revision" class="metrica my-1"></span><span class="small text-ocean">Perfiles revisados</span></div></div>
+      <div class="col-6 col-lg-3"><div class="neo-card p-3 h-100"><span class="small text-secondary">Contactados</span><span id="i-contactado" class="metrica my-1"></span><span class="small text-ocean">En proceso</span></div></div>
+    </section>
+
+    <!-- Lista de postulantes -->
+    <section id="lista" class="neo-card p-4">
+      <h2 class="h5 mb-3">Lista de postulantes</h2>
+      <form id="filtros-postulantes" class="row g-3 mb-3" role="search">
+        <div class="col-md-5">
+          <label class="form-label" for="f-buscar">Buscar candidato</label>
+          <input id="f-buscar" name="buscar" type="search" class="form-control" placeholder="Nombre o correo...">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label" for="f-estado">Estado</label>
+          <select id="f-estado" name="estado" class="form-select">
+            <option value="">Todos los estados</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="revision">En revisión</option>
+            <option value="contactado">Contactado</option>
+            <option value="descartado">Descartado</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label" for="f-orden">Ordenar por</label>
+          <select id="f-orden" name="orden" class="form-select">
+            <option value="recientes">Más recientes</option>
+            <option value="antiguos">Más antiguos</option>
+          </select>
+        </div>
+      </form>
+
+      <ul id="lista-postulantes" class="list-unstyled d-grid gap-2 mb-3"></ul>
+      <p id="sin-postulantes" class="text-secondary" hidden>Ningún candidato coincide con los filtros.</p>
+
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+        <span id="conteo" class="small text-secondary" role="status"></span>
+        <div class="d-flex gap-2">
+          <button id="anterior" type="button" class="btn btn-neo-secondary px-3"><i class="bi bi-arrow-left" aria-hidden="true"></i> Anterior</button>
+          <button id="siguiente" type="button" class="btn btn-neo-secondary px-4">Siguiente <i class="bi bi-arrow-right" aria-hidden="true"></i></button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="pie"></footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/comun.js"></script>
+  <script>
+    // Filtros de consulta: buscar por nombre o correo, filtrar por estado, ordenar por fecha y paginar.
+    // shortcut: trabaja en el navegador; con la API, GET /api/ofertas/302/postulaciones?buscar=&estado=&orden=&pagina=
+    const POR_PAGINA = 5;
+    const buscar = document.getElementById('f-buscar');
+    const estado = document.getElementById('f-estado');
+    const orden = document.getElementById('f-orden');
+    let pagina = 1;
+
+    for (const clave of ['pendiente', 'revision', 'contactado']) {
+      document.getElementById(`i-${clave}`).textContent = POSTULANTES.filter(p => p.estado === clave).length;
+    }
+    document.getElementById('i-total').textContent = POSTULANTES.length;
+
+    function pintar() {
+      const consulta = normalizar(buscar.value);
+      const signo = orden.value === 'recientes' ? -1 : 1;
+      const filtrados = POSTULANTES
+        .filter(p => normalizar(`${p.nombre} ${p.correo}`).includes(consulta) && (!estado.value || p.estado === estado.value))
+        .sort((a, b) => signo * a.fecha.localeCompare(b.fecha) || a.id - b.id);
+      const paginas = Math.max(1, Math.ceil(filtrados.length / POR_PAGINA));
+      pagina = Math.min(pagina, paginas);
+      const desde = (pagina - 1) * POR_PAGINA;
+      const visibles = filtrados.slice(desde, desde + POR_PAGINA);
+
+      document.getElementById('lista-postulantes').innerHTML = visibles.map(p => `
+        <li class="neo-card-sm p-3 row g-2 align-items-center mx-0 postulante">
+          <div class="col-md-4"><strong>${esc(p.nombre)}</strong><span class="subtitulo">${esc(p.cargo)} · ${esc(p.correo)}</span></div>
+          <div class="col-6 col-md-2 small text-secondary">CV adjunto · PDF</div>
+          <div class="col-6 col-md-2">${insigniaEstado(p.estado)}</div>
+          <div class="col-6 col-md-2 small text-secondary">${formatoFecha(p.fecha)}</div>
+          <div class="col-6 col-md-2 text-md-end"><a class="btn btn-neo-secondary btn-sm px-3" href="perfil-candidato.html?id=${p.id}">Ver perfil</a></div>
+        </li>`).join('');
+      document.getElementById('sin-postulantes').hidden = filtrados.length > 0;
+      document.getElementById('conteo').textContent = filtrados.length
+        ? `Mostrando ${desde + 1}–${desde + visibles.length} de ${filtrados.length} postulaciones · Página ${pagina} de ${paginas}`
+        : 'Mostrando 0 postulaciones';
+      document.getElementById('anterior').disabled = pagina === 1;
+      document.getElementById('siguiente').disabled = pagina === paginas;
+    }
+
+    [buscar, estado, orden].forEach(control => control.addEventListener('input', () => { pagina = 1; pintar(); }));
+    document.getElementById('anterior').addEventListener('click', () => { pagina--; pintar(); });
+    document.getElementById('siguiente').addEventListener('click', () => { pagina++; pintar(); });
+    document.getElementById('filtros-postulantes').addEventListener('submit', evento => evento.preventDefault());
+    pintar();
+  </script>
+</body>
+</html>
