@@ -37,8 +37,14 @@
     <div class="row g-4">
       <!-- Filtros por criterios de búsqueda de empleo -->
       <aside class="col-md-4 col-lg-3">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="panel-filtros" aria-labelledby="t-panel-filtros">
+          <div class="offcanvas-header border-bottom border-dark">
+            <h2 id="t-panel-filtros" class="h5 mb-0">Filtros del Foro</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#panel-filtros" aria-label="Cerrar filtros"></button>
+          </div>
+          <div class="offcanvas-body p-3 p-md-0 d-block">
         <form id="filtros-foro" class="neo-card p-3">
-          <h2 class="h5 mb-3">Filtros del Foro</h2>
+          <h2 class="h5 mb-3 d-none d-md-block">Filtros del Foro</h2>
 
           <fieldset class="mb-3">
             <legend class="form-label">Sector Laboral</legend>
@@ -66,13 +72,28 @@
           <input type="checkbox" class="btn-check" name="tema" value="salarios" id="f-salarios">
           <label class="badge-neo badge-neo-salary w-100 justify-content-center py-2 mb-3" for="f-salarios">Debates de Salarios</label>
 
-          <button type="reset" class="btn btn-neo-secondary btn-sm w-100">Limpiar filtros</button>
+          <div class="d-grid gap-2">
+            <button type="reset" class="btn btn-neo-secondary btn-sm">Limpiar filtros</button>
+            <button type="button" class="btn btn-neo-primary btn-sm d-md-none" data-bs-dismiss="offcanvas" data-bs-target="#panel-filtros">Ver temas</button>
+          </div>
         </form>
+          </div>
+        </div>
       </aside>
 
       <!-- Hilos de discusión -->
       <section class="col-md-8 col-lg-9" aria-label="Hilos de discusión">
-        <p id="conteo-hilos" class="visually-hidden" role="status"></p>
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+          <p id="conteo-hilos" class="fw-bold mb-0" role="status"></p>
+          <div class="d-flex align-items-center gap-2">
+            <button type="button" class="btn btn-neo-secondary btn-sm d-md-none" data-bs-toggle="offcanvas" data-bs-target="#panel-filtros" aria-controls="panel-filtros"><i class="bi bi-funnel" aria-hidden="true"></i> Filtros</button>
+            <label class="form-label mb-0" for="orden-hilos">Ordenar por</label>
+            <select id="orden-hilos" class="form-select form-select-sm w-auto">
+              <option value="recientes">Más recientes</option>
+              <option value="respuestas">Más respuestas</option>
+            </select>
+          </div>
+        </div>
         <div id="lista-hilos" class="d-flex flex-column gap-3"></div>
         <p id="sin-hilos" class="text-secondary mt-3" hidden>No hay hilos que coincidan con tu búsqueda o filtros.</p>
       </section>
@@ -146,20 +167,20 @@
     const marcados = nombre => [...formFiltros.querySelectorAll(`[name="${nombre}"]:checked`)].map(c => c.value);
 
     const tarjetaHilo = h => `
-      <article class="neo-card p-3 hilo">
+      <article class="neo-card p-3 hilo tarjeta-accion" id="hilo-${h.id}">
         <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-2">
           <div class="d-flex flex-wrap gap-2">
             ${h.etiquetas.map(([color, icono, texto]) => `<span class="badge-neo badge-neo-${color}"><i class="bi bi-${icono}" aria-hidden="true"></i> ${esc(texto)}</span>`).join('')}
           </div>
           <span class="small text-secondary">${esc(h.fecha)}</span>
         </div>
-        <h2 class="h5 mb-1"><a class="text-reset" href="hilo.html?id=${h.id}">${esc(h.titulo)}</a></h2>
+        <h2 class="h5 mb-1"><a class="text-reset stretched-link" href="hilo.html?id=${h.id}">${esc(h.titulo)}</a></h2>
         <p class="text-secondary mb-3">${esc(h.resumen)}</p>
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 pt-2 border-top">
           <span><i class="bi bi-person-badge text-ocean me-1" aria-hidden="true"></i>Publicado por: <strong>${esc(h.autor)} (${esc(h.cargo)})</strong></span>
           <div class="d-flex align-items-center gap-2">
             <span class="badge-neo badge-neo-neutral"><i class="bi bi-chat-left-text" aria-hidden="true"></i> ${h.respuestas} Respuestas</span>
-            <a class="btn btn-neo-accent btn-sm" href="hilo.html?id=${h.id}#responder">Responder Hilo</a>
+            <a class="btn btn-neo-accent btn-sm sobre-enlace" href="hilo.html?id=${h.id}#responder">Responder Hilo</a>
           </div>
         </div>
       </article>`;
@@ -177,9 +198,10 @@
         && (!tipos.length || tipos.includes(h.tipo))
         && (!nivel || h.nivel === nivel)
         && (!soloSalarios || h.salarios));
+      if (document.getElementById('orden-hilos').value === 'respuestas') visibles.sort((a, b) => b.respuestas - a.respuestas);
       document.getElementById('lista-hilos').innerHTML = visibles.map(tarjetaHilo).join('');
       document.getElementById('sin-hilos').hidden = visibles.length > 0;
-      document.getElementById('conteo-hilos').textContent = `${visibles.length} hilos`;
+      document.getElementById('conteo-hilos').textContent = `${visibles.length} ${visibles.length === 1 ? 'tema' : 'temas'}`;
     }
 
     // Publicar un tema nuevo: aparece primero en la lista
@@ -204,10 +226,15 @@
       bootstrap.Modal.getInstance('#modal-tema').hide();
       formFiltros.reset();
       buscador.value = '';
-      setTimeout(pintar);
+      setTimeout(() => {
+        pintar();
+        notificar('Tema publicado. Ya aparece primero en la lista.');
+        document.querySelector(`#hilo-${nuevo.id} a`)?.focus();
+      });
     });
 
     buscador.addEventListener('input', pintar);
+    document.getElementById('orden-hilos').addEventListener('input', pintar);
     formFiltros.addEventListener('input', pintar);
     formFiltros.addEventListener('reset', () => setTimeout(pintar));
     pintar();

@@ -31,6 +31,7 @@
             <ul class="nav nav-pills nav-pills-neo flex-column text-start">
               <li class="nav-item"><a class="nav-link active" aria-current="true" href="#perfil"><i class="bi bi-person-fill" aria-hidden="true"></i> Mi perfil</a></li>
               <li class="nav-item"><a class="nav-link" href="#solicitudes"><i class="bi bi-file-earmark-check" aria-hidden="true"></i> Solicitudes</a></li>
+              <li class="nav-item"><a class="nav-link" href="#guardadas"><i class="bi bi-bookmark" aria-hidden="true"></i> Ofertas guardadas</a></li>
               <li class="nav-item"><a class="nav-link" href="#alertas"><i class="bi bi-bell" aria-hidden="true"></i> Alertas</a></li>
               <li class="nav-item"><a class="nav-link" href="#valoraciones"><i class="bi bi-star" aria-hidden="true"></i> Valoraciones</a></li>
             </ul>
@@ -68,6 +69,7 @@
               <label class="dropzone-neo mb-3" for="p-cv">
                 <i class="bi bi-cloud-arrow-up fs-3 text-ocean d-block" aria-hidden="true"></i>
                 <span id="p-cv-nombre" class="fw-bold">Cargar Currículum (PDF, DOCX)</span>
+                <span class="d-block small text-secondary">Arrastra el archivo aquí o haz clic · máximo 5 MB</span>
                 <input id="p-cv" name="cv" type="file" accept=".pdf,.docx" class="visually-hidden" data-muestra="p-cv-nombre">
               </label>
               <div class="d-flex justify-content-between align-items-center gap-2">
@@ -166,6 +168,19 @@
             </form>
           </section>
 
+          <!-- Ofertas guardadas -->
+          <section id="guardadas" class="col-12">
+            <div class="neo-card p-3">
+              <h2 class="h5 mb-3">Ofertas guardadas</h2>
+              <ul id="lista-guardadas" class="list-unstyled d-grid gap-2 mb-0"></ul>
+              <div id="sin-guardadas" class="text-center py-3" hidden>
+                <i class="bi bi-bookmark fs-3 text-ocean" aria-hidden="true"></i>
+                <p class="mb-2">Todavía no guardas ofertas. Usa el botón <i class="bi bi-bookmark" aria-hidden="true"></i> en cualquier oferta para tenerla aquí.</p>
+                <a class="btn btn-neo-primary btn-sm" href="resultados.html">Buscar ofertas</a>
+              </div>
+            </div>
+          </section>
+
           <!-- Solicitudes enviadas -->
           <section id="solicitudes" class="col-12">
             <div class="neo-card overflow-hidden">
@@ -232,7 +247,7 @@
       listaAlertas.insertAdjacentHTML('beforeend', filaAlerta(`a-g${guardados('alertas').length}`, texto));
       guardarEn('alertas', texto);
       formAlerta.reset();
-      setTimeout(() => avisar(formAlerta, 'Alerta creada. Te avisaremos por correo o SMS.'));
+      notificar(`Alerta «${texto}» creada. Te avisaremos por correo o SMS.`);
     });
 
     // Valoraciones: empresas disponibles y la que venga en ?empresa=
@@ -241,9 +256,33 @@
     selectEmpresa.value = parametro('empresa') ?? '';
     if (selectEmpresa.selectedIndex < 0) selectEmpresa.value = '';
 
-    const iconosEstrella = document.querySelectorAll('.estrellas label i');
-    document.querySelectorAll('input[name="calificacion"]').forEach(radio => radio.addEventListener('change', () =>
-      iconosEstrella.forEach((icono, i) => icono.className = i < radio.value ? 'bi bi-star-fill' : 'bi bi-star')));
+    // Estrellas: se llenan hasta la elegida y muestran una vista previa al pasar el mouse
+    const iconosEstrella = [...document.querySelectorAll('.estrellas label i')];
+    const llenar = n => iconosEstrella.forEach((icono, i) => icono.className = i < n ? 'bi bi-star-fill' : 'bi bi-star');
+    const elegida = () => Number(document.querySelector('input[name="calificacion"]:checked')?.value ?? 0);
+    document.querySelectorAll('input[name="calificacion"]').forEach(radio => radio.addEventListener('change', () => llenar(elegida())));
+    document.querySelectorAll('.estrellas label').forEach((label, i) => {
+      label.addEventListener('mouseenter', () => llenar(i + 1));
+      label.addEventListener('mouseleave', () => llenar(elegida()));
+    });
+    document.getElementById('form-valoracion').addEventListener('reset', () => setTimeout(() => llenar(0)));
+
+    // Ofertas guardadas desde Resultados o la Descripción del trabajo
+    function pintarGuardadas() {
+      const guardadas = ofertasGuardadas().map(id => OFERTAS.find(o => o.id === id)).filter(Boolean);
+      document.getElementById('sin-guardadas').hidden = guardadas.length > 0;
+      document.getElementById('lista-guardadas').innerHTML = guardadas.map(o => `
+        <li class="neo-subbox p-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+          <div><a class="fw-bold" href="detalle-oferta.html?id=${o.id}">${esc(o.titulo)}</a><span class="subtitulo">${esc(o.empresa)} · ${esc(o.modalidad)} · ${formatoSalario(o)}</span></div>
+          <div class="d-flex gap-2">
+            <a class="btn btn-neo-primary btn-sm" href="postulacion.html?id=${o.id}">Postularme</a>
+            <button type="button" class="btn btn-neo-secondary btn-sm" data-guardar-oferta="${o.id}" aria-label="Quitar ${esc(o.titulo)} de guardadas"></button>
+          </div>
+        </li>`).join('');
+      marcarGuardadas();
+    }
+    document.addEventListener('click', evento => { if (evento.target.closest('[data-guardar-oferta]')) pintarGuardadas(); });
+    pintarGuardadas();
   </script>
 </body>
 </html>

@@ -42,7 +42,7 @@ DB_NAME=portalTrabajo
 | Comando | Qué hace |
 |---|---|
 | `npm run dev` | Servidor Express con recarga automática (nodemon) |
-| `npm test` | Prueba todo el front-end en Chrome sin ventana (168 revisiones) |
+| `npm test` | Prueba todo el front-end en Chrome sin ventana (187 revisiones) |
 | `npm run laminas` | Genera el PDF de prototipos y las láminas para Figma |
 
 ---
@@ -145,16 +145,49 @@ Se carga en todas las páginas, después de `datos.js` y antes del script propio
 - **Formularios** con `class="needs-validation" novalidate`:
   - validan con HTML5 y muestran los errores de Bootstrap;
   - si todo está bien, disparan el evento **`enviado`** y luego van a `data-destino` o muestran `data-exito` en el `[role=status]` del formulario.
+- **Errores en español:** si un campo no trae su propio `.invalid-feedback`, se crea un mensaje claro debajo («Este campo es obligatorio.», «Escribe un correo válido…», «Escribe al menos N caracteres…») con `aria-invalid` y `aria-describedby`. Se actualiza mientras el usuario corrige.
 - **Atributos útiles:**
   - `data-espejo="campo"`: copia en vivo el valor de `name="campo"` (vistas previas).
-  - `data-muestra="id"` en un `input[type=file]`: muestra el nombre del archivo y rechaza más de 5 MB.
+  - `data-muestra="id"` en un `input[type=file]`: muestra el nombre del archivo y valida tipo (según `accept`) y tamaño (5 MB). La `.dropzone-neo` acepta arrastrar y soltar.
+  - `data-guardar-oferta="id"`: guarda o quita una oferta (`data-solo-icono` muestra solo el ícono).
   - `data-abrir-login`: abre el login del encabezado.
-  - `data-aviso`: muestra un mensaje al pulsar.
-- **Utilidades:** `esc()` (escapa HTML: todo texto del usuario o de la API pasa por aquí antes de `innerHTML`), `normalizar()` (búsqueda sin tildes ni mayúsculas), `parametro()`, `formatoFecha()`, `formatoSalario()`, `estrellas()`, `insigniaEstado()`, `guardados()` y `guardarEn()`.
+- **Avisos:** `notificar(texto, 'exito' | 'info' | 'error')` muestra un toast de Bootstrap; los errores de formulario siguen apareciendo junto al formulario.
+- **Automático en todas las páginas:**
+  - botón para ver u ocultar contraseñas;
+  - contador en los `textarea[maxlength]`;
+  - enlace «Saltar al contenido»;
+  - botón «Volver arriba»;
+  - pie de página con enlaces.
+- **Utilidades:**
+  - `esc()`: escapa HTML; todo texto del usuario o de la API pasa por aquí antes de `innerHTML`.
+  - `normalizar()`: búsqueda sin tildes ni mayúsculas.
+  - `parametro()`, `formatoFecha()`, `formatoSalario()`, `estrellas()`, `insigniaEstado()`.
+  - `guardados()` y `guardarEn()` (sessionStorage).
+  - `ofertasGuardadas()` y `marcarGuardadas()` (localStorage).
 
 ### Datos de ejemplo — `js/datos.js`
 
 `OFERTAS`, `EMPRESAS`, `HILOS`, `POSTULANTES`, `REGISTROS` (admin) y `RECURSOS`. Las páginas pintan sus listas a partir de estos arreglos. Los indicadores se calculan de los datos (por ejemplo, 18 postulantes: 7 pendientes, 8 en revisión y 3 contactados).
+
+### Experiencia de usuario
+
+| Mejora | Dónde |
+|---|---|
+| Barra de navegación fija arriba; los saltos a secciones no quedan tapados | Todas |
+| Avisos flotantes (toasts) que confirman cada acción: guardar, publicar, reportar, cambiar estado, exportar | Todas |
+| Mensajes de error en español debajo de cada campo y foco en el primero con error | Todos los formularios |
+| Ver u ocultar contraseña | Login del encabezado y Registro |
+| Contador de caracteres en textos largos | Postulación, foros, hilo y valoraciones |
+| CV con arrastrar y soltar, y validación de tipo y tamaño al elegirlo | Mi perfil y Postulación |
+| Tarjetas que se abren con un clic en cualquier parte, con efecto al pasar el mouse | Inicio, Resultados, Foros, Recursos y Postulaciones |
+| Filtros activos como etiquetas que se quitan con un clic; la búsqueda queda en la URL (se puede compartir, guardar en favoritos y sobrevive al recargar) | Resultados |
+| En celular los filtros se abren en un panel lateral, con contador de filtros aplicados | Resultados y Foros |
+| Ofertas guardadas con el botón <i>marcador</i>, listadas en «Mi perfil → Ofertas guardadas» | Inicio, Resultados, Descripción y Perfil |
+| Borrador real de la oferta: se guarda y se recupera al volver | Publicar oferta |
+| Orden por más recientes o más respuestas; foco en el tema recién publicado | Foros |
+| Vista previa de las estrellas al pasar el mouse | Valoraciones del perfil |
+| Indicador del filtro aplicado en la tabla, con «Ver todos» | Admin |
+| «Saltar al contenido», «Volver arriba», foco visible y respeto de «reducir movimiento» del sistema | Todas |
 
 ### Accesibilidad y seguridad del lado del cliente
 
@@ -183,7 +216,8 @@ Cada lugar que hoy usa datos de ejemplo tiene un comentario `// shortcut:` con l
 | Login (encabezado) | Elige el rol en una lista | Autenticación real; el servidor decide el rol |
 | Foros / Hilo | `HILOS` + `sessionStorage` | `GET /api/hilos?...`, `POST /api/hilos`, `POST /api/hilos/:id/respuestas` |
 | Valoraciones | `EMPRESAS` | `GET /api/empresas`, `POST /api/reportes` |
-| Publicar oferta | Mensaje de éxito | `POST /api/ofertas` |
+| Publicar oferta | Mensaje de éxito; borrador en `localStorage` | `POST /api/ofertas` (estado publicada o borrador) |
+| Ofertas guardadas | `localStorage` del navegador | `GET/POST/DELETE /api/candidatos/me/guardadas` |
 | Datos de la empresa | Mensaje de éxito | `PUT /api/empresas/:id` |
 | Postulaciones | Filtra y pagina `POSTULANTES` | `GET /api/ofertas/:id/postulaciones?buscar=&estado=&orden=&pagina=` |
 | Revisión de candidatura | `POSTULANTES` | `GET /api/postulaciones/:id`, `PUT /api/postulaciones/:id { estado }` |
@@ -233,9 +267,18 @@ Para cambiar textos, edita `prototipos/contenido.json` (cada cuadrito indica el 
 - **Valoraciones y recursos:** búsqueda de empresas, reportar reseñas y artículos por `id`.
 - **Empresa:** indicadores 18/7/8/3, paginación, filtros y orden, perfil del candidato, descartar, CV descargable, vista previa al publicar y validaciones; guardar y cancelar en los datos de la empresa.
 - **Admin:** filtros del menú, crear, editar, suspender, deshabilitar, eliminar con confirmación, exportar CSV, moderar con confirmación y configuración.
+- **Experiencia de usuario:**
+  - «Saltar al contenido», barra fija, ver contraseña;
+  - errores en español que aparecen y desaparecen al corregir;
+  - «Volver arriba»;
+  - filtros leídos de la URL, etiquetas de filtros y quitar un filtro;
+  - tarjetas clicables;
+  - guardar y quitar ofertas, y verlas en el perfil;
+  - contador de caracteres y borrador recuperado;
+  - orden de foros, indicador de filtro en admin y panel de filtros en celular.
 - **Login** con cada uno de los tres roles.
 
-Resultado actual: **168/168 OK**. Deja una captura de cada pantalla en `pruebas/capturas/` (ignorado en git).
+Resultado actual: **187/187 OK**. Deja una captura de cada pantalla en `pruebas/capturas/` (ignorado en git).
 
 ---
 

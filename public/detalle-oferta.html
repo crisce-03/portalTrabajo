@@ -36,7 +36,7 @@
       <p id="o-meta" class="text-secondary mb-3"></p>
       <div class="d-flex flex-wrap align-items-center gap-2">
         <span id="o-etiquetas" class="d-flex flex-wrap gap-2"></span>
-        <button type="button" class="btn btn-neo-secondary ms-sm-2" data-bs-toggle="button" aria-pressed="false"><i class="bi bi-bookmark me-1" aria-hidden="true"></i>Guardar oferta</button>
+        <button id="o-guardar" type="button" class="btn btn-neo-secondary ms-sm-2" data-guardar-oferta="302">Guardar oferta</button>
         <a id="o-aplicar" class="btn btn-neo-primary px-4" href="postulacion.html">Aplicar al Trabajo</a>
       </div>
     </section>
@@ -114,6 +114,7 @@
       <span class="badge-neo badge-neo-ocean">${esc(oferta.sector)}</span>
       <span class="badge-neo badge-neo-salary">${formatoSalario(oferta)}</span>`;
     document.getElementById('o-aplicar').href = `postulacion.html?id=${oferta.id}`;
+    document.getElementById('o-guardar').dataset.guardarOferta = oferta.id;
     texto('o-descripcion', oferta.descripcion);
     lista('o-responsabilidades', oferta.responsabilidades);
     lista('o-requisitos', oferta.requisitos);

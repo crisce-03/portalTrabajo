@@ -256,6 +256,49 @@ h1, h2, h3, h4, h5, h6, .font-inter {
 .pie-neo {
   background: var(--color-callout);
   border-top: var(--border-neo);
-  font-size: 12px;
+  font-size: 13px;
   color: var(--ink-muted);
+}
+.pie-neo a { color: var(--ink-main); text-decoration: none; }
+.pie-neo a:hover { color: var(--color-primary); text-decoration: underline; }
+
+/* ---------- Experiencia de usuario ---------- */
+html { scroll-behavior: smooth; }
+[id] { scroll-margin-top: 100px; } /* que la barra fija no tape la sección a la que se salta */
+#navbar { position: sticky; top: 0; z-index: 1030; background: var(--bg-canvas); padding-bottom: .5rem; }
+.saltar { position: fixed !important; top: .75rem; left: .75rem; z-index: 2000; }
+main:focus { outline: none; }
+
+/* Foco visible y consistente para teclado */
+a:focus-visible, summary:focus-visible, .nav-link:focus-visible { outline: 3px solid var(--color-primary); outline-offset: 2px; border-radius: 4px; }
+.form-control:focus, .form-select:focus { border-color: var(--color-primary); box-shadow: 0 0 0 .2rem rgba(3, 105, 161, .25), var(--shadow-neo-sm); }
+.form-check-input:focus { box-shadow: 0 0 0 .2rem rgba(3, 105, 161, .25); }
+
+/* Tarjetas que se abren con un clic en cualquier parte (Bootstrap .stretched-link) */
+.tarjeta-accion { position: relative; transition: transform .15s ease, box-shadow .15s ease; }
+.tarjeta-accion:hover, .tarjeta-accion:focus-within { transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--ink-main); }
+.sobre-enlace { position: relative; z-index: 2; } /* botones que deben quedar encima del enlace estirado */
+
+/* Avisos flotantes (toasts) */
+.zona-avisos { top: 84px; z-index: 1090; }
+.toast-neo { background: #fff; border: var(--border-neo); border-radius: var(--radius-neo); box-shadow: var(--shadow-neo-lg); }
+.toast-exito i { color: var(--color-success); }
+.toast-info i { color: var(--color-primary); }
+.toast-error { background: var(--color-danger-soft); }
+.toast-error i { color: var(--color-danger); }
+
+.boton-subir { position: fixed; right: 1.25rem; bottom: 1.25rem; z-index: 1020; width: 48px; height: 48px; border-radius: 50%; }
+.dropzone-neo:hover { background: #D6EEFC; }
+.dropzone-neo.arrastrando { background: #BAE6FD; border-style: solid; }
+.contador { font-size: 11.5px; }
+.input-group > .form-control { box-shadow: none; }
+
+/* Panel de filtros: lateral en celular, columna en escritorio */
+.offcanvas { background: var(--bg-canvas); }
+.offcanvas.offcanvas-start { border-right: var(--border-neo); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .tarjeta-accion, .btn { transition: none; }
+  .tarjeta-accion:hover, .tarjeta-accion:focus-within { transform: none; }
 }

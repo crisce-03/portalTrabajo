@@ -122,7 +122,8 @@
       respuestas.push(nueva);
       formRespuesta.reset();
       pintarRespuestas();
-      setTimeout(() => avisar(formRespuesta, 'Respuesta publicada.'));
+      notificar('Respuesta publicada.');
+      document.querySelector('#lista-respuestas li:last-child').scrollIntoView({ block: 'center' });
     });
 
     pintarRespuestas();

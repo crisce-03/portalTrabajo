@@ -117,12 +117,12 @@
       const visibles = filtrados.slice(desde, desde + POR_PAGINA);
 
       document.getElementById('lista-postulantes').innerHTML = visibles.map(p => `
-        <li class="neo-card-sm p-3 row g-2 align-items-center mx-0 postulante">
+        <li class="neo-card-sm p-3 row g-2 align-items-center mx-0 postulante tarjeta-accion">
           <div class="col-md-4"><strong>${esc(p.nombre)}</strong><span class="subtitulo">${esc(p.cargo)} · ${esc(p.correo)}</span></div>
           <div class="col-6 col-md-2 small text-secondary">CV adjunto · PDF</div>
           <div class="col-6 col-md-2">${insigniaEstado(p.estado)}</div>
           <div class="col-6 col-md-2 small text-secondary">${formatoFecha(p.fecha)}</div>
-          <div class="col-6 col-md-2 text-md-end"><a class="btn btn-neo-secondary btn-sm px-3" href="perfil-candidato.html?id=${p.id}">Ver perfil</a></div>
+          <div class="col-6 col-md-2 text-md-end"><a class="btn btn-neo-secondary btn-sm px-3 stretched-link" href="perfil-candidato.html?id=${p.id}" aria-label="Ver perfil de ${esc(p.nombre)}">Ver perfil</a></div>
         </li>`).join('');
       document.getElementById('sin-postulantes').hidden = filtrados.length > 0;
       document.getElementById('conteo').textContent = filtrados.length

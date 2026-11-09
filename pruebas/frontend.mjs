@@ -49,7 +49,8 @@ const H = `const $ = s => document.querySelector(s), $$ = s => [...document.quer
   const escribir = (s, v) => { const e = $(s); e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); };
   const elegir = (s, v) => { const e = $(s); e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); e.dispatchEvent(new Event('change', { bubbles: true })); };
   const visibles = s => $$(s).filter(e => e.offsetParent !== null).length;
-  const pausa = ms => new Promise(r => setTimeout(r, ms));`;
+  const pausa = ms => new Promise(r => setTimeout(r, ms));
+  const ultimoAviso = () => $$('.zona-avisos .toast').at(-1)?.textContent.trim() ?? '';`;
 const ev = async expr => {
   const r = await cdp('Runtime.evaluate', { expression: `(async () => { ${H} ${expr} })()`, awaitPromise: true, returnByValue: true });
   if (r.exceptionDetails) throw new Error(r.exceptionDetails.exception?.description ?? r.exceptionDetails.text);
@@ -78,7 +79,7 @@ async function capturar(nombre, ancho = 1366) {
 }
 const resultados = [];
 const ok = (nombre, cond, detalle = '') => resultados.push(`${cond ? 'OK  ' : 'FALLA'} ${nombre}${!cond && detalle ? ' — ' + detalle : ''}`);
-const limpiarSesion = () => ev('sessionStorage.clear(); return true');
+const limpiarSesion = () => ev('sessionStorage.clear(); localStorage.clear(); return true');
 
 const PAGINAS = ['index', 'registro', 'resultados', 'detalle-oferta', 'postulacion', 'postulacion-enviada',
   'recursos', 'recurso', 'noticias', 'foros', 'hilo', 'valoraciones', 'perfil-usuario',
@@ -138,7 +139,7 @@ ok('mis solicitudes incluye la nueva como Recibida', await ev(`const f = $('#tab
 await ir('perfil-usuario.html?empresa=TechNova%20S.A.#valoraciones');
 ok('perfil: empresa preseleccionada desde Valorar', await ev(`return $('#v-empresa').value`) === 'TechNova S.A.');
 ok('perfil: valoración sin estrellas no se envía', await ev(`escribir('#v-comentario', 'Buen lugar para trabajar.'); $('#form-valoracion').requestSubmit(); return $('#form-valoracion [role=status]').textContent.startsWith('Revisa')`));
-ok('perfil: valoración completa', await ev(`$('label[for=c-4]').click(); $('#form-valoracion').requestSubmit(); return $$('.estrellas .bi-star-fill').length === 4 && $('#form-valoracion [role=status]').textContent.startsWith('¡Gracias')`));
+ok('perfil: valoración completa', await ev(`$('label[for=c-4]').click(); $('#form-valoracion').requestSubmit(); return $$('.estrellas .bi-star-fill').length === 4 && ultimoAviso().startsWith('¡Gracias')`));
 ok('perfil: crear alerta', await ev(`escribir('#a-nueva', 'Analista <b>QA</b>'); $('#form-alerta').requestSubmit(); await pausa(20); const ult = $$('#lista-alertas .alerta').at(-1); return ult.textContent.includes('Analista <b>QA</b>') && !ult.querySelector('b')`));
 await ir('perfil-usuario.html');
 ok('perfil: la alerta creada sigue al recargar', await ev(`return $$('#lista-alertas .alerta').length`) === 5);
@@ -197,27 +198,56 @@ ok('candidato: CV descargable', await ev(`return $('#c-descargar').download`) ==
 await ir('publicar-oferta.html');
 ok('publicar: vista previa modal en vivo', await ev(`escribir('#o-titulo', 'Analista QA'); $('[data-bs-target="#modal-vista"]').click(); await pausa(400); return $('#modal-vista.show [data-espejo=titulo]').textContent`) === 'Analista QA');
 ok('publicar: título vacío bloquea', await ev(`$('#modal-vista .btn-close').click(); await pausa(400); escribir('#o-titulo', ''); $('#form-oferta').requestSubmit(); return $('#o-titulo').matches(':invalid')`));
-ok('publicar: publicar oferta', await ev(`escribir('#o-titulo', 'Analista QA'); $('#form-oferta').requestSubmit(); return $('#form-oferta [role=status]').textContent`) === 'Oferta publicada correctamente.');
+ok('publicar: publicar oferta', await ev(`escribir('#o-titulo', 'Analista QA'); $('#form-oferta').requestSubmit(); return ultimoAviso()`) === 'Oferta publicada correctamente.');
 
 await ir('datos-empresa.html');
-ok('empresa: guardar actualiza fecha', await ev(`$('#form-empresa').requestSubmit(); return $('#actualizado').textContent !== '20 de octubre de 2026' && $('#form-empresa [role=status]').textContent === 'Cambios guardados.'`));
+ok('empresa: guardar actualiza fecha', await ev(`$('#form-empresa').requestSubmit(); return $('#actualizado').textContent !== '20 de octubre de 2026' && ultimoAviso() === 'Cambios guardados.'`));
 ok('empresa: cancelar restaura vista previa', await ev(`escribir('#e-nombre', 'Otra S.A.'); $('#form-empresa').reset(); await pausa(30); return $('[data-espejo=nombre]').textContent`) === 'InnovaTech S.A.');
 
 // ---------- Admin ----------
 await ir('admin.html');
 ok('admin: 6 registros', await ev(`return $$('#tabla-control tbody tr').length`) === 6);
 ok('admin: gestión de usuarios filtra', await ev(`$('[data-filtro=usuario]').click(); return $$('#tabla-control tbody tr').length`) === 2);
-ok('admin: nuevo registro', await ev(`$('#nuevo-registro').click(); await pausa(400); escribir('#m-nombre', 'Pedro Gómez'); escribir('#m-detalle', 'Candidato Registrado'); $('#form-registro-admin').requestSubmit(); await pausa(400); return $$('#tabla-control tbody tr').length === 3 && $('#estado-control').textContent.includes('Pedro Gómez')`));
+ok('admin: nuevo registro', await ev(`$('#nuevo-registro').click(); await pausa(400); escribir('#m-nombre', 'Pedro Gómez'); escribir('#m-detalle', 'Candidato Registrado'); $('#form-registro-admin').requestSubmit(); await pausa(400); return $$('#tabla-control tbody tr').length === 3 && ultimoAviso().includes('Pedro Gómez')`));
 ok('admin: deshabilitar usuario', await ev(`$('[data-accion=deshabilitar]').click(); return $('#tabla-control tbody tr').textContent.includes('Deshabilitado')`));
-ok('admin: restablecer contraseña', await ev(`$$('[data-accion=clave]')[1].click(); return $('#estado-control').textContent.includes('carlos.v@correo.com')`));
+ok('admin: restablecer contraseña', await ev(`$$('[data-accion=clave]')[1].click(); return ultimoAviso().includes('carlos.v@correo.com')`));
 ok('admin: editar empresa', await ev(`$('[data-filtro=empresa]').click(); $('[data-accion=editar]').click(); await pausa(400); escribir('#m-nombre', 'Auto Life Corporation'); $('#form-registro-admin').requestSubmit(); await pausa(400); return $('#tabla-control tbody').textContent.includes('Auto Life Corporation')`));
 ok('admin: suspender empresa', await ev(`$('[data-accion=suspender]').click(); return $('#tabla-control tbody tr').textContent.includes('Suspendida')`));
 ok('admin: eliminar pide confirmación', await ev(`$('[data-filtro=vacante]').click(); $('[data-accion=eliminar]').click(); await pausa(400); const visible = $('#modal-confirmar').classList.contains('show'); $('#modal-confirmar .btn-neo-secondary').click(); await pausa(400); return visible && $$('#tabla-control tbody tr').length === 2`));
 ok('admin: eliminar confirmado', await ev(`$('[data-accion=eliminar]').click(); await pausa(400); $('#confirmar-si').click(); await pausa(400); return $$('#tabla-control tbody tr').length`) === 1);
-ok('admin: exportar CSV', await ev(`$('[data-filtro=""]').click(); $('#exportar').click(); return $('#estado-control').textContent`) === 'Se exportaron 6 registros.');
+ok('admin: exportar CSV', await ev(`$('[data-filtro=""]').click(); $('#exportar').click(); return ultimoAviso()`) === 'Se exportaron 6 registros.');
 ok('admin: aprobar reporte', await ev(`$('[data-decision=aprobar]').click(); await pausa(50); return $('#pendientes').textContent + '|' + $('#total-reportes').textContent`) === '1 Pendiente de Revisión|8');
 ok('admin: eliminar reporte con confirmación', await ev(`$('[data-decision=eliminar]').click(); await pausa(400); $('#confirmar-si').click(); await pausa(400); return !$('#bandeja-vacia').hidden && $('#total-reportes').textContent === '7'`));
-ok('admin: configuración', await ev(`$('#configuracion form').requestSubmit(); return $('#configuracion [role=status]').textContent`) === 'Configuración guardada.');
+ok('admin: configuración', await ev(`$('#configuracion form').requestSubmit(); return ultimoAviso()`) === 'Configuración guardada.');
+
+// ---------- Experiencia de usuario ----------
+await ir('index.html'); await limpiarSesion(); await ir('index.html');
+ok('UX: «Saltar al contenido» lleva al contenido principal', await ev(`const s = $('.saltar'); s.focus(); return document.activeElement === s && s.getAttribute('href') === '#' + $('main').id`));
+ok('UX: barra de navegación fija', await ev(`return getComputedStyle($('#navbar')).position === 'sticky'`));
+ok('UX: ver u ocultar contraseña', await ev(`const c = $('#login-clave'); const b = c.closest('.input-group').querySelector('button'); b.click(); const visible = c.type === 'text'; b.click(); return visible && c.type === 'password'`));
+ok('UX: error en español debajo del campo', await ev(`escribir('#login-correo', 'malo'); $('#form-login').requestSubmit(); return $('#login-correo-error')?.textContent.startsWith('Escribe un correo válido') && $('#login-correo').getAttribute('aria-invalid') === 'true'`));
+ok('UX: el error desaparece al corregir', await ev(`escribir('#login-correo', 'bien@correo.com'); return !$('#login-correo-error') && $('#login-correo').getAttribute('aria-invalid') === 'false'`));
+await ir('admin.html');
+ok('UX: «Volver arriba» aparece al bajar', await ev(`const b = $('.boton-subir'); const antes = b.hidden; scrollTo(0, 5000); await pausa(150); return antes && !b.hidden`));
+ok('UX: admin muestra el filtro aplicado', await ev(`$('[data-filtro=empresa]').click(); const f = $('#filtro-activo'); const visto = !f.hidden && f.textContent.includes('Empresas'); $('[data-ver-todos]').click(); return visto && f.hidden && $$('#tabla-control tbody tr').length === 6`));
+await ir('resultados.html?modalidad=Remoto&sector=Tecnolog%C3%ADa');
+ok('UX: resultados lee los filtros de la URL', await ev(`return $('#fm-2').checked && $('#fs-0').checked && $('#conteo').textContent === '1 empleo encontrado'`));
+ok('UX: etiquetas de filtros aplicados', await ev(`return $$('#filtros-activos .badge-neo').length`) === 2);
+ok('UX: quitar un filtro desde su etiqueta', await ev(`$('#filtros-activos .badge-neo').click(); return $$('#filtros-activos .badge-neo').length === 1 && !$('#fs-0').checked && !location.search.includes('sector')`));
+ok('UX: tarjeta completa abre la oferta', await ev(`return !!$('.oferta .stretched-link') && getComputedStyle($('.oferta')).position === 'relative'`));
+ok('UX: guardar oferta desde resultados', await ev(`const b = $('[data-guardar-oferta]'); b.click(); return b.getAttribute('aria-pressed') === 'true' && ultimoAviso().startsWith('Oferta guardada')`));
+await ir('perfil-usuario.html');
+ok('UX: la oferta guardada aparece en Mi perfil', await ev(`return $$('#lista-guardadas li').length === 1 && $('#lista-guardadas').textContent.includes('Desarrollador Fullstack')`));
+ok('UX: quitar de guardadas', await ev(`$('#lista-guardadas [data-guardar-oferta]').click(); return $$('#lista-guardadas li').length === 0 && !$('#sin-guardadas').hidden`));
+ok('UX: contador de caracteres', await ev(`escribir('#v-comentario', 'Hola mundo'); return $('#v-comentario + .contador').textContent`) === '10 / 1000 caracteres');
+await ir('publicar-oferta.html');
+ok('UX: guardar borrador', await ev(`escribir('#o-titulo', 'Oferta en borrador'); $('#guardar-borrador').click(); return ultimoAviso().startsWith('Borrador guardado')`));
+await ir('publicar-oferta.html');
+ok('UX: el borrador se recupera al volver', await ev(`return $('#o-titulo').value === 'Oferta en borrador' && $('[data-espejo=titulo]').textContent === 'Oferta en borrador' && ultimoAviso().startsWith('Recuperamos')`));
+await ir('foros.html');
+ok('UX: foros ordena por más respuestas', await ev(`elegir('#orden-hilos', 'respuestas'); return $('.hilo h2').textContent.startsWith('Consejos para negociar')`));
+await ir('foros.html', 390);
+ok('UX: en celular los filtros se abren en panel lateral', await ev(`const panel = $('#panel-filtros'); const oculto = !panel.classList.contains('show'); $('[data-bs-target="#panel-filtros"][data-bs-toggle]').click(); await pausa(500); return oculto && panel.classList.contains('show')`));
 
 // ---------- Login por rol ----------
 for (const [rol, destino] of [['empresa', 'panel-empresa.html'], ['admin', 'admin.html'], ['candidato', 'perfil-usuario.html']]) {

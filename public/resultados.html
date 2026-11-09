@@ -47,65 +47,81 @@
     </form>
 
     <div class="row g-4">
-      <!-- Filtros adicionales -->
+      <!-- Filtros adicionales: columna en escritorio, panel lateral en celular -->
       <aside class="col-lg-3">
-        <form id="filtros" class="neo-card p-3">
-          <h2 class="h5 mb-3">Filtrar resultados</h2>
-          <fieldset class="mb-3">
-            <legend class="form-label">Nivel de experiencia</legend>
-            <div class="form-check"><input class="form-check-input" type="checkbox" name="experiencia" value="Sin experiencia" id="fx-0"><label class="form-check-label" for="fx-0">Sin experiencia</label></div>
-            <div class="form-check"><input class="form-check-input" type="checkbox" name="experiencia" value="Junior" id="fx-1"><label class="form-check-label" for="fx-1">Junior (0 a 2 años)</label></div>
-            <div class="form-check"><input class="form-check-input" type="checkbox" name="experiencia" value="Intermedio" id="fx-2"><label class="form-check-label" for="fx-2">Intermedio (2 a 4 años)</label></div>
-            <div class="form-check"><input class="form-check-input" type="checkbox" name="experiencia" value="Senior" id="fx-3"><label class="form-check-label" for="fx-3">Senior (5 años o más)</label></div>
-          </fieldset>
-          <fieldset class="mb-3">
-            <legend class="form-label">Sector laboral</legend>
-            <div class="form-check"><input class="form-check-input" type="checkbox" name="sector" value="Tecnología" id="fs-0"><label class="form-check-label" for="fs-0">Tecnología</label></div>
-            <div class="form-check"><input class="form-check-input" type="checkbox" name="sector" value="Diseño" id="fs-1"><label class="form-check-label" for="fs-1">Diseño</label></div>
-            <div class="form-check"><input class="form-check-input" type="checkbox" name="sector" value="Administración y finanzas" id="fs-2"><label class="form-check-label" for="fs-2">Administración y finanzas</label></div>
-            <div class="form-check"><input class="form-check-input" type="checkbox" name="sector" value="Marketing" id="fs-3"><label class="form-check-label" for="fs-3">Marketing</label></div>
-          </fieldset>
-          <fieldset class="mb-3">
-            <legend class="form-label">Tipo de contrato</legend>
-            <div class="form-check"><input class="form-check-input" type="checkbox" name="contrato" value="Tiempo completo" id="fc-0"><label class="form-check-label" for="fc-0">Tiempo completo</label></div>
-            <div class="form-check"><input class="form-check-input" type="checkbox" name="contrato" value="Medio tiempo" id="fc-1"><label class="form-check-label" for="fc-1">Medio tiempo</label></div>
-            <div class="form-check"><input class="form-check-input" type="checkbox" name="contrato" value="Por proyecto" id="fc-2"><label class="form-check-label" for="fc-2">Por proyecto</label></div>
-            <div class="form-check"><input class="form-check-input" type="checkbox" name="contrato" value="Pasantía" id="fc-3"><label class="form-check-label" for="fc-3">Pasantía</label></div>
-          </fieldset>
-          <fieldset class="mb-3">
-            <legend class="form-label">Tipo de trabajo</legend>
-            <div class="form-check"><input class="form-check-input" type="checkbox" name="modalidad" value="Presencial" id="fm-0"><label class="form-check-label" for="fm-0">Presencial</label></div>
-            <div class="form-check"><input class="form-check-input" type="checkbox" name="modalidad" value="Híbrido" id="fm-1"><label class="form-check-label" for="fm-1">Híbrido</label></div>
-            <div class="form-check"><input class="form-check-input" type="checkbox" name="modalidad" value="Remoto" id="fm-2"><label class="form-check-label" for="fm-2">Remoto</label></div>
-          </fieldset>
-          <label class="form-label" for="f-salario">Salario mínimo</label>
-          <select id="f-salario" name="salario" class="form-select mb-3">
-            <option value="">Cualquiera</option>
-            <option value="500">Desde $500</option>
-            <option value="1000">Desde $1,000</option>
-            <option value="1500">Desde $1,500</option>
-          </select>
-          <button type="reset" class="btn btn-neo-secondary btn-sm w-100">Limpiar filtros</button>
-        </form>
+        <div class="offcanvas-lg offcanvas-start" tabindex="-1" id="panel-filtros" aria-labelledby="t-panel-filtros">
+          <div class="offcanvas-header border-bottom border-dark">
+            <h2 id="t-panel-filtros" class="h5 mb-0">Filtrar resultados</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#panel-filtros" aria-label="Cerrar filtros"></button>
+          </div>
+          <div class="offcanvas-body p-3 p-lg-0 d-block">
+            <form id="filtros" class="neo-card p-3">
+              <h2 class="h5 mb-3 d-none d-lg-block">Filtrar resultados</h2>
+              <fieldset class="mb-3">
+                <legend class="form-label">Nivel de experiencia</legend>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="experiencia" value="Sin experiencia" id="fx-0"><label class="form-check-label" for="fx-0">Sin experiencia</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="experiencia" value="Junior" id="fx-1"><label class="form-check-label" for="fx-1">Junior (0 a 2 años)</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="experiencia" value="Intermedio" id="fx-2"><label class="form-check-label" for="fx-2">Intermedio (2 a 4 años)</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="experiencia" value="Senior" id="fx-3"><label class="form-check-label" for="fx-3">Senior (5 años o más)</label></div>
+              </fieldset>
+              <fieldset class="mb-3">
+                <legend class="form-label">Sector laboral</legend>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="sector" value="Tecnología" id="fs-0"><label class="form-check-label" for="fs-0">Tecnología</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="sector" value="Diseño" id="fs-1"><label class="form-check-label" for="fs-1">Diseño</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="sector" value="Administración y finanzas" id="fs-2"><label class="form-check-label" for="fs-2">Administración y finanzas</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="sector" value="Marketing" id="fs-3"><label class="form-check-label" for="fs-3">Marketing</label></div>
+              </fieldset>
+              <fieldset class="mb-3">
+                <legend class="form-label">Tipo de contrato</legend>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="contrato" value="Tiempo completo" id="fc-0"><label class="form-check-label" for="fc-0">Tiempo completo</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="contrato" value="Medio tiempo" id="fc-1"><label class="form-check-label" for="fc-1">Medio tiempo</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="contrato" value="Por proyecto" id="fc-2"><label class="form-check-label" for="fc-2">Por proyecto</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="contrato" value="Pasantía" id="fc-3"><label class="form-check-label" for="fc-3">Pasantía</label></div>
+              </fieldset>
+              <fieldset class="mb-3">
+                <legend class="form-label">Tipo de trabajo</legend>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="modalidad" value="Presencial" id="fm-0"><label class="form-check-label" for="fm-0">Presencial</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="modalidad" value="Híbrido" id="fm-1"><label class="form-check-label" for="fm-1">Híbrido</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="modalidad" value="Remoto" id="fm-2"><label class="form-check-label" for="fm-2">Remoto</label></div>
+              </fieldset>
+              <label class="form-label" for="f-salario">Salario mínimo</label>
+              <select id="f-salario" name="salario" class="form-select mb-3">
+                <option value="">Cualquiera</option>
+                <option value="500">Desde $500</option>
+                <option value="1000">Desde $1,000</option>
+                <option value="1500">Desde $1,500</option>
+              </select>
+              <div class="d-grid gap-2">
+                <button type="reset" class="btn btn-neo-secondary btn-sm">Limpiar filtros</button>
+                <button type="button" class="btn btn-neo-primary btn-sm d-lg-none" data-bs-dismiss="offcanvas" data-bs-target="#panel-filtros">Ver resultados</button>
+              </div>
+            </form>
+          </div>
+        </div>
       </aside>
 
       <!-- Lista de trabajos -->
       <section class="col-lg-9" aria-label="Lista de empleos">
-        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
           <p id="conteo" class="fw-bold mb-0" role="status"></p>
           <div class="d-flex align-items-center gap-2">
+            <button type="button" class="btn btn-neo-secondary btn-sm d-lg-none" data-bs-toggle="offcanvas" data-bs-target="#panel-filtros" aria-controls="panel-filtros">
+              <i class="bi bi-funnel" aria-hidden="true"></i> Filtros <span id="num-filtros" class="badge rounded-pill text-bg-dark ms-1" hidden></span>
+            </button>
             <label class="form-label mb-0" for="r-orden">Ordenar por</label>
-            <select id="r-orden" class="form-select form-select-sm w-auto">
+            <select id="r-orden" name="orden" class="form-select form-select-sm w-auto">
               <option value="fecha">Más recientes</option>
               <option value="salario">Mayor salario</option>
             </select>
           </div>
         </div>
+        <div id="filtros-activos" class="d-flex flex-wrap align-items-center gap-2 mb-3" aria-label="Filtros aplicados"></div>
         <div id="lista-ofertas" class="d-grid gap-3"></div>
         <div id="sin-ofertas" class="neo-card p-4 text-center" hidden>
           <i class="bi bi-search fs-2 text-ocean" aria-hidden="true"></i>
           <p class="fw-bold mb-1">No encontramos empleos con esos filtros.</p>
-          <p class="small text-secondary mb-0">Prueba con otra palabra clave o limpia los filtros.</p>
+          <p class="small text-secondary">Prueba con otra palabra clave o quita algunos filtros.</p>
+          <button type="button" class="btn btn-neo-primary btn-sm" data-limpiar-todo>Ver todas las ofertas</button>
         </div>
       </section>
     </div>
@@ -121,19 +137,61 @@
     const campoQ = document.getElementById('r-q');
     const campoUbicacion = document.getElementById('r-ubicacion');
     const campoOrden = document.getElementById('r-orden');
+    const GRUPOS = ['experiencia', 'sector', 'contrato', 'modalidad'];
     const marcados = nombre => [...filtros.querySelectorAll(`[name="${nombre}"]:checked`)].map(c => c.value);
 
-    // Lo que viene desde la búsqueda de Inicio
-    campoQ.value = parametro('q') ?? '';
-    campoUbicacion.value = parametro('ubicacion') ?? '';
-    filtros.salario.value = parametro('salario') ?? '';
-    for (const nombre of ['experiencia', 'modalidad']) {
-      filtros.querySelectorAll(`[name="${nombre}"]`).forEach(c => c.checked = c.value === parametro(nombre));
+    // La búsqueda vive en la URL: se puede compartir, guardar en favoritos y sobrevive al recargar
+    const enUrl = new URLSearchParams(location.search);
+    campoQ.value = enUrl.get('q') ?? '';
+    campoUbicacion.value = enUrl.get('ubicacion') ?? '';
+    filtros.salario.value = enUrl.get('salario') ?? '';
+    campoOrden.value = enUrl.get('orden') ?? 'fecha';
+    for (const nombre of GRUPOS) {
+      const valores = enUrl.getAll(nombre);
+      filtros.querySelectorAll(`[name="${nombre}"]`).forEach(c => c.checked = valores.includes(c.value));
+    }
+
+    function guardarEnUrl() {
+      const p = new URLSearchParams();
+      if (campoQ.value.trim()) p.set('q', campoQ.value.trim());
+      if (campoUbicacion.value) p.set('ubicacion', campoUbicacion.value);
+      GRUPOS.forEach(nombre => marcados(nombre).forEach(v => p.append(nombre, v)));
+      if (filtros.salario.value) p.set('salario', filtros.salario.value);
+      if (campoOrden.value !== 'fecha') p.set('orden', campoOrden.value);
+      history.replaceState(null, '', `${location.pathname}${p.size ? '?' + p : ''}`);
+    }
+
+    // Etiquetas con los filtros aplicados; cada una se quita con un clic
+    function pintarFiltrosActivos() {
+      const activos = [];
+      if (campoQ.value.trim()) activos.push([`“${campoQ.value.trim()}”`, () => { campoQ.value = ''; }]);
+      if (campoUbicacion.value) activos.push([campoUbicacion.value, () => { campoUbicacion.value = ''; }]);
+      for (const nombre of GRUPOS) {
+        filtros.querySelectorAll(`[name="${nombre}"]:checked`).forEach(c => activos.push([c.value, () => { c.checked = false; }]));
+      }
+      if (filtros.salario.value) activos.push([filtros.salario.selectedOptions[0].text, () => { filtros.salario.value = ''; }]);
+      const zona = document.getElementById('filtros-activos');
+      zona.replaceChildren(...activos.map(([texto, quitar]) => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'badge-neo badge-neo-ocean';
+        chip.setAttribute('aria-label', `Quitar filtro ${texto}`);
+        chip.innerHTML = `${esc(texto)} <i class="bi bi-x-lg" aria-hidden="true"></i>`;
+        chip.addEventListener('click', () => { quitar(); pintar(); });
+        return chip;
+      }));
+      if (activos.length > 1) {
+        zona.insertAdjacentHTML('beforeend', '<button type="button" class="btn btn-link btn-sm p-0 shadow-none border-0" data-limpiar-todo>Quitar todos</button>');
+      }
+      const contador = document.getElementById('num-filtros');
+      const enPanel = GRUPOS.reduce((n, g) => n + marcados(g).length, 0) + (filtros.salario.value ? 1 : 0);
+      contador.hidden = enPanel === 0;
+      contador.textContent = enPanel;
     }
 
     function pintar() {
       const consulta = normalizar(campoQ.value);
-      const [experiencia, sector, contrato, modalidad] = ['experiencia', 'sector', 'contrato', 'modalidad'].map(marcados);
+      const [experiencia, sector, contrato, modalidad] = GRUPOS.map(marcados);
       const minimo = Number(filtros.salario.value) || 0;
       const enGrupo = (lista, valor) => !lista.length || lista.includes(valor);
       const ofertas = OFERTAS.filter(o =>
@@ -149,13 +207,16 @@
       document.getElementById('conteo').textContent = `${ofertas.length} ${ofertas.length === 1 ? 'empleo encontrado' : 'empleos encontrados'}`;
       document.getElementById('sin-ofertas').hidden = ofertas.length > 0;
       document.getElementById('lista-ofertas').innerHTML = ofertas.map(o => `
-        <article class="neo-card p-3 oferta">
+        <article class="neo-card p-3 oferta tarjeta-accion">
           <div class="d-flex flex-wrap justify-content-between gap-2">
             <div>
-              <h2 class="h5 mb-1"><a class="text-reset" href="detalle-oferta.html?id=${o.id}">${esc(o.titulo)}</a></h2>
+              <h2 class="h5 mb-1"><a class="text-reset stretched-link" href="detalle-oferta.html?id=${o.id}">${esc(o.titulo)}</a></h2>
               <p class="text-secondary mb-2"><i class="bi bi-building me-1" aria-hidden="true"></i>${esc(o.empresa)} · <i class="bi bi-geo-alt me-1" aria-hidden="true"></i>${esc(o.ubicacion)}</p>
             </div>
-            <span class="small text-secondary">Publicado: ${formatoFecha(o.fecha)}</span>
+            <div class="d-flex align-items-start gap-2">
+              <span class="small text-secondary">Publicado: ${formatoFecha(o.fecha)}</span>
+              <button type="button" class="btn btn-neo-secondary btn-sm sobre-enlace" data-guardar-oferta="${o.id}" data-solo-icono aria-label="Guardar oferta ${esc(o.titulo)}"></button>
+            </div>
           </div>
           <div class="d-flex flex-wrap align-items-center gap-2">
             <span class="badge-neo badge-neo-community">${esc(o.modalidad)}</span>
@@ -163,14 +224,23 @@
             <span class="badge-neo badge-neo-warning">${esc(o.experiencia)}</span>
             <span class="badge-neo badge-neo-ocean">${esc(o.sector)}</span>
             <span class="fw-bold text-mar ms-md-auto">${formatoSalario(o)}</span>
-            <a class="btn btn-neo-primary btn-sm" href="detalle-oferta.html?id=${o.id}">Ver oferta</a>
+            <span class="btn btn-neo-primary btn-sm" aria-hidden="true">Ver oferta</span>
           </div>
         </article>`).join('');
+      marcarGuardadas();
+      pintarFiltrosActivos();
+      guardarEnUrl();
     }
 
     document.getElementById('form-busqueda').addEventListener('submit', evento => { evento.preventDefault(); pintar(); });
     [filtros, campoQ, campoUbicacion, campoOrden].forEach(control => control.addEventListener('input', pintar));
     filtros.addEventListener('reset', () => setTimeout(pintar));
+    document.addEventListener('click', evento => {
+      if (!evento.target.closest('[data-limpiar-todo]')) return;
+      campoQ.value = '';
+      campoUbicacion.value = '';
+      filtros.reset();
+    });
     pintar();
   </script>
 </body>

@@ -134,6 +134,7 @@
     document.querySelectorAll('[data-estado]').forEach(boton => boton.addEventListener('click', () => {
       candidato.estado = boton.dataset.estado;
       pintarEstado();
+      notificar(`Postulación de ${candidato.nombre}: ${ESTADOS[candidato.estado][0].toLowerCase()}.`);
     }));
     pintarEstado();
   </script>

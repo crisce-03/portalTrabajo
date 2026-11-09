@@ -99,19 +99,19 @@
         <h2 id="t-info" class="h5 mb-3">Todo lo que necesitas en un solo portal</h2>
         <div class="row g-3">
           <div class="col-md-4">
-            <article class="neo-card p-3 h-100 d-flex flex-column">
+            <article class="neo-card p-3 h-100 d-flex flex-column tarjeta-accion">
               <span class="badge-neo badge-neo-ocean align-self-start mb-2"><i class="bi bi-person-badge" aria-hidden="true"></i> Candidatos</span>
               <h3 class="h6">Crea tu perfil y sube tu CV</h3>
               <p class="small text-secondary">Postúlate con un clic, recibe alertas y da seguimiento a tus solicitudes.</p>
-              <a class="btn btn-neo-secondary btn-sm align-self-start mt-auto" href="registro.html">Crear cuenta</a>
+              <a class="btn btn-neo-secondary btn-sm align-self-start mt-auto stretched-link" href="registro.html">Crear cuenta</a>
             </article>
           </div>
           <div class="col-md-4">
-            <article class="neo-card p-3 h-100 d-flex flex-column">
+            <article class="neo-card p-3 h-100 d-flex flex-column tarjeta-accion">
               <span class="badge-neo badge-neo-salary align-self-start mb-2"><i class="bi bi-building" aria-hidden="true"></i> Empresas</span>
               <h3 class="h6">Publica vacantes</h3>
               <p class="small text-secondary">Llega a candidatos calificados y revisa sus postulaciones desde tu panel.</p>
-              <a class="btn btn-neo-secondary btn-sm align-self-start mt-auto" href="registro.html?tipo=empresa">Registrar empresa</a>
+              <a class="btn btn-neo-secondary btn-sm align-self-start mt-auto stretched-link" href="registro.html?tipo=empresa">Registrar empresa</a>
             </article>
           </div>
           <div class="col-md-4">
@@ -149,17 +149,18 @@
       .sort((a, b) => b.fecha.localeCompare(a.fecha)).slice(0, 3)
       .map(o => `
         <div class="col-md-4">
-          <article class="neo-card p-3 h-100 d-flex flex-column">
-            <div class="d-flex flex-wrap gap-2 mb-2">
+          <article class="neo-card p-3 h-100 d-flex flex-column tarjeta-accion">
+            <div class="d-flex flex-wrap align-items-start gap-2 mb-2">
               <span class="badge-neo badge-neo-neutral">${esc(o.modalidad)}</span>
               <span class="badge-neo badge-neo-ocean">${esc(o.sector)}</span>
+              <button type="button" class="btn btn-neo-secondary btn-sm ms-auto sobre-enlace" data-guardar-oferta="${o.id}" data-solo-icono aria-label="Guardar oferta ${esc(o.titulo)}"></button>
             </div>
-            <h3 class="h6 mb-1"><a class="text-reset" href="detalle-oferta.html?id=${o.id}">${esc(o.titulo)}</a></h3>
+            <h3 class="h6 mb-1"><a class="text-reset stretched-link" href="detalle-oferta.html?id=${o.id}">${esc(o.titulo)}</a></h3>
             <p class="small text-secondary mb-1">${esc(o.empresa)} · ${esc(o.ubicacion)}</p>
             <p class="small fw-bold text-mar mb-3">${formatoSalario(o)}</p>
             <div class="d-flex justify-content-between align-items-center mt-auto">
               <span class="small text-secondary">Publicado: ${formatoFecha(o.fecha)}</span>
-              <a class="btn btn-neo-primary btn-sm" href="detalle-oferta.html?id=${o.id}">Ver oferta</a>
+              <span class="btn btn-neo-primary btn-sm" aria-hidden="true">Ver oferta</span>
             </div>
           </article>
         </div>`).join('');

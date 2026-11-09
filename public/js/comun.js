@@ -70,9 +70,41 @@ document.getElementById('navbar').innerHTML = `
     </div>
   </nav>`;
 
+// "Saltar al contenido" para quien navega con teclado o lector de pantalla
+const principal = document.querySelector('main');
+principal.id ||= 'contenido';
+principal.tabIndex = -1;
+document.body.insertAdjacentHTML('afterbegin',
+  `<a class="visually-hidden-focusable saltar btn btn-neo-primary" href="#${principal.id}">Saltar al contenido</a>`);
+
 const pie = document.getElementById('pie');
-pie.className = 'pie-neo mt-4';
-pie.innerHTML = '<div class="container-xl py-3">PortalTrabajo © 2026 · Proyecto DPWA — UNICAES</div>';
+pie.className = 'pie-neo mt-5';
+pie.innerHTML = `
+  <div class="container-xl py-4">
+    <div class="row g-4">
+      <div class="col-md-4">
+        <p class="fw-bold font-inter d-flex align-items-center gap-2 mb-2"><span class="logo-neo"><i class="bi bi-briefcase-fill" aria-hidden="true"></i></span>PortalTrabajo</p>
+        <p class="mb-0">Conectamos talento y empresas en El Salvador.</p>
+      </div>
+      <nav class="col-6 col-md-2" aria-label="Candidatos">
+        <p class="fw-bold mb-2">Candidatos</p>
+        <ul class="list-unstyled d-grid gap-1 mb-0"><li><a href="resultados.html">Buscar empleo</a></li><li><a href="registro.html">Crear cuenta</a></li><li><a href="perfil-usuario.html">Mi perfil</a></li></ul>
+      </nav>
+      <nav class="col-6 col-md-2" aria-label="Empresas">
+        <p class="fw-bold mb-2">Empresas</p>
+        <ul class="list-unstyled d-grid gap-1 mb-0"><li><a href="publicar-oferta.html">Publicar empleos</a></li><li><a href="panel-empresa.html">Panel empresarial</a></li><li><a href="registro.html?tipo=empresa">Registrar empresa</a></li></ul>
+      </nav>
+      <nav class="col-6 col-md-2" aria-label="Comunidad">
+        <p class="fw-bold mb-2">Comunidad</p>
+        <ul class="list-unstyled d-grid gap-1 mb-0"><li><a href="recursos.html">Recursos</a></li><li><a href="noticias.html">Noticias</a></li><li><a href="foros.html">Foros</a></li><li><a href="valoraciones.html">Valoraciones</a></li></ul>
+      </nav>
+      <div class="col-6 col-md-2">
+        <p class="fw-bold mb-2">Ayuda</p>
+        <a href="mailto:soporte@portaltrabajo.com">soporte@portaltrabajo.com</a>
+      </div>
+    </div>
+    <p class="small mt-4 mb-0">PortalTrabajo © 2026 · Proyecto DPWA — UNICAES</p>
+  </div>`;
 
 // ---------- Utilidades ----------
 
@@ -100,13 +132,123 @@ function guardarEn(clave, elemento) {
   try { sessionStorage.setItem(clave, JSON.stringify([...guardados(clave), elemento])); } catch { /* solo dura esta página */ }
 }
 
-// Muestra un mensaje en el [role=status] del formulario
+// Muestra un mensaje en el [role=status] del formulario (errores)
 function avisar(form, texto) {
   const estado = form?.querySelector('[role="status"]');
   if (estado) estado.textContent = texto;
 }
 
+// Avisos flotantes para confirmar acciones, visibles aunque el usuario esté en otra parte de la página
+const zonaAvisos = document.createElement('div');
+zonaAvisos.className = 'toast-container position-fixed end-0 p-3 zona-avisos';
+document.body.append(zonaAvisos);
+function notificar(texto, tipo = 'exito') {
+  const iconos = { exito: 'check-circle-fill', info: 'info-circle-fill', error: 'exclamation-triangle-fill' };
+  const aviso = document.createElement('div');
+  aviso.className = `toast toast-neo toast-${tipo}`;
+  aviso.setAttribute('role', tipo === 'error' ? 'alert' : 'status');
+  aviso.innerHTML = `
+    <div class="d-flex align-items-center gap-2 p-3">
+      <i class="bi bi-${iconos[tipo]} fs-5" aria-hidden="true"></i>
+      <span class="me-auto"></span>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Cerrar aviso"></button>
+    </div>`;
+  aviso.querySelector('span').textContent = texto;
+  zonaAvisos.append(aviso);
+  aviso.addEventListener('hidden.bs.toast', () => aviso.remove());
+  bootstrap.Toast.getOrCreateInstance(aviso, { delay: 4500 }).show();
+}
+
+// Ofertas guardadas: preferencia de cada visitante en su navegador
+// shortcut: localStorage; con la API, POST/DELETE /api/candidatos/me/guardadas
+function ofertasGuardadas() { try { return JSON.parse(localStorage.getItem('ofertasGuardadas')) ?? []; } catch { return []; } }
+function guardarOfertas(lista) { try { localStorage.setItem('ofertasGuardadas', JSON.stringify(lista)); } catch { /* sin almacenamiento */ } }
+function pintarBotonGuardar(boton, guardada) {
+  boton.setAttribute('aria-pressed', String(guardada));
+  boton.innerHTML = `<i class="bi bi-bookmark${guardada ? '-fill' : ''}" aria-hidden="true"></i>`
+    + ('soloIcono' in boton.dataset ? '' : ` ${guardada ? 'Guardada' : 'Guardar oferta'}`);
+}
+// Las páginas que pintan ofertas llaman a esto después de pintar
+function marcarGuardadas() {
+  const lista = ofertasGuardadas();
+  document.querySelectorAll('[data-guardar-oferta]').forEach(b => pintarBotonGuardar(b, lista.includes(Number(b.dataset.guardarOferta))));
+}
+document.addEventListener('click', evento => {
+  const boton = evento.target.closest('[data-guardar-oferta]');
+  if (!boton) return;
+  const id = Number(boton.dataset.guardarOferta);
+  const lista = ofertasGuardadas();
+  const guardada = !lista.includes(id);
+  guardarOfertas(guardada ? [...lista, id] : lista.filter(x => x !== id));
+  marcarGuardadas();
+  notificar(guardada ? 'Oferta guardada. La encontrarás en Mi perfil.' : 'Quitaste la oferta de tus guardadas.', 'info');
+});
+
 // ---------- Formularios ----------
+
+// Ver u ocultar contraseñas
+document.querySelectorAll('input[type="password"]').forEach(campo => {
+  const margenes = [...campo.classList].filter(c => /^m[btxyse]?-/.test(c));
+  const grupo = document.createElement('div');
+  grupo.className = ['input-group', 'has-validation', ...margenes].join(' ');
+  campo.classList.remove(...margenes);
+  campo.before(grupo);
+  grupo.append(campo);
+  const boton = document.createElement('button');
+  boton.type = 'button';
+  boton.className = 'btn btn-neo-secondary';
+  boton.setAttribute('aria-label', 'Mostrar contraseña');
+  boton.setAttribute('aria-pressed', 'false');
+  boton.innerHTML = '<i class="bi bi-eye" aria-hidden="true"></i>';
+  boton.addEventListener('click', () => {
+    const mostrar = campo.type === 'password';
+    campo.type = mostrar ? 'text' : 'password';
+    boton.setAttribute('aria-pressed', String(mostrar));
+    boton.firstElementChild.className = mostrar ? 'bi bi-eye-slash' : 'bi bi-eye';
+  });
+  grupo.append(boton);
+  // el mensaje de error propio del campo debe quedar dentro del grupo para que Bootstrap lo muestre
+  if (grupo.nextElementSibling?.classList.contains('invalid-feedback')) grupo.append(grupo.nextElementSibling);
+});
+
+// Mensaje de error en español debajo de cada campo inválido (si el campo no trae uno propio)
+function mensajeDe(campo) {
+  const v = campo.validity;
+  if (v.valueMissing) {
+    if (campo.type === 'checkbox') return 'Debes marcar esta casilla para continuar.';
+    return campo.tagName === 'SELECT' ? 'Elige una opción.' : 'Este campo es obligatorio.';
+  }
+  if (v.typeMismatch) return campo.type === 'email' ? 'Escribe un correo válido, por ejemplo nombre@correo.com.' : 'Escribe la dirección completa, por ejemplo https://empresa.com.';
+  if (v.tooShort) return `Escribe al menos ${campo.minLength} caracteres (llevas ${campo.value.length}).`;
+  return campo.validationMessage;
+}
+function describir(campo, id, agregar) {
+  const ids = new Set((campo.getAttribute('aria-describedby') ?? '').split(' ').filter(Boolean));
+  if (agregar) ids.add(id); else ids.delete(id);
+  if (ids.size) campo.setAttribute('aria-describedby', [...ids].join(' ')); else campo.removeAttribute('aria-describedby');
+}
+function marcarCampo(campo) {
+  if (!campo.willValidate || !campo.id || campo.type === 'radio') return;
+  const valido = campo.validity.valid;
+  campo.setAttribute('aria-invalid', String(!valido));
+  const propio = [...(campo.closest('.input-group') ?? campo).parentElement.children]
+    .some(e => e.matches('.invalid-feedback:not([data-auto])')) || campo.closest('.input-group')?.querySelector('.invalid-feedback');
+  if (propio) return;
+  const idAviso = `${campo.id}-error`;
+  let aviso = document.getElementById(idAviso);
+  if (valido) { aviso?.remove(); describir(campo, idAviso, false); return; }
+  if (!aviso) {
+    aviso = document.createElement('div');
+    aviso.id = idAviso;
+    aviso.className = 'invalid-feedback d-block';
+    aviso.dataset.auto = '';
+    const ancla = campo.parentElement.matches('.input-group, .d-flex') ? campo.parentElement
+      : campo.type === 'checkbox' ? campo.nextElementSibling ?? campo : campo;
+    ancla.after(aviso);
+    describir(campo, idAviso, true);
+  }
+  aviso.textContent = mensajeDe(campo);
+}
 
 // Formularios con class="needs-validation": validan con HTML5; si todo está bien disparan el evento
 // "enviado" (para la lógica de cada página) y luego van a data-destino o muestran data-exito.
@@ -115,25 +257,28 @@ document.querySelectorAll('form.needs-validation').forEach(form => {
   form.addEventListener('submit', evento => {
     evento.preventDefault();
     form.classList.add('was-validated');
+    [...form.elements].forEach(marcarCampo);
     if (!form.checkValidity()) {
       avisar(form, 'Revisa los campos marcados en rojo.');
       form.querySelector(':invalid')?.focus();
       return;
     }
+    avisar(form, '');
     form.dispatchEvent(new Event('enviado'));
     if (form.dataset.destino) location.href = form.dataset.destino;
-    else if (form.dataset.exito) avisar(form, form.dataset.exito);
+    else if (form.dataset.exito) notificar(form.dataset.exito);
   });
+  const revisar = evento => { if (form.classList.contains('was-validated')) marcarCampo(evento.target); };
+  form.addEventListener('input', revisar);
+  form.addEventListener('change', revisar);
   form.addEventListener('reset', () => {
     form.classList.remove('was-validated');
     avisar(form, '');
+    form.querySelectorAll('[data-auto]').forEach(aviso => aviso.remove());
+    form.querySelectorAll('[aria-invalid]').forEach(campo => campo.removeAttribute('aria-invalid'));
     setTimeout(actualizarEspejos); // el reset cambia los valores después del evento
   });
 });
-
-// Botones que solo confirman una acción (p. ej. "Guardar borrador")
-document.querySelectorAll('[data-aviso]').forEach(boton =>
-  boton.addEventListener('click', () => avisar(boton.closest('form'), boton.dataset.aviso)));
 
 // Vista previa en vivo: un elemento con data-espejo="campo" copia el valor de name="campo"
 function actualizarEspejos() {
@@ -144,15 +289,58 @@ function actualizarEspejos() {
 }
 document.addEventListener('input', actualizarEspejos);
 
-// Archivos (CV): muestra el nombre elegido y rechaza más de 5 MB
+// Archivos (CV): muestra el nombre elegido y valida tipo y tamaño (el servidor debe validarlo de nuevo)
 const MAX_ARCHIVO = 5 * 1024 * 1024;
 document.querySelectorAll('input[type="file"][data-muestra]').forEach(input => {
   input.addEventListener('change', () => {
     const archivo = input.files[0];
     if (!archivo) return;
-    input.setCustomValidity(archivo.size > MAX_ARCHIVO ? 'El archivo supera 5 MB.' : '');
-    document.getElementById(input.dataset.muestra).textContent =
-      input.validity.valid ? archivo.name : `${archivo.name} (supera 5 MB)`;
+    const permitidos = input.accept.split(',').map(e => e.trim().toLowerCase()).filter(Boolean);
+    const extension = archivo.name.slice(archivo.name.lastIndexOf('.')).toLowerCase();
+    const error = permitidos.length && !permitidos.includes(extension) ? `Solo se aceptan archivos ${permitidos.join(', ').toUpperCase()}.`
+      : archivo.size > MAX_ARCHIVO ? 'El archivo supera 5 MB.' : '';
+    input.setCustomValidity(error);
+    document.getElementById(input.dataset.muestra).textContent = error ? `${archivo.name} — ${error}` : archivo.name;
+    if (error) notificar(error, 'error'); else notificar(`Archivo listo: ${archivo.name}`, 'info');
+  });
+});
+
+// Zonas para arrastrar y soltar archivos
+document.querySelectorAll('.dropzone-neo').forEach(zona => {
+  const input = zona.querySelector('input[type="file"]');
+  ['dragenter', 'dragover'].forEach(tipo => zona.addEventListener(tipo, evento => { evento.preventDefault(); zona.classList.add('arrastrando'); }));
+  ['dragleave', 'drop'].forEach(tipo => zona.addEventListener(tipo, () => zona.classList.remove('arrastrando')));
+  zona.addEventListener('drop', evento => {
+    evento.preventDefault();
+    input.files = evento.dataTransfer.files;
+    input.dispatchEvent(new Event('change'));
+  });
+});
+
+// Botón «Volver arriba» en páginas largas
+const botonSubir = document.createElement('button');
+botonSubir.type = 'button';
+botonSubir.className = 'btn btn-neo-primary boton-subir';
+botonSubir.setAttribute('aria-label', 'Volver arriba');
+botonSubir.innerHTML = '<i class="bi bi-arrow-up" aria-hidden="true"></i>';
+botonSubir.hidden = true;
+botonSubir.addEventListener('click', () => { window.scrollTo({ top: 0 }); principal.focus({ preventScroll: true }); });
+document.body.append(botonSubir);
+addEventListener('scroll', () => { botonSubir.hidden = scrollY < 600; }, { passive: true });
+
+// Lo que depende de valores que ponen los scripts de cada página se prepara cuando ya corrieron todos
+document.addEventListener('DOMContentLoaded', () => {
+  actualizarEspejos();
+  marcarGuardadas();
+  // Contador de caracteres en los textos largos
+  document.querySelectorAll('textarea[maxlength]').forEach(area => {
+    const contador = document.createElement('div');
+    contador.className = 'form-text text-end contador';
+    const actualizar = () => { contador.textContent = `${area.value.length} / ${area.maxLength} caracteres`; };
+    area.after(contador);
+    area.addEventListener('input', actualizar);
+    area.form?.addEventListener('reset', () => setTimeout(actualizar));
+    actualizar();
   });
 });
 

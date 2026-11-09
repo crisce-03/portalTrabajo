@@ -103,6 +103,7 @@
       if (!boton) return;
       boton.disabled = true;
       boton.innerHTML = '<i class="bi bi-flag-fill me-1" aria-hidden="true"></i>Reportada para moderación';
+      notificar('Gracias. El equipo de moderación revisará la reseña.', 'info');
     });
 
     [campoBuscar, campoOrden].forEach(control => control.addEventListener('input', pintar));

@@ -94,6 +94,10 @@
               <button id="nuevo-registro" type="button" class="btn btn-neo-primary btn-sm">+ Nuevo Registro</button>
             </div>
           </div>
+          <div id="filtro-activo" class="px-3 py-2 border-bottom small d-flex align-items-center gap-2" style="background:var(--color-primary-soft);" hidden>
+            <i class="bi bi-funnel-fill text-ocean" aria-hidden="true"></i><span></span>
+            <button type="button" class="btn btn-link btn-sm p-0 border-0 shadow-none" data-ver-todos>Ver todos</button>
+          </div>
           <div class="table-responsive">
             <table id="tabla-control" class="table table-neo">
               <thead>
@@ -107,7 +111,6 @@
               <tbody></tbody>
             </table>
           </div>
-          <p id="estado-control" class="small text-mar fw-bold px-3 py-2 mb-0" role="status"></p>
         </section>
 
         <!-- Moderación de foros y reseñas -->
@@ -266,7 +269,6 @@
     const TIPOS = { empresa: ['Empresa', 'ocean'], vacante: ['Vacante', 'community'], usuario: ['Usuario', 'neutral'] };
     const ESTADOS_TIPO = { empresa: ['Verificada', 'Pendiente', 'Suspendida'], vacante: ['Activa', 'Cerrada'], usuario: ['Habilitado', 'Deshabilitado'] };
     const COLOR_ESTADO = { Verificada: 'salary', Activa: 'salary', Habilitado: 'salary', Pendiente: 'warning', Cerrada: 'neutral', Suspendida: 'danger', Deshabilitado: 'danger' };
-    const estadoControl = document.getElementById('estado-control');
     let filtroTipo = '';
 
     const boton = (accion, icono, etiqueta, peligro = false) =>
@@ -297,9 +299,13 @@
     // Menú: gestión de usuarios / empresas / vacantes filtra la tabla ("" = todos)
     document.querySelectorAll('[data-filtro]').forEach(link => link.addEventListener('click', () => {
       filtroTipo = link.dataset.filtro;
-      estadoControl.textContent = '';
+      const indicador = document.getElementById('filtro-activo');
+      indicador.hidden = !filtroTipo;
+      indicador.querySelector('span').textContent = filtroTipo ? `Mostrando solo: ${TIPOS[filtroTipo][0]}s` : '';
       pintarTabla();
     }));
+
+    document.querySelector('[data-ver-todos]').addEventListener('click', () => document.querySelector('[data-filtro=""]').click());
 
     // Confirmación con ventana modal (nunca alert/confirm del navegador)
     function confirmar(texto) {
@@ -338,7 +344,7 @@
       else registros.unshift({ id: Date.now(), tipo: formRegistro.tipo.value, ...datos });
       modalRegistro.hide();
       pintarTabla();
-      estadoControl.textContent = existente ? `Se actualizó «${datos.nombre}».` : `Se creó «${datos.nombre}».`;
+      notificar(existente ? `Se actualizó «${datos.nombre}».` : `Se creó «${datos.nombre}».`);
     });
 
     // Acciones de cada fila
@@ -352,19 +358,19 @@
           return;
         case 'suspender':
           registro.estado = registro.estado === 'Suspendida' ? 'Verificada' : 'Suspendida';
-          estadoControl.textContent = `«${registro.nombre}» ahora está ${registro.estado.toLowerCase()}.`;
+          notificar(`«${registro.nombre}» ahora está ${registro.estado.toLowerCase()}.`);
           break;
         case 'deshabilitar':
           registro.estado = registro.estado === 'Deshabilitado' ? 'Habilitado' : 'Deshabilitado';
-          estadoControl.textContent = `«${registro.nombre}» ahora está ${registro.estado.toLowerCase()}.`;
+          notificar(`«${registro.nombre}» ahora está ${registro.estado.toLowerCase()}.`);
           break;
         case 'clave':
-          estadoControl.textContent = `Se envió un enlace para restablecer la contraseña a ${registro.correo ?? 'su correo registrado'}.`;
+          notificar(`Se envió un enlace para restablecer la contraseña a ${registro.correo ?? 'su correo registrado'}.`);
           return;
         case 'eliminar':
           if (!await confirmar(`¿Eliminar «${registro.nombre}»? Esta acción no se puede deshacer.`)) return;
           registros.splice(registros.indexOf(registro), 1);
-          estadoControl.textContent = `Se eliminó «${registro.nombre}».`;
+          notificar(`Se eliminó «${registro.nombre}».`);
           break;
       }
       pintarTabla();
@@ -382,7 +388,7 @@
       enlace.download = 'registros-portal-trabajo.csv';
       enlace.click();
       URL.revokeObjectURL(enlace.href);
-      estadoControl.textContent = `Se exportaron ${filas.length} registros.`;
+      notificar(`Se exportaron ${filas.length} registros.`);
     });
 
     // Moderación: aprobar o eliminar quita el reporte de la bandeja y actualiza los contadores.
