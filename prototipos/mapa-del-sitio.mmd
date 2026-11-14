@@ -1,0 +1,58 @@
+flowchart LR
+    classDef default fill:#FFFFFF,stroke:#1E293B,stroke-width:1.5px,color:#1E293B
+    home(["MOD-01-HOME<br/>Inicio"])
+
+    subgraph mod01 ["MOD-01 · Inicio y Búsqueda"]
+        signup["MOD-01-SIGNUP<br/>Registro"]
+        results["MOD-01-RESULTS<br/>Resultados de búsqueda"]
+        detail["MOD-01-JOB-DETAIL<br/>Descripción del trabajo"]
+        apply["MOD-01-APPLY<br/>Postulación"]
+        applyok["MOD-01-APPLY-OK<br/>Confirmación"]
+    end
+
+    subgraph mod02 ["MOD-02 · Comunidad y Candidato"]
+        resources["MOD-02-RESOURCES<br/>Centro de recursos"]
+        resource["MOD-02-RESOURCE<br/>Artículo / tutorial"]
+        news["MOD-02-NEWS<br/>Noticias laborales"]
+        forum["MOD-02-FORUM<br/>Foros"]
+        thread["MOD-02-THREAD<br/>Hilo de discusión"]
+        reviews["MOD-02-REVIEWS<br/>Valoraciones de empresas"]
+        dash["MOD-02-USER-DASH<br/>Perfil de usuario"]
+    end
+
+    subgraph mod03 ["MOD-03 · Módulo Empresarial"]
+        cdash["MOD-03-COMPANY-DASH<br/>Panel empresarial"]
+        post["MOD-03-POST-JOB<br/>Publicar oferta"]
+        cedit["MOD-03-COMPANY-EDIT<br/>Datos de la empresa"]
+        applicants["MOD-03-APPLICANTS<br/>Postulaciones recibidas"]
+        cand["MOD-03-CANDIDATE<br/>Revisión de candidatura"]
+    end
+
+    subgraph mod04 ["MOD-04 · Administración y Moderación"]
+        admin["MOD-04-ADMIN-DASH<br/>Panel administrativo"]
+    end
+
+    home --> signup
+    home --> results --> detail --> apply --> applyok
+    home --> resources
+    resources --> resource
+    resources --> news
+    home --> forum --> thread
+    home --> reviews
+    home --> dash
+    home --> post
+    cdash --> post
+    cdash --> cedit
+    cdash --> applicants --> cand
+    home -.->|"Solo administradores"| admin
+
+    classDef hector fill:#FEF3C7,stroke:#D97706,stroke-width:2px
+    class forum,dash,admin hector
+    classDef grupo_mod01 fill:#E0F2FE,stroke:#0369A1
+    class mod01 grupo_mod01
+    classDef grupo_mod02 fill:#DBEAFE,stroke:#1E3A8A
+    class mod02 grupo_mod02
+    classDef grupo_mod03 fill:#CCFBF1,stroke:#0F766E
+    class mod03 grupo_mod03
+    classDef grupo_mod04 fill:#F1F5F9,stroke:#64748B
+    class mod04 grupo_mod04

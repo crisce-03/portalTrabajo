@@ -1,0 +1,264 @@
+{
+  "proyecto": "Portal de Trabajo",
+  "portada": {
+    "titulo": "Portal de Trabajo",
+    "subtitulo": "Requerimientos del Sitio Web — Primera Etapa: Prototipos",
+    "materia": "Proyecto 2do Periodo · Desarrollo de Páginas Web Activas (DPWA)",
+    "facultad": "Facultad de Ingeniería y Arquitectura — UNICAES",
+    "docente": "Ing. Jose Emerson Aguilar",
+    "integrantes": ["Héctor Alejandro García Guevara", "Cris Cerritos", "Axel"],
+    "fecha": "Noviembre 2026"
+  },
+  "justificacion": "Estética Soft Neo-Brutalism con paleta Azul Mar: bordes de 1.5 px y sombras sólidas hacen que cada bloque se lea como una tarjeta independiente y que la jerarquía se entienda incluso en blanco y negro. Los colores se usan con significado: azul mar para acciones, marino para comunidad, verde mar para estados activos y salarios, ámbar para calificaciones y rojo para moderación y acciones destructivas. Inter para títulos y Roboto para texto por su legibilidad en pantalla. Bootstrap 5.3 da una cuadrícula responsiva (se adapta a celular) y componentes que el equipo implementa tal cual en el sitio.",
+  "modulos": {
+    "01": "01 — Inicio y Búsqueda",
+    "02": "02 — Comunidad y Candidato",
+    "03": "03 — Módulo Empresarial",
+    "04": "04 — Administración y Moderación"
+  },
+  "pantallas": [
+    {
+      "id": "MOD-01-HOME", "archivo": "index.html", "titulo": "Página de Inicio",
+      "tipoUsuario": "Visitante / todos los usuarios", "modulo": "01",
+      "preparar": "document.getElementById('boton-login').click()",
+      "objetivo": "Presentar el portal y llevar al usuario a buscar empleo, iniciar sesión o registrarse desde un solo lugar.",
+      "justificacion": "La búsqueda ocupa la parte superior porque es la acción principal; las métricas y las ofertas recientes muestran actividad real del portal.",
+      "callouts": [
+        { "lado": "izq", "titulo": "Búsqueda Destacada:", "texto": "Motor de búsqueda por palabra clave con filtros de ubicación, tipo de trabajo, salario mínimo y nivel de experiencia. Al buscar, envía los criterios a la página de resultados.", "ancla": "#busqueda" },
+        { "lado": "izq", "titulo": "Métricas del Portal:", "texto": "Total de empresas, usuarios, empleos publicados y solicitudes recibidas en el mes, para dar confianza al visitante.", "ancla": "#metricas" },
+        { "lado": "izq", "titulo": "Información del Portal:", "texto": "Accesos para candidatos, empresas y comunidad: crear cuenta, registrar empresa, recursos y foros.", "ancla": "#informacion" },
+        { "lado": "der", "titulo": "Encabezado e Inicio de Sesión:", "texto": "Logo, barra de navegación con las secciones del portal y formulario de inicio de sesión según el tipo de cuenta, junto al botón «Registrarse».", "ancla": "#form-login" },
+        { "lado": "der", "titulo": "Ofertas Recientes:", "texto": "Las tres vacantes más nuevas con empresa, ubicación, salario y fecha; «Ver oferta» abre la descripción completa del trabajo.", "ancla": "#recientes" },
+        { "lado": "der", "titulo": "Empresas Mejor Valoradas:", "texto": "Ranking según las reseñas de los usuarios, con acceso a todas las valoraciones de empresas.", "ancla": "#mejor-valoradas" }
+      ]
+    },
+    {
+      "id": "MOD-01-SIGNUP", "archivo": "registro.html", "titulo": "Registro de Cuenta",
+      "tipoUsuario": "Visitante", "modulo": "01",
+      "objetivo": "Permitir que candidatos y empresas creen su cuenta en el portal.",
+      "justificacion": "Un solo formulario con selector de tipo de cuenta evita duplicar pantallas; los beneficios a la izquierda motivan el registro.",
+      "callouts": [
+        { "lado": "izq", "titulo": "Beneficios por Tipo de Cuenta:", "texto": "Explica qué puede hacer un candidato y una empresa antes de registrarse, con acceso directo para iniciar sesión si ya tiene cuenta.", "ancla": "#beneficios" },
+        { "lado": "der", "titulo": "Tipo de Cuenta:", "texto": "Al elegir Candidato o Empresa el formulario cambia y solo pide los datos necesarios para ese rol.", "ancla": "#form-registro fieldset" },
+        { "lado": "der", "titulo": "Validación de Datos:", "texto": "Verifica correo válido, contraseña de 8 caracteres o más, que ambas contraseñas coincidan y la aceptación de términos.", "ancla": "#r-confirmar" },
+        { "lado": "der", "titulo": "Creación de la Cuenta:", "texto": "Al enviar, la cuenta queda creada y el usuario entra directo a su perfil de candidato o al panel empresarial.", "ancla": "#form-registro button[type=submit]" }
+      ]
+    },
+    {
+      "id": "MOD-01-RESULTS", "archivo": "resultados.html?q=&modalidad=", "titulo": "Resultados de Búsqueda",
+      "tipoUsuario": "Visitante / Candidato", "modulo": "01",
+      "objetivo": "Mostrar las vacantes que coinciden con la búsqueda y permitir refinarlas con filtros.",
+      "justificacion": "Filtros fijos a la izquierda, como pide el requerimiento, y tarjetas con insignias de color por atributo para comparar ofertas de un vistazo.",
+      "callouts": [
+        { "lado": "izq", "titulo": "Motor de Búsqueda:", "texto": "Permite cambiar la palabra clave y la ubicación sin volver al inicio; conserva lo que se buscó en la página principal.", "ancla": "#form-busqueda" },
+        { "lado": "izq", "titulo": "Filtros Adicionales:", "texto": "Filtra por nivel de experiencia, sector laboral, tipo de contrato, tipo de trabajo y salario mínimo; la lista se actualiza al instante.", "ancla": "#filtros" },
+        { "lado": "der", "titulo": "Orden de Resultados:", "texto": "Cuenta los empleos encontrados y ordena por más recientes o por mayor salario.", "ancla": "#r-orden" },
+        { "lado": "der", "titulo": "Lista de Trabajos:", "texto": "Cada resultado muestra título, empresa, ubicación, tipo de trabajo, contrato, salario y fecha de publicación; «Ver oferta» abre el detalle.", "ancla": ".oferta" }
+      ]
+    },
+    {
+      "id": "MOD-01-JOB-DETAIL", "archivo": "detalle-oferta.html?id=302", "titulo": "Descripción del Trabajo",
+      "tipoUsuario": "Visitante / Candidato", "modulo": "01",
+      "objetivo": "Mostrar la información completa de una vacante para que el candidato decida si postularse.",
+      "justificacion": "Los datos clave y los botones de acción van arriba; la descripción a la izquierda y la empresa a la derecha separan la oferta de quien la publica.",
+      "callouts": [
+        { "lado": "izq", "titulo": "Información de la Oferta Laboral:", "texto": "Presenta el puesto, la empresa, ubicación, modalidad, jornada y salario. Permite guardar la oferta o iniciar el proceso de postulación.", "ancla": "#info-oferta" },
+        { "lado": "izq", "titulo": "Descripción del Trabajo:", "texto": "Muestra las responsabilidades, los requisitos y los beneficios ofrecidos, para que el candidato evalúe si cumple con el perfil solicitado.", "ancla": "#descripcion" },
+        { "lado": "der", "titulo": "Información de la Empresa:", "texto": "Datos generales y medios de contacto de la empresa que publica la vacante, con acceso a su perfil público.", "ancla": "#empresa" },
+        { "lado": "der", "titulo": "Valoraciones de la Empresa:", "texto": "Calificación promedio y número de opiniones de otros usuarios sobre la experiencia laboral en la empresa.", "ancla": "#valoracion" },
+        { "lado": "der", "titulo": "Comentarios y Opiniones:", "texto": "Experiencias compartidas por otros profesionales y opción de publicar una valoración sobre la empresa.", "ancla": "#comentarios" }
+      ]
+    },
+    {
+      "id": "MOD-01-APPLY", "archivo": "postulacion.html?id=302", "sesion": "candidato", "titulo": "Postulación a una Oferta",
+      "tipoUsuario": "Candidato registrado", "modulo": "01",
+      "objetivo": "Registrar la candidatura del usuario a una vacante con sus datos, su CV y un mensaje de presentación.",
+      "justificacion": "Formulario por etapas en una sola página para no perder datos; el resumen fijo a la derecha recuerda a qué vacante se aplica. Si el visitante no ha iniciado sesión, se le pide hacerlo antes de enviar.",
+      "callouts": [
+        { "lado": "izq", "titulo": "Etapas de Postulación:", "texto": "Muestra las fases del proceso: información personal, currículum y presentación, y confirmación del envío.", "ancla": "#etapas" },
+        { "lado": "izq", "titulo": "Información del Candidato:", "texto": "Datos personales y de contacto, cargados desde el perfil, para que la empresa pueda identificar y contactar al candidato.", "ancla": "#datos-candidato" },
+        { "lado": "izq", "titulo": "Currículum y Presentación:", "texto": "Permite adjuntar el CV (PDF o DOCX, máximo 5 MB) y escribir un mensaje que destaque habilidades y experiencia.", "ancla": "#cv-presentacion" },
+        { "lado": "izq", "titulo": "Confirmación y Envío:", "texto": "El candidato confirma sus datos y acepta las condiciones; el botón valida todo antes de registrar la postulación.", "ancla": "#confirmar-envio" },
+        { "lado": "der", "titulo": "Resumen de la Oferta:", "texto": "Información principal del empleo seleccionado: empresa, ubicación, modalidad, jornada, salario e ID de la vacante.", "ancla": "#resumen-oferta" },
+        { "lado": "der", "titulo": "Datos de Verificación:", "texto": "Recomendaciones que el candidato debe revisar antes de enviar su solicitud.", "ancla": "#antes-enviar" }
+      ]
+    },
+    {
+      "id": "MOD-01-APPLY-OK", "archivo": "postulacion-enviada.html?id=302", "sesion": "candidato", "titulo": "Confirmación de Postulación",
+      "tipoUsuario": "Candidato registrado", "modulo": "01",
+      "objetivo": "Confirmar al candidato que su solicitud fue recibida y orientarlo al siguiente paso.",
+      "justificacion": "Mensaje de éxito en verde mar y resumen en una sola tarjeta; dos acciones claras para continuar.",
+      "callouts": [
+        { "lado": "izq", "titulo": "Confirmación de Postulación:", "texto": "Informa al candidato que su solicitud fue enviada correctamente y recibida por la empresa.", "ancla": "#confirmacion .badge-neo" },
+        { "lado": "izq", "titulo": "Resumen de la Solicitud:", "texto": "Vacante, empresa, candidato, currículum adjunto, estado inicial y número de seguimiento.", "ancla": "#resumen" },
+        { "lado": "der", "titulo": "Seguimiento de Postulaciones:", "texto": "Lleva al perfil del candidato, donde la solicitud aparece en «Mis solicitudes» con su estado.", "ancla": "#siguientes-pasos a:first-child" },
+        { "lado": "der", "titulo": "Regreso a la Búsqueda:", "texto": "Vuelve a los resultados de búsqueda para seguir explorando oportunidades laborales.", "ancla": "#siguientes-pasos a:last-child" }
+      ]
+    },
+    {
+      "id": "MOD-02-RESOURCES", "archivo": "recursos.html", "titulo": "Centro de Recursos Profesionales",
+      "tipoUsuario": "Todos los usuarios", "modulo": "02",
+      "objetivo": "Reunir materiales para preparar entrevistas, mejorar el currículum y desarrollar habilidades profesionales.",
+      "justificacion": "Tarjetas por categoría con insignias de color y recursos destacados con imagen, para explorar sin leer listas largas.",
+      "callouts": [
+        { "lado": "izq", "titulo": "Secciones de Recursos:", "texto": "Pestañas para pasar del centro de recursos a los artículos y tutoriales o a las noticias laborales.", "ancla": "nav[aria-label='Secciones de recursos']" },
+        { "lado": "izq", "titulo": "Presentación de Recursos:", "texto": "Introduce las herramientas y materiales disponibles para prepararse para oportunidades laborales.", "ancla": "main > section.neo-card" },
+        { "lado": "izq", "titulo": "Categorías de Recursos:", "texto": "Organiza los materiales en entrevistas, currículum, habilidades y noticias del sector laboral.", "ancla": "section[aria-labelledby='t-categorias']" },
+        { "lado": "der", "titulo": "Recursos Destacados:", "texto": "Selección de artículos, tutoriales y guías recomendadas con título, descripción y duración.", "ancla": "#destacados" },
+        { "lado": "der", "titulo": "Acceso a Material Educativo:", "texto": "«Abrir recurso» muestra el contenido completo con consejos, ejemplos prácticos y material de aprendizaje.", "ancla": "#destacados article .btn" }
+      ]
+    },
+    {
+      "id": "MOD-02-RESOURCE", "archivo": "recurso.html?id=entrevistas", "titulo": "Artículo / Tutorial",
+      "tipoUsuario": "Todos los usuarios", "modulo": "02",
+      "objetivo": "Presentar un artículo, tutorial o video de orientación profesional.",
+      "justificacion": "Lectura en una columna ancha y sugerencias a la derecha; las mismas pestañas mantienen al usuario ubicado dentro de Recursos.",
+      "callouts": [
+        { "lado": "izq", "titulo": "Material del Recurso:", "texto": "Tipo de recurso (video, artículo o plantilla), título, duración y el material principal.", "ancla": "#material" },
+        { "lado": "izq", "titulo": "Contenido Paso a Paso:", "texto": "El tema se explica con subtítulos y listas cortas para facilitar la lectura.", "ancla": "#r-secciones" },
+        { "lado": "der", "titulo": "Otros Recursos:", "texto": "Sugiere artículos de otras categorías para seguir aprendiendo.", "ancla": "#otros-recursos" },
+        { "lado": "der", "titulo": "Aplicar lo Aprendido:", "texto": "Accesos directos a la búsqueda de empleo y a las noticias laborales.", "ancla": "#aplicar" }
+      ]
+    },
+    {
+      "id": "MOD-02-NEWS", "archivo": "noticias.html", "titulo": "Noticias Laborales",
+      "tipoUsuario": "Todos los usuarios", "modulo": "02",
+      "objetivo": "Informar sobre tendencias y cambios del mercado laboral.",
+      "justificacion": "Noticias en tarjetas con categoría y fecha; «Leer más» despliega el texto sin cambiar de página.",
+      "callouts": [
+        { "lado": "izq", "titulo": "Noticias del Sector:", "texto": "Cada noticia muestra categoría, fecha y resumen; «Leer más» despliega el contenido completo.", "ancla": "#lista-noticias" },
+        { "lado": "der", "titulo": "Alertas de Empleo:", "texto": "Invita a crear una alerta desde el perfil para recibir ofertas por correo o SMS.", "ancla": "#alertas-noticias" },
+        { "lado": "der", "titulo": "Conversación en Comunidad:", "texto": "Lleva a los foros para comentar las noticias con otros profesionales.", "ancla": "#comunidad" }
+      ]
+    },
+    {
+      "id": "MOD-02-FORUM", "archivo": "foros.html", "titulo": "Foros de Discusión Profesional",
+      "tipoUsuario": "Candidato registrado / Profesional", "modulo": "02",
+      "objetivo": "Proporcionar un espacio colaborativo, categorizado por los filtros de búsqueda de empleo, donde los usuarios interactúan y comparten información sobre trabajos y carreras.",
+      "justificacion": "Repite la columna de filtros de la búsqueda de empleo para que el usuario reconozca el patrón; las insignias distinguen sector, modalidad, nivel y ubicación.",
+      "callouts": [
+        { "lado": "izq", "titulo": "Creación y Búsqueda de Hilos:", "texto": "Buscador por palabra clave que filtra los debates. «Nuevo Tema de Discusión» abre un formulario para publicar un hilo en una categoría.", "ancla": "#barra-foro" },
+        { "lado": "izq", "titulo": "Categorización por Filtros:", "texto": "Los temas se agrupan con los filtros de la búsqueda de empleo: sector, nivel, tipo de contrato y debates de salarios. Al marcarlos, la lista se actualiza.", "ancla": "#filtros-foro" },
+        { "lado": "der", "titulo": "Etiquetas de Búsqueda:", "texto": "Cada hilo muestra insignias de sector, modalidad, nivel y ubicación para saber de un vistazo si aplica al perfil del usuario.", "ancla": ".hilo .badge-neo" },
+        { "lado": "der", "titulo": "Interacción Profesional:", "texto": "Autor y cargo, contador de respuestas y botón «Responder Hilo», que abre la conversación completa.", "ancla": ".hilo .border-top" }
+      ]
+    },
+    {
+      "id": "MOD-02-THREAD", "archivo": "hilo.html?id=1", "titulo": "Hilo de Discusión",
+      "tipoUsuario": "Candidato registrado / Profesional", "modulo": "02",
+      "objetivo": "Mostrar una conversación completa del foro y permitir responderla.",
+      "justificacion": "La publicación original arriba y las respuestas en orden debajo, como en los foros conocidos; las normas siempre visibles a la derecha.",
+      "callouts": [
+        { "lado": "izq", "titulo": "Publicación Original:", "texto": "Tema completo con sus etiquetas de sector, modalidad y nivel, el autor y la fecha.", "ancla": "#publicacion" },
+        { "lado": "izq", "titulo": "Respuestas:", "texto": "Respuestas de la comunidad con autor y cargo; cada una puede reportarse para que el administrador la revise.", "ancla": "#respuestas" },
+        { "lado": "izq", "titulo": "Responder al Hilo:", "texto": "Formulario que valida el texto antes de agregar la respuesta a la conversación.", "ancla": "#responder" },
+        { "lado": "der", "titulo": "Normas de la Comunidad:", "texto": "Reglas de convivencia que aplica la moderación de contenido.", "ancla": "#reglas" },
+        { "lado": "der", "titulo": "Otros Temas:", "texto": "Enlaces a más hilos y regreso a la lista de foros.", "ancla": "#relacionados" }
+      ]
+    },
+    {
+      "id": "MOD-02-REVIEWS", "archivo": "valoraciones.html", "titulo": "Valoraciones de Empresas",
+      "tipoUsuario": "Todos (leer) / Candidato registrado (valorar)", "modulo": "02",
+      "objetivo": "Ayudar a los usuarios a decidir dónde trabajar con base en las experiencias de otros empleados.",
+      "justificacion": "Una tarjeta por empresa con la nota grande a la izquierda y las opiniones a la derecha; el ámbar se usa solo para las estrellas.",
+      "callouts": [
+        { "lado": "izq", "titulo": "Búsqueda de Empresas:", "texto": "Busca por nombre, sector o ciudad y ordena por mejor valoradas o por más opiniones.", "ancla": "#herramientas" },
+        { "lado": "izq", "titulo": "Calificación Promedio:", "texto": "Cada empresa muestra su promedio con estrellas y el número de opiniones.", "ancla": ".empresa .neo-subbox" },
+        { "lado": "der", "titulo": "Opiniones Recientes:", "texto": "Reseñas de empleados y exempleados; cualquier reseña puede reportarse y pasa a la bandeja de moderación.", "ancla": ".empresa ul" },
+        { "lado": "der", "titulo": "Valorar y Ver Ofertas:", "texto": "«Valorar» abre el formulario del perfil con la empresa elegida; «Ver ofertas» busca sus vacantes.", "ancla": ".empresa .btn-neo-primary" }
+      ]
+    },
+    {
+      "id": "MOD-02-USER-DASH", "archivo": "perfil-usuario.html", "titulo": "Tablero Personal y Perfil de Usuario",
+      "tipoUsuario": "Candidato / Buscador de empleo registrado", "modulo": "02",
+      "objetivo": "Centralizar la edición de datos del candidato, la carga del CV, las alertas de empleo, las métricas de visibilidad, sus solicitudes y la valoración de empresas.",
+      "justificacion": "Barra lateral fija con la navegación del candidato y cuadrícula de tarjetas para ver todo sin cambiar de página; verde mar indica «activo» y ámbar las calificaciones.",
+      "callouts": [
+        { "lado": "izq", "titulo": "Menú del Candidato:", "texto": "Accesos a Mi perfil, Solicitudes, Alertas y Valoraciones. La opción activa se resalta en azul mar.", "ancla": "#menu-candidato nav" },
+        { "lado": "izq", "titulo": "Gestión de Perfil:", "texto": "Editar nombre, apellidos, email y teléfono, y cargar el currículum (PDF o DOCX).", "ancla": "#perfil" },
+        { "lado": "izq", "titulo": "Panel de Alertas:", "texto": "Con el interruptor encendido el usuario recibe por correo o SMS las ofertas que coinciden; también puede crear alertas nuevas.", "ancla": "#alertas" },
+        { "lado": "der", "titulo": "Estadísticas de Perfil:", "texto": "Visitas al perfil (1,245) con su tendencia y total de solicitudes enviadas (87).", "ancla": "#estadisticas" },
+        { "lado": "der", "titulo": "Sección de Valoraciones:", "texto": "Elegir la empresa, calificar de 1 a 5 estrellas y comentar la experiencia; la reseña se publica en Valoraciones de empresas.", "ancla": "#valoraciones" },
+        { "lado": "der", "titulo": "Mis Solicitudes:", "texto": "Ofertas a las que aplicó el candidato con empresa, fecha y estado: recibida, en revisión, pendiente o contactado.", "ancla": "#solicitudes" }
+      ]
+    },
+    {
+      "id": "MOD-03-COMPANY-DASH", "archivo": "panel-empresa.html", "titulo": "Panel Empresarial",
+      "tipoUsuario": "Empresa / Empleador", "modulo": "03",
+      "objetivo": "Dar a la empresa un resumen de su actividad y acceso rápido a sus ofertas, sus datos y sus postulaciones.",
+      "justificacion": "Indicadores arriba y ofertas al centro, ordenados por uso; los datos de la empresa y los candidatos recientes quedan a la derecha.",
+      "callouts": [
+        { "lado": "izq", "titulo": "Indicadores Empresariales:", "texto": "Ofertas publicadas, postulaciones recibidas, candidatos en revisión y profesionales contactados.", "ancla": "section[aria-label='Indicadores empresariales']" },
+        { "lado": "izq", "titulo": "Gestión de Ofertas Laborales:", "texto": "Vacantes publicadas con su estado y cantidad de postulantes; acceso al formulario para publicar nuevas ofertas.", "ancla": "main .col-lg-8" },
+        { "lado": "der", "titulo": "Información de la Empresa:", "texto": "Resumen de los datos de la empresa con la opción de actualizar la información registrada.", "ancla": "main .col-lg-4 > section:first-child" },
+        { "lado": "der", "titulo": "Candidatos Recientes:", "texto": "Últimas postulaciones recibidas con acceso a su perfil y a la consulta de postulaciones.", "ancla": "main .col-lg-4 > section:last-child" }
+      ]
+    },
+    {
+      "id": "MOD-03-POST-JOB", "archivo": "publicar-oferta.html", "titulo": "Publicar Nueva Oferta",
+      "tipoUsuario": "Empresa / Empleador", "modulo": "03",
+      "objetivo": "Permitir que la empresa publique una vacante con toda la información que necesita el candidato.",
+      "justificacion": "Formulario a la izquierda y vista previa a la derecha que se actualiza mientras se escribe, para revisar la oferta antes de publicarla.",
+      "callouts": [
+        { "lado": "izq", "titulo": "Información de la Vacante:", "texto": "Título, ubicación, modalidad, tipo de contrato, experiencia requerida, rango salarial y correo de contacto.", "ancla": "#form-oferta .row" },
+        { "lado": "izq", "titulo": "Descripción y Requisitos:", "texto": "Campos para detallar responsabilidades, conocimientos y condiciones que deben cumplir los candidatos.", "ancla": "#o-descripcion" },
+        { "lado": "izq", "titulo": "Beneficios Laborales:", "texto": "Prestaciones y oportunidades que ofrece la empresa: seguros, capacitaciones, horarios flexibles y crecimiento.", "ancla": "#o-beneficios" },
+        { "lado": "izq", "titulo": "Gestión de Publicación:", "texto": "Guardar como borrador o publicar después de validar los campos obligatorios.", "ancla": "#form-oferta button[type=submit]" },
+        { "lado": "der", "titulo": "Vista Previa de la Oferta:", "texto": "Muestra en vivo cómo se verá la vacante en el portal; «Vista previa» la abre completa.", "ancla": "main .col-lg-4 > section:first-child" }
+      ]
+    },
+    {
+      "id": "MOD-03-COMPANY-EDIT", "archivo": "datos-empresa.html", "titulo": "Datos de la Empresa (Mantenimiento)",
+      "tipoUsuario": "Empresa / Empleador", "modulo": "03",
+      "objetivo": "Mantener actualizada la información que ven los candidatos al consultar las ofertas de la empresa.",
+      "justificacion": "Mismo esquema formulario + vista previa que al publicar ofertas, para que la empresa aprenda un solo patrón.",
+      "callouts": [
+        { "lado": "izq", "titulo": "Información General de la Empresa:", "texto": "Consultar y modificar nombre comercial, sector, tamaño, ubicación, sitio web y medios de contacto.", "ancla": "#form-empresa .row" },
+        { "lado": "izq", "titulo": "Descripción Empresarial:", "texto": "Texto sobre la actividad y características de la empresa para que los candidatos la conozcan mejor.", "ancla": "#e-acerca" },
+        { "lado": "izq", "titulo": "Mantenimiento de Datos:", "texto": "Guardar los cambios, verificando antes los campos obligatorios, o cancelarlos para volver a los datos registrados.", "ancla": "#form-empresa button[type=submit]" },
+        { "lado": "der", "titulo": "Vista Previa:", "texto": "Cómo se presentará la empresa a los usuarios del portal; se actualiza mientras se edita.", "ancla": "main .col-lg-4 > section:first-child" },
+        { "lado": "der", "titulo": "Estado de la Empresa:", "texto": "Estado de verificación del perfil empresarial y fecha de su última actualización.", "ancla": "main .col-lg-4 > section:last-child" }
+      ]
+    },
+    {
+      "id": "MOD-03-APPLICANTS", "archivo": "postulaciones.html", "titulo": "Consulta de Postulaciones",
+      "tipoUsuario": "Empresa / Empleador", "modulo": "03",
+      "objetivo": "Consultar los candidatos de cada oferta publicada y dar seguimiento a su evaluación.",
+      "justificacion": "Indicadores por estado arriba y lista paginada con filtros, para manejar muchas postulaciones sin perder el control.",
+      "callouts": [
+        { "lado": "izq", "titulo": "Información de la Oferta Seleccionada:", "texto": "Vacante cuyas postulaciones se consultan, con su código, empresa y estado de publicación.", "ancla": "#oferta-seleccionada" },
+        { "lado": "izq", "titulo": "Indicadores de Postulaciones:", "texto": "Total de candidatos y cuántos están pendientes, en evaluación o contactados.", "ancla": "#indicadores" },
+        { "lado": "izq", "titulo": "Filtros de Consulta:", "texto": "Buscar por nombre o correo, filtrar por estado y ordenar por fecha de postulación.", "ancla": "#filtros-postulantes" },
+        { "lado": "der", "titulo": "Listado de Postulantes:", "texto": "Candidatos con cargo, correo, CV adjunto, estado y fecha, en páginas de cinco.", "ancla": "#lista-postulantes" },
+        { "lado": "der", "titulo": "Revisión de Perfiles:", "texto": "«Ver perfil» abre la información detallada de cada candidato para evaluar su experiencia.", "ancla": ".postulante .btn" }
+      ]
+    },
+    {
+      "id": "MOD-03-CANDIDATE", "archivo": "perfil-candidato.html?id=1", "titulo": "Revisión de Candidatura",
+      "tipoUsuario": "Empresa / Empleador", "modulo": "03",
+      "objetivo": "Analizar el perfil y el currículum de un postulante para decidir el estado de su candidatura.",
+      "justificacion": "Perfil completo a la izquierda y decisiones a la derecha, siempre visibles mientras se lee el perfil.",
+      "callouts": [
+        { "lado": "izq", "titulo": "Información del Candidato:", "texto": "Datos personales y profesionales del postulante, medios de contacto, fecha de solicitud y estado actual.", "ancla": "#info-candidato" },
+        { "lado": "izq", "titulo": "Perfil Profesional:", "texto": "Resumen de la trayectoria, habilidades técnicas, experiencia laboral, formación y mensaje de presentación.", "ancla": "#perfil-profesional" },
+        { "lado": "der", "titulo": "Consulta de Currículum:", "texto": "Visualizar o descargar el CV adjunto durante la postulación.", "ancla": "#curriculum" },
+        { "lado": "der", "titulo": "Vacante Relacionada:", "texto": "Oferta a la que se postuló el candidato, con la empresa responsable y el estado de la vacante.", "ancla": "#vacante" },
+        { "lado": "der", "titulo": "Evaluación de Postulación:", "texto": "Marcar al candidato como contactado, mantenerlo en revisión o descartar su candidatura.", "ancla": "#evaluar" }
+      ]
+    },
+    {
+      "id": "MOD-04-ADMIN-DASH", "archivo": "admin.html", "titulo": "Perfil Administrativo y Control del Sistema",
+      "tipoUsuario": "Administrador del sistema (acceso exclusivo)", "modulo": "04",
+      "objetivo": "Brindar a los administradores control total sobre usuarios, empresas, vacantes, moderación de contenido, estadísticas y configuración del sistema.",
+      "justificacion": "Consola con barra lateral propia del rol; métricas arriba, tabla CRUD al centro y moderación debajo, ordenadas por frecuencia de uso. El rojo se reserva para acciones destructivas, que siempre piden confirmación.",
+      "callouts": [
+        { "lado": "izq", "titulo": "Menú Exclusivo Admin:", "texto": "Solo aparece para cuentas con rol Administrador. Agrupa Panel principal, Gestión de usuarios, empresas y vacantes, Moderación, Estadísticas y Otros.", "ancla": "#menu-admin nav" },
+        { "lado": "izq", "titulo": "Moderación de Contenido:", "texto": "Reportes de foros y reseñas: «Aprobar» mantiene la publicación y «Eliminar» la retira del portal después de confirmar.", "ancla": "#moderacion" },
+        { "lado": "izq", "titulo": "Estadísticas del Sistema:", "texto": "Postulaciones por mes, usuarios por tipo, vacantes verificadas y tiempo medio de moderación.", "ancla": "#estadisticas" },
+        { "lado": "der", "titulo": "Métricas Globales:", "texto": "Total de usuarios, empresas activas, vacantes vigentes y reportes por moderar; el contador rojo avisa del contenido urgente.", "ancla": "#kpis" },
+        { "lado": "der", "titulo": "Gestión de Usuarios, Empresas y Vacantes:", "texto": "Tabla CRUD: crear, editar, suspender, deshabilitar, eliminar y exportar a Excel (CSV) los registros.", "ancla": "#control" },
+        { "lado": "der", "titulo": "Otros / Configuración:", "texto": "Reglas generales del portal: verificación de empresas, revisión de reseñas, registro abierto y correo de soporte.", "ancla": "#configuracion" }
+      ]
+    }
+  ]
+}

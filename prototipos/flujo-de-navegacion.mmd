@@ -1,0 +1,61 @@
+flowchart TD
+    classDef default fill:#FFFFFF,stroke:#1E293B,stroke-width:1.5px,color:#1E293B
+    entry(["Entrada al portal"]) --> home["MOD-01-HOME<br/>Inicio"]
+
+    subgraph visitante ["Visitante"]
+        results["MOD-01-RESULTS<br/>Resultados"]
+        detail["MOD-01-JOB-DETAIL<br/>Descripción del trabajo"]
+        resources["MOD-02-RESOURCES<br/>Recursos"]
+        reviews["MOD-02-REVIEWS<br/>Valoraciones"]
+    end
+
+    home -->|"Buscar empleo"| results --> detail
+    home --> resources
+    home --> reviews
+    detail -->|"Aplicar"| sesion{"¿Sesión de candidato?"}
+    sesion -->|"No"| login["Iniciar sesión (encabezado) / MOD-01-SIGNUP"]
+    login --> sesion
+    home -->|"Iniciar sesión"| rol{"¿Tipo de usuario?"}
+
+    subgraph candidato ["Candidato registrado"]
+        apply["MOD-01-APPLY<br/>Postulación"]
+        applyok["MOD-01-APPLY-OK<br/>Confirmación"]
+        dash["MOD-02-USER-DASH<br/>Perfil"]
+        forum["MOD-02-FORUM<br/>Foros"]
+        thread["MOD-02-THREAD<br/>Hilo"]
+    end
+
+    sesion -->|"Sí"| apply --> applyok -->|"Mis solicitudes"| dash
+    rol -->|"Candidato"| dash
+    dash --> forum --> thread
+
+    subgraph empresa ["Empresa"]
+        cdash["MOD-03-COMPANY-DASH<br/>Panel"]
+        post["MOD-03-POST-JOB<br/>Publicar oferta"]
+        cedit["MOD-03-COMPANY-EDIT<br/>Datos"]
+        applicants["MOD-03-APPLICANTS<br/>Postulaciones"]
+        cand["MOD-03-CANDIDATE<br/>Candidato"]
+    end
+
+    rol -->|"Empresa"| cdash
+    cdash --> post
+    cdash --> cedit
+    cdash --> applicants --> cand
+    applyok -.->|"Llega a la empresa"| applicants
+
+    subgraph administrador ["Administrador"]
+        admin["MOD-04-ADMIN-DASH<br/>Panel administrativo"]
+    end
+
+    rol -->|"Administrador"| admin
+
+    classDef grupo_visitante fill:#F1F5F9,stroke:#64748B
+    class visitante grupo_visitante
+    classDef grupo_candidato fill:#E0F2FE,stroke:#0369A1
+    class candidato grupo_candidato
+    classDef grupo_empresa fill:#CCFBF1,stroke:#0F766E
+    class empresa grupo_empresa
+    classDef grupo_administrador fill:#DBEAFE,stroke:#1E3A8A
+    class administrador grupo_administrador
+    classDef hector fill:#FEF3C7,stroke:#D97706,stroke-width:2px
+    class dash,forum,admin hector
