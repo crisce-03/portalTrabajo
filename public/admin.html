@@ -4,16 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Panel administrativo · PortalTrabajo</title>
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="css/estilos.css" rel="stylesheet">
+  <script src="js/components/theme.js"></script>
 </head>
 <!-- MOD-04-ADMIN-DASH · Administrador del sistema (acceso exclusivo) -->
-<body data-usuario="admin">
+<body data-requiere="admin" data-activo="admin">
   <header id="navbar" class="container-xl pt-3"></header>
 
   <main id="panel" class="container-xl py-4">
@@ -23,7 +24,7 @@
       <aside id="menu-admin" class="col-lg-3">
         <div class="neo-subbox p-3 h-100 d-flex flex-column">
           <div class="d-flex align-items-center gap-2 mb-2">
-            <span class="logo-neo" style="width:40px;height:40px;background:var(--color-secondary);"><i class="bi bi-shield-shaded" aria-hidden="true"></i></span>
+            <span class="logo-neo logo-neo-admin"><i class="bi bi-shield-shaded" aria-hidden="true"></i></span>
             <div>
               <p class="fw-bold font-inter mb-0">Admin Console</p>
               <span class="subtitulo">Rol exclusivo</span>
@@ -75,7 +76,7 @@
             <div class="neo-card p-3 h-100">
               <span class="small text-secondary d-block">Reportes / Moderar</span>
               <span class="d-flex align-items-center gap-2 my-1">
-                <span id="total-reportes" class="metrica" style="color:var(--color-danger);">9</span>
+                <span id="total-reportes" class="metrica text-danger">9</span>
                 <span class="badge-neo badge-neo-danger">Urgente</span>
               </span>
             </div>
@@ -84,7 +85,7 @@
 
         <!-- CRUD de usuarios, empresas y vacantes -->
         <section id="control" class="neo-card overflow-hidden mb-4">
-          <div class="p-3 border-bottom border-dark d-flex flex-wrap justify-content-between align-items-center gap-2" style="background:var(--bg-canvas);">
+          <div class="p-3 border-bottom border-dark d-flex flex-wrap justify-content-between align-items-center gap-2 superficie-canvas">
             <div>
               <h2 class="h5 mb-0">Control de Usuarios, Empresas y Vacantes</h2>
               <span class="subtitulo">CRUD administrativo</span>
@@ -94,7 +95,7 @@
               <button id="nuevo-registro" type="button" class="btn btn-neo-primary btn-sm">+ Nuevo Registro</button>
             </div>
           </div>
-          <div id="filtro-activo" class="px-3 py-2 border-bottom small d-flex align-items-center gap-2" style="background:var(--color-primary-soft);" hidden>
+          <div id="filtro-activo" class="px-3 py-2 border-bottom small d-flex align-items-center gap-2 superficie-primary-soft" hidden>
             <i class="bi bi-funnel-fill text-ocean" aria-hidden="true"></i><span></span>
             <button type="button" class="btn btn-link btn-sm p-0 border-0 shadow-none" data-ver-todos>Ver todos</button>
           </div>
@@ -156,12 +157,12 @@
               <h2 class="h5 mb-0">Estadísticas del sistema</h2>
               <span class="subtitulo mb-3">Postulaciones por mes (2026)</span>
               <div class="grafico mb-3">
-                <div><span>6,200</span><span class="barra" style="height:64%"></span><span>Jun</span></div>
-                <div><span>7,100</span><span class="barra" style="height:74%"></span><span>Jul</span></div>
-                <div><span>6,800</span><span class="barra" style="height:70%"></span><span>Ago</span></div>
-                <div><span>8,300</span><span class="barra" style="height:86%"></span><span>Sep</span></div>
-                <div><span>9,100</span><span class="barra" style="height:94%"></span><span>Oct</span></div>
-                <div><span>9,640</span><span class="barra" style="height:100%;background:var(--color-secondary);"></span><span>Nov</span></div>
+                <div><span>6,200</span><span class="barra barra-64"></span><span>Jun</span></div>
+                <div><span>7,100</span><span class="barra barra-74"></span><span>Jul</span></div>
+                <div><span>6,800</span><span class="barra barra-70"></span><span>Ago</span></div>
+                <div><span>8,300</span><span class="barra barra-86"></span><span>Sep</span></div>
+                <div><span>9,100</span><span class="barra barra-94"></span><span>Oct</span></div>
+                <div><span>9,640</span><span class="barra barra-100 barra-final"></span><span>Nov</span></div>
               </div>
               <div class="row g-2 small">
                 <div class="col-6"><div class="neo-subbox p-2"><strong class="d-block">66,470</strong>Candidatos</div></div>
@@ -261,152 +262,17 @@
 
   <footer id="pie"></footer>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="js/datos.js"></script>
-  <script src="js/comun.js"></script>
-  <script>
-    // shortcut: el CRUD trabaja sobre REGISTROS en memoria; con la API, cada acción es un POST/PUT/DELETE a /api/admin/...
-    const registros = REGISTROS.map(r => ({ ...r }));
-    const TIPOS = { empresa: ['Empresa', 'ocean'], vacante: ['Vacante', 'community'], usuario: ['Usuario', 'neutral'] };
-    const ESTADOS_TIPO = { empresa: ['Verificada', 'Pendiente', 'Suspendida'], vacante: ['Activa', 'Cerrada'], usuario: ['Habilitado', 'Deshabilitado'] };
-    const COLOR_ESTADO = { Verificada: 'salary', Activa: 'salary', Habilitado: 'salary', Pendiente: 'warning', Cerrada: 'neutral', Suspendida: 'danger', Deshabilitado: 'danger' };
-    let filtroTipo = '';
-
-    const boton = (accion, icono, etiqueta, peligro = false) =>
-      `<button type="button" class="btn ${peligro ? 'btn-neo-danger' : 'btn-neo-secondary'} btn-sm" data-accion="${accion}" aria-label="${etiqueta}" title="${etiqueta}"><i class="bi bi-${icono}" aria-hidden="true"></i></button>`;
-    const acciones = r => ({
-      empresa: boton('editar', 'pencil', 'Editar empresa')
-        + boton('suspender', 'slash-circle', r.estado === 'Suspendida' ? 'Reactivar empresa' : 'Suspender empresa', true),
-      vacante: (r.oferta
-        ? `<a class="btn btn-neo-secondary btn-sm" href="detalle-oferta.html?id=${r.oferta}" aria-label="Ver vacante" title="Ver vacante"><i class="bi bi-eye" aria-hidden="true"></i></a>`
-        : boton('editar', 'pencil', 'Editar vacante'))
-        + boton('eliminar', 'trash', 'Eliminar vacante', true),
-      usuario: boton('clave', 'key', 'Restablecer contraseña')
-        + boton('deshabilitar', 'person-x', r.estado === 'Deshabilitado' ? 'Habilitar usuario' : 'Deshabilitar usuario', true),
-    })[r.tipo];
-
-    function pintarTabla() {
-      document.querySelector('#tabla-control tbody').innerHTML = registros
-        .filter(r => !filtroTipo || r.tipo === filtroTipo)
-        .map(r => `
-          <tr data-id="${r.id}" data-tipo="${r.tipo}">
-            <td><span class="badge-neo badge-neo-${TIPOS[r.tipo][1]}">${TIPOS[r.tipo][0]}</span></td>
-            <td><strong>${esc(r.nombre)}</strong> · <span class="text-secondary">${esc(r.detalle)}</span></td>
-            <td><span class="badge-neo badge-neo-${COLOR_ESTADO[r.estado]}">${esc(r.estado)}</span></td>
-            <td class="text-end text-nowrap"><div class="d-inline-flex gap-1">${acciones(r)}</div></td>
-          </tr>`).join('');
-    }
-
-    // Menú: gestión de usuarios / empresas / vacantes filtra la tabla ("" = todos)
-    document.querySelectorAll('[data-filtro]').forEach(link => link.addEventListener('click', () => {
-      filtroTipo = link.dataset.filtro;
-      const indicador = document.getElementById('filtro-activo');
-      indicador.hidden = !filtroTipo;
-      indicador.querySelector('span').textContent = filtroTipo ? `Mostrando solo: ${TIPOS[filtroTipo][0]}s` : '';
-      pintarTabla();
-    }));
-
-    document.querySelector('[data-ver-todos]').addEventListener('click', () => document.querySelector('[data-filtro=""]').click());
-
-    // Confirmación con ventana modal (nunca alert/confirm del navegador)
-    function confirmar(texto) {
-      document.getElementById('confirmar-texto').textContent = texto;
-      const modal = bootstrap.Modal.getOrCreateInstance('#modal-confirmar');
-      return new Promise(resolver => {
-        const si = document.getElementById('confirmar-si');
-        si.onclick = () => { si.onclick = null; resolver(true); modal.hide(); };
-        document.getElementById('modal-confirmar').addEventListener('hidden.bs.modal', () => resolver(false), { once: true });
-        modal.show();
-      });
-    }
-
-    // Crear y editar con la misma ventana
-    const formRegistro = document.getElementById('form-registro-admin');
-    const modalRegistro = bootstrap.Modal.getOrCreateInstance('#modal-registro');
-    const opcionesEstado = tipo => formRegistro.estado.innerHTML = ESTADOS_TIPO[tipo].map(e => `<option>${e}</option>`).join('');
-    formRegistro.tipo.addEventListener('change', () => opcionesEstado(formRegistro.tipo.value));
-    function abrirRegistro(registro) {
-      formRegistro.reset();
-      document.getElementById('t-modal-registro').textContent = registro ? 'Editar registro' : 'Nuevo registro';
-      formRegistro.registro.value = registro?.id ?? '';
-      formRegistro.tipo.value = registro?.tipo ?? (filtroTipo || 'empresa');
-      formRegistro.tipo.disabled = Boolean(registro);
-      opcionesEstado(formRegistro.tipo.value);
-      formRegistro.nombre.value = registro?.nombre ?? '';
-      formRegistro.detalle.value = registro?.detalle ?? '';
-      if (registro) formRegistro.estado.value = registro.estado;
-      modalRegistro.show();
-    }
-    document.getElementById('nuevo-registro').addEventListener('click', () => abrirRegistro());
-    formRegistro.addEventListener('enviado', () => {
-      const datos = { nombre: formRegistro.nombre.value.trim(), detalle: formRegistro.detalle.value.trim(), estado: formRegistro.estado.value };
-      const existente = registros.find(r => r.id === Number(formRegistro.registro.value));
-      if (existente) Object.assign(existente, datos);
-      else registros.unshift({ id: Date.now(), tipo: formRegistro.tipo.value, ...datos });
-      modalRegistro.hide();
-      pintarTabla();
-      notificar(existente ? `Se actualizó «${datos.nombre}».` : `Se creó «${datos.nombre}».`);
-    });
-
-    // Acciones de cada fila
-    document.querySelector('#tabla-control tbody').addEventListener('click', async evento => {
-      const accion = evento.target.closest('[data-accion]');
-      if (!accion) return;
-      const registro = registros.find(r => r.id === Number(accion.closest('tr').dataset.id));
-      switch (accion.dataset.accion) {
-        case 'editar':
-          abrirRegistro(registro);
-          return;
-        case 'suspender':
-          registro.estado = registro.estado === 'Suspendida' ? 'Verificada' : 'Suspendida';
-          notificar(`«${registro.nombre}» ahora está ${registro.estado.toLowerCase()}.`);
-          break;
-        case 'deshabilitar':
-          registro.estado = registro.estado === 'Deshabilitado' ? 'Habilitado' : 'Deshabilitado';
-          notificar(`«${registro.nombre}» ahora está ${registro.estado.toLowerCase()}.`);
-          break;
-        case 'clave':
-          notificar(`Se envió un enlace para restablecer la contraseña a ${registro.correo ?? 'su correo registrado'}.`);
-          return;
-        case 'eliminar':
-          if (!await confirmar(`¿Eliminar «${registro.nombre}»? Esta acción no se puede deshacer.`)) return;
-          registros.splice(registros.indexOf(registro), 1);
-          notificar(`Se eliminó «${registro.nombre}».`);
-          break;
-      }
-      pintarTabla();
-    });
-
-    // Exportar la tabla visible a CSV (se abre en Excel)
-    document.getElementById('exportar').addEventListener('click', () => {
-      // Un valor que empieza con = + - @ se volvería fórmula en Excel: se le antepone '
-      const celda = valor => `"${String(valor).replace(/^[=+\-@]/, "'$&").replace(/"/g, '""')}"`;
-      const filas = registros.filter(r => !filtroTipo || r.tipo === filtroTipo)
-        .map(r => [TIPOS[r.tipo][0], r.nombre, r.detalle, r.estado]);
-      const csv = [['Tipo', 'Nombre', 'Detalle', 'Estado'], ...filas].map(f => f.map(celda).join(',')).join('\r\n');
-      const enlace = document.createElement('a');
-      enlace.href = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' }));
-      enlace.download = 'registros-portal-trabajo.csv';
-      enlace.click();
-      URL.revokeObjectURL(enlace.href);
-      notificar(`Se exportaron ${filas.length} registros.`);
-    });
-
-    // Moderación: aprobar o eliminar quita el reporte de la bandeja y actualiza los contadores.
-    // shortcut: no guarda la decisión; con la API, enviarla al servidor antes de quitar el reporte
-    document.getElementById('bandeja').addEventListener('click', async evento => {
-      const decision = evento.target.closest('[data-decision]');
-      if (!decision) return;
-      if (decision.dataset.decision === 'eliminar' && !await confirmar('¿Eliminar este contenido del portal?')) return;
-      decision.closest('.reporte').remove();
-      const restantes = document.querySelectorAll('#bandeja .reporte').length;
-      document.getElementById('pendientes').textContent =
-        `${restantes} ${restantes === 1 ? 'Pendiente' : 'Pendientes'} de Revisión`;
-      const total = document.getElementById('total-reportes');
-      total.textContent = Number(total.textContent) - 1;
-      document.getElementById('bandeja-vacia').hidden = restantes > 0;
-    });
-
-    pintarTabla();
-  </script>
+  
+  
+  
+    <script src="js/services/mock-data.js"></script>
+    <script src="js/services/api.js"></script>
+    <script src="js/utils/helpers.js"></script>
+    <script src="js/components/notifications.js"></script>
+    <script src="js/components/navbar.js"></script>
+    <script src="js/components/footer.js"></script>
+    <script src="js/components/offer-actions.js"></script>
+    <script src="js/utils/forms.js"></script>
+    <script src="js/pages/admin.js"></script>
 </body>
 </html>
