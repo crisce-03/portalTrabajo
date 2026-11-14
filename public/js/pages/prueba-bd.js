@@ -3,8 +3,7 @@ document.getElementById('btn-test').addEventListener('click', async () => {
     resultadoDiv.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Conectando...';
     
     try {
-        const response = await fetch('/api/test-db');
-        const data = await response.json();
+        const data = await apiRequest('/test-db');
         
         if (data.success) {
             resultadoDiv.innerHTML = `
