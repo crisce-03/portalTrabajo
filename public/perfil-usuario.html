@@ -7,7 +7,7 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
   <link href="css/estilos.css" rel="stylesheet">
@@ -23,7 +23,8 @@
       <!-- Menú del candidato -->
       <aside id="menu-candidato" class="col-lg-3">
         <div class="neo-subbox p-3 h-100 d-flex flex-column text-center">
-          <div class="avatar-usuario rounded-circle d-flex align-items-center justify-content-center text-white font-inter fs-3 mx-auto mb-2" aria-hidden="true">HG</div>
+          <div class="rounded-circle d-flex align-items-center justify-content-center text-white font-inter fs-3 mx-auto mb-2"
+            style="width:72px;height:72px;background:var(--color-primary);border:var(--border-neo);box-shadow:var(--shadow-neo-sm);" aria-hidden="true">HG</div>
           <p class="fw-bold font-inter fs-5 mb-0">Héctor García</p>
           <span class="subtitulo">Candidato</span>
           <hr class="opacity-50">
@@ -31,7 +32,6 @@
             <ul class="nav nav-pills nav-pills-neo flex-column text-start">
               <li class="nav-item"><a class="nav-link active" aria-current="true" href="#perfil"><i class="bi bi-person-fill" aria-hidden="true"></i> Mi perfil</a></li>
               <li class="nav-item"><a class="nav-link" href="#solicitudes"><i class="bi bi-file-earmark-check" aria-hidden="true"></i> Solicitudes</a></li>
-              <li class="nav-item"><a class="nav-link" href="#guardadas"><i class="bi bi-bookmark" aria-hidden="true"></i> Ofertas guardadas</a></li>
               <li class="nav-item"><a class="nav-link" href="#alertas"><i class="bi bi-bell" aria-hidden="true"></i> Alertas</a></li>
               <li class="nav-item"><a class="nav-link" href="#valoraciones"><i class="bi bi-star" aria-hidden="true"></i> Valoraciones</a></li>
             </ul>
@@ -69,7 +69,6 @@
               <label class="dropzone-neo mb-3" for="p-cv">
                 <i class="bi bi-cloud-arrow-up fs-3 text-ocean d-block" aria-hidden="true"></i>
                 <span id="p-cv-nombre" class="fw-bold">Cargar Currículum (PDF, DOCX)</span>
-                <span class="d-block small text-secondary">Arrastra el archivo aquí o haz clic · máximo 5 MB</span>
                 <input id="p-cv" name="cv" type="file" accept=".pdf,.docx" class="visually-hidden" data-muestra="p-cv-nombre">
               </label>
               <div class="d-flex justify-content-between align-items-center gap-2">
@@ -84,9 +83,9 @@
             <div class="neo-card p-3 h-100 d-flex flex-column gap-3">
               <h2 class="h5 mb-0">Estadísticas de perfil</h2>
               <div class="neo-subbox p-3 d-flex align-items-center justify-content-between mt-auto">
-                <svg class="perfil-chart-svg" viewBox="0 0 100 42" aria-hidden="true">
-                  <path class="perfil-chart-line" d="M 4,36 L 26,22 L 48,28 L 72,12 L 95,6" fill="none" stroke-width="2.5" stroke-linecap="round"/>
-                  <circle class="perfil-chart-point" cx="95" cy="6" r="3.5" stroke-width="1.5"/>
+                <svg width="110" height="44" viewBox="0 0 100 42" aria-hidden="true">
+                  <path d="M 4,36 L 26,22 L 48,28 L 72,12 L 95,6" fill="none" stroke="#0369A1" stroke-width="2.5" stroke-linecap="round"/>
+                  <circle cx="95" cy="6" r="3.5" fill="#1E3A8A" stroke="#1E293B" stroke-width="1.5"/>
                 </svg>
                 <div class="text-end">
                   <span class="metrica">1,245</span>
@@ -94,12 +93,12 @@
                 </div>
               </div>
               <div class="neo-subbox p-3 d-flex align-items-center justify-content-between mb-auto">
-                <div class="perfil-chart-bars d-flex align-items-end gap-1" aria-hidden="true">
-                  <span class="perfil-chart-bar perfil-chart-bar-14"></span>
-                  <span class="perfil-chart-bar perfil-chart-bar-22"></span>
-                  <span class="perfil-chart-bar perfil-chart-bar-18"></span>
-                  <span class="perfil-chart-bar perfil-chart-bar-28"></span>
-                  <span class="perfil-chart-bar perfil-chart-bar-38"></span>
+                <div class="d-flex align-items-end gap-1" style="height:40px;" aria-hidden="true">
+                  <span style="width:11px;height:14px;background:#94A3B8;border:1px solid #1E293B;"></span>
+                  <span style="width:11px;height:22px;background:#64748B;border:1px solid #1E293B;"></span>
+                  <span style="width:11px;height:18px;background:#0F766E;border:1px solid #1E293B;"></span>
+                  <span style="width:11px;height:28px;background:#0369A1;border:1px solid #1E293B;"></span>
+                  <span style="width:11px;height:38px;background:#1E3A8A;border:1px solid #1E293B;"></span>
                 </div>
                 <div class="text-end">
                   <span class="metrica">87</span>
@@ -168,23 +167,10 @@
             </form>
           </section>
 
-          <!-- Ofertas guardadas -->
-          <section id="guardadas" class="col-12">
-            <div class="neo-card p-3">
-              <h2 class="h5 mb-3">Ofertas guardadas</h2>
-              <ul id="lista-guardadas" class="list-unstyled d-grid gap-2 mb-0"></ul>
-              <div id="sin-guardadas" class="text-center py-3" hidden>
-                <i class="bi bi-bookmark fs-3 text-ocean" aria-hidden="true"></i>
-                <p class="mb-2">Todavía no guardas ofertas. Usa el botón <i class="bi bi-bookmark" aria-hidden="true"></i> en cualquier oferta para tenerla aquí.</p>
-                <a class="btn btn-neo-primary btn-sm" href="resultados.html">Buscar ofertas</a>
-              </div>
-            </div>
-          </section>
-
           <!-- Solicitudes enviadas -->
           <section id="solicitudes" class="col-12">
             <div class="neo-card overflow-hidden">
-              <div class="p-3 border-bottom border-dark d-flex flex-wrap justify-content-between align-items-center gap-2 superficie-canvas">
+              <div class="p-3 border-bottom border-dark d-flex flex-wrap justify-content-between align-items-center gap-2" style="background:var(--bg-canvas);">
                 <h2 class="h5 mb-0">Mis solicitudes</h2>
                 <a class="btn btn-neo-primary btn-sm" href="resultados.html">Buscar más ofertas</a>
               </div>
