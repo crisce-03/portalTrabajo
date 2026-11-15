@@ -6,6 +6,7 @@ import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
 import app from '../backend/app.js';
 import { pool } from '../backend/Data/db.js';
+import { signToken } from '../backend/Utils/Token.js';
 
 const sello = Date.now();
 const crearUsuario = async (rol) => (await pool.query(
@@ -22,11 +23,15 @@ const recurso = (await pool.query(
 
 const servidor = app.listen(0);
 const base = `http://localhost:${servidor.address().port}/api`;
+let token; // sesión con la que se hacen las peticiones
 const pedir = async (ruta, metodo = 'GET', cuerpo) => {
     const esFormulario = cuerpo instanceof FormData;
     const res = await fetch(base + ruta, {
         method: metodo,
-        headers: cuerpo && !esFormulario ? { 'Content-Type': 'application/json' } : {},
+        headers: {
+            ...(cuerpo && !esFormulario && { 'Content-Type': 'application/json' }),
+            ...(token && { Authorization: `Bearer ${token}` }),
+        },
         body: esFormulario ? cuerpo : cuerpo && JSON.stringify(cuerpo),
     });
     return { status: res.status, ...(await res.json()) };
@@ -42,7 +47,6 @@ let rutaCv;
 
 try {
     // ---------- Sin sesión ----------
-    delete process.env.AUTH_DEMO_USUARIO_ID;
     assert.equal((await pedir('/candidatos/me')).status, 401);
     assert.equal((await pedir('/valoraciones', 'POST', {})).status, 401);
 
@@ -52,7 +56,9 @@ try {
     assert.equal((await pedir('/recursos?categoria=Otra')).status, 400);
 
     // ---------- Perfil del candidato ----------
-    process.env.AUTH_DEMO_USUARIO_ID = String(candidato);
+    token = 'no-es-un-token';
+    assert.equal((await pedir('/candidatos/me')).status, 401);
+    token = signToken({ id: candidato, rol: 'candidato' });
     r = await pedir('/candidatos/me');
     assert.deepEqual([r.status, r.data.nombre, r.data.visitas, r.data.solicitudes, r.data.cvNombre], [200, 'Prueba', 0, 0, null]);
 
@@ -97,7 +103,7 @@ try {
     assert.equal((await pool.query('SELECT COUNT(*)::int AS n FROM reportes WHERE valoracion_id = $1', [e.resenas[0].id])).rows[0].n, 1);
 
     // ---------- Otros roles ----------
-    process.env.AUTH_DEMO_USUARIO_ID = String(duenio);
+    token = signToken({ id: duenio, rol: 'empresa' });
     assert.equal((await pedir('/candidatos/me')).status, 403);
     assert.equal((await pedir('/valoraciones', 'POST', { empresaId: empresa, calificacion: 5, comentario: 'Somos los mejores.' })).status, 403);
     // La alerta de otra persona no existe para este usuario

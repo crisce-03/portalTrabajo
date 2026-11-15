@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import * as candidatoController from '../Controllers/CandidatoController.js';
-import { autenticar, requiereRol } from '../Middlewares/Auth.js';
+import { autenticar, permitirRoles } from '../Middlewares/Auth.js';
 import uploadCv from '../Middlewares/UploadCv.js';
 import { ROLES } from '../Constants/roles.js';
 
 const router = Router();
 
-router.use(autenticar, requiereRol(ROLES.CANDIDATO));
+router.use(autenticar, permitirRoles(ROLES.CANDIDATO));
 
 router.get('/', candidatoController.getPerfil);
 router.put('/', uploadCv, candidatoController.updatePerfil);

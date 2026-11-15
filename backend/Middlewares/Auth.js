@@ -1,21 +1,36 @@
-import { pool } from '../Data/db.js';
+import { verifyToken } from '../Utils/Token.js';
+import * as usuariosRepository from '../Repositories/UsuariosRepository.js';
 import AppError from '../Utils/AppError.js';
 
-// Contrato para las rutas privadas: después de autenticar, req.usuario = { id, rol }.
-// shortcut: sin login real, el usuario sale de AUTH_DEMO_USUARIO_ID en .env (solo fuera de producción);
-// cuando exista la autenticación, reemplazar el cuerpo de autenticar por la verificación del token
-export const autenticar = async (req, res, next) => {
-    const id = Number(process.env.AUTH_DEMO_USUARIO_ID);
-    if (!id || process.env.NODE_ENV === 'production') throw AppError.unauthorized();
+const autenticar = async (req, res, next) => {
+    const cabecera = req.headers.authorization || '';
 
-    const result = await pool.query('SELECT id, rol FROM usuarios WHERE id = $1 AND activo', [id]);
-    if (!result.rows[0]) throw AppError.unauthorized();
+    if (!cabecera.startsWith('Bearer ')) {
+        throw AppError.unauthorized('Debes iniciar sesión');
+    }
 
-    req.usuario = result.rows[0];
+    let datos;
+    try {
+        datos = verifyToken(cabecera.slice(7));
+    } catch {
+        throw AppError.unauthorized('La sesión no es válida o ya expiró');
+    }
+
+    const usuario = await usuariosRepository.buscarPorId(datos.id);
+
+    if (!usuario || !usuario.activo) {
+        throw AppError.unauthorized('La cuenta no existe o está deshabilitada');
+    }
+
+    req.usuario = usuario;
     next();
-}
+};
 
-export const requiereRol = (...roles) => (req, res, next) => {
-    if (!roles.includes(req.usuario.rol)) throw AppError.forbidden();
+const permitirRoles = (...roles) => (req, res, next) => {
+    if (!roles.includes(req.usuario.rol)) {
+        throw AppError.forbidden();
+    }
     next();
-}
+};
+
+export { autenticar, permitirRoles };
