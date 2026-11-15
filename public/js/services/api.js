@@ -11,6 +11,7 @@ async function apiRequest(route, options = {}) {
   try { token = sessionStorage.getItem('token'); } catch { /* sin almacenamiento: va sin sesión */ }
   if (token) headers.set('Authorization', `Bearer ${token}`);
   const response = await fetch(url, { ...options, headers });
+  if (response.status === 401 && token) cerrarSesion(); // token vencido: la próxima página pide iniciar sesión
 
   const payload = await response.json().catch(() => null);
   if (!response.ok) {

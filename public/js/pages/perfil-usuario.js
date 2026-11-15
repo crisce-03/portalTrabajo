@@ -108,20 +108,3 @@ const avisarError = error => notificar(error.message, 'error');
       label.addEventListener('mouseleave', () => llenar(elegida()));
     });
     document.getElementById('form-valoracion').addEventListener('reset', () => setTimeout(() => llenar(0)));
-
-    // Ofertas guardadas desde Resultados o la Descripción del trabajo
-    function pintarGuardadas() {
-      const guardadas = ofertasGuardadas().map(id => OFERTAS.find(o => o.id === id)).filter(Boolean);
-      document.getElementById('sin-guardadas').hidden = guardadas.length > 0;
-      document.getElementById('lista-guardadas').innerHTML = guardadas.map(o => `
-        <li class="neo-subbox p-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
-          <div><a class="fw-bold" href="detalle-oferta.html?id=${o.id}">${esc(o.titulo)}</a><span class="subtitulo">${esc(o.empresa)} · ${esc(o.modalidad)} · ${formatoSalario(o)}</span></div>
-          <div class="d-flex gap-2">
-            <a class="btn btn-neo-primary btn-sm" href="postulacion.html?id=${o.id}">Postularme</a>
-            <button type="button" class="btn btn-neo-secondary btn-sm" data-guardar-oferta="${o.id}" aria-label="Quitar ${esc(o.titulo)} de guardadas"></button>
-          </div>
-        </li>`).join('');
-      marcarGuardadas();
-    }
-    document.addEventListener('click', evento => { if (evento.target.closest('[data-guardar-oferta]')) pintarGuardadas(); });
-    pintarGuardadas();

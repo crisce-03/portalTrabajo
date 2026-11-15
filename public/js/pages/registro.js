@@ -1,12 +1,10 @@
 const formRegistro = document.getElementById('form-registro');
-    const camposCandidato = document.getElementById('campos-candidato');
     const camposEmpresa = document.getElementById('campos-empresa');
 
-    // Un fieldset deshabilitado no se valida ni se envía: así cada tipo pide solo sus campos
+    // Un fieldset deshabilitado no se valida ni se envía: los datos de empresa solo se piden a las empresas.
+    // Nombre y apellidos se piden siempre: la API los exige a la persona dueña de la cuenta.
     function alternarTipo() {
-      const esEmpresa = formRegistro.tipo.value === 'empresa';
-      camposEmpresa.hidden = camposEmpresa.disabled = !esEmpresa;
-      camposCandidato.hidden = camposCandidato.disabled = esEmpresa;
+      camposEmpresa.hidden = camposEmpresa.disabled = formRegistro.tipo.value !== 'empresa';
     }
     formRegistro.querySelectorAll('[name="tipo"]').forEach(radio => radio.addEventListener('change', alternarTipo));
     if (parametro('tipo') === 'empresa') document.getElementById('t-empresa').checked = true;
@@ -17,8 +15,12 @@ const formRegistro = document.getElementById('form-registro');
     const revisarClaves = () => confirmar.setCustomValidity(confirmar.value === clave.value ? '' : 'Las contraseñas no coinciden.');
     [clave, confirmar].forEach(campo => campo.addEventListener('input', revisarClaves));
 
-    // shortcut: no crea la cuenta; con la API, hacer POST /api/registro y usar el rol que devuelva
-    formRegistro.addEventListener('enviado', () => {
-      guardarSesion(formRegistro.tipo.value);
-      formRegistro.dataset.destino = INICIO_POR_ROL[formRegistro.tipo.value];
+    formRegistro.addEventListener('enviado', async () => {
+      try {
+        const { data } = await apiRequest('/registro', { method: 'POST', body: JSON.stringify(Object.fromEntries(new FormData(formRegistro))) });
+        iniciarSesion(data);
+        location.href = INICIO_POR_ROL[data.usuario.rol];
+      } catch (error) {
+        avisar(formRegistro, error.message);
+      }
     });
