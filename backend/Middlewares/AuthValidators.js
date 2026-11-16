@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ROLES, TIPOS_REGISTRO } from '../Constants/roles.js';
 
 const nombre = z.string('El nombre es obligatorio')
     .trim()
@@ -20,7 +21,7 @@ const clave = z.string('La contraseña es obligatoria')
     .max(72, 'La contraseña no puede superar los 72 caracteres');
 
 export const registroSchema = z.object({
-    tipo: z.enum(['candidato', 'empresa'], 'El tipo de cuenta debe ser candidato o empresa'),
+    tipo: z.enum(TIPOS_REGISTRO, 'El tipo de cuenta debe ser candidato o empresa'),
     nombre,
     apellidos,
     correo,
@@ -28,7 +29,7 @@ export const registroSchema = z.object({
     telefono: z.string().trim().max(30, 'El teléfono es demasiado largo').optional(),
     empresa: z.string().trim().max(150, 'El nombre de la empresa es demasiado largo').optional(),
     sector: z.string().trim().max(100, 'El sector es demasiado largo').optional(),
-}).refine((datos) => datos.tipo !== 'empresa' || (datos.empresa && datos.sector), {
+}).refine((datos) => datos.tipo !== ROLES.EMPRESA || (datos.empresa && datos.sector), {
     message: 'El nombre de la empresa y el sector son obligatorios',
     path: ['empresa'],
 });

@@ -113,16 +113,11 @@ async function abrirDetallePostulacion(id) {
 async function descargarCv(id, boton) {
   boton.disabled = true;
   try {
-    const token = sessionStorage.getItem('token');
-    const response = await fetch(`/api/empresa/postulaciones/${encodeURIComponent(id)}/cv`, { headers: { Authorization: `Bearer ${token}` } });
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({}));
-      throw new Error(error.message || 'No se pudo descargar el CV.');
-    }
-    const url = URL.createObjectURL(await response.blob());
+    const { blob, filename } = await apiDownload(`/empresa/postulaciones/${encodeURIComponent(id)}/cv`);
+    const url = URL.createObjectURL(blob);
     const enlace = document.createElement('a');
     enlace.href = url;
-    enlace.download = postulacionActiva?.cvNombre || 'curriculum';
+    enlace.download = filename || postulacionActiva?.cvNombre || 'curriculum';
     enlace.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   } catch (error) { avisarError(error); }

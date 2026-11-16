@@ -9,3 +9,7 @@ export const ESTADOS_OFERTA = Object.freeze({
     ACTIVA: 'activa',
     CERRADA: 'cerrada',
 });
+
+export const ESTADOS_CREACION_OFERTA = [ESTADOS_OFERTA.BORRADOR, ESTADOS_OFERTA.ACTIVA];
+export const CAMPOS_OBLIGATORIOS_OFERTA = ['ubicacion', 'modalidad', 'contrato', 'correoContacto', 'descripcion', 'requisitos'];
+export const ORDENES_BUSQUEDA_OFERTAS = ['fecha', 'salario'];

@@ -1,13 +1,11 @@
 import * as ofertasRepository from '../Repositories/OfertasRepository.js';
-import { ESTADOS_OFERTA } from '../Constants/ofertas.js';
+import { ESTADOS_OFERTA, CAMPOS_OBLIGATORIOS_OFERTA } from '../Constants/ofertas.js';
 import AppError from '../Utils/AppError.js';
 
-const CAMPOS_OBLIGATORIOS = ['ubicacion', 'modalidad', 'contrato', 'correoContacto', 'descripcion'];
-
 const verificarCompleta = oferta => {
-    const faltan = CAMPOS_OBLIGATORIOS.filter(campo => !oferta[campo]);
-    
-    if (!oferta.requisitos || oferta.requisitos.length === 0) faltan.push('requisitos');
+    const faltan = CAMPOS_OBLIGATORIOS_OFERTA.filter(campo =>
+        campo === 'requisitos' ? !oferta[campo] || oferta[campo].length === 0 : !oferta[campo]
+    );
 
     if (faltan.length > 0) {
         throw AppError.badRequest(`Para publicar la oferta faltan estos datos: ${faltan.join(', ')}`, faltan);
@@ -15,10 +13,6 @@ const verificarCompleta = oferta => {
 };
 
 const listar = async (empresaId, estado) => {
-    if (estado && !Object.values(ESTADOS_OFERTA).includes(estado)) {
-        throw AppError.badRequest('El estado debe ser borrador, activa o cerrada');
-    }
-
     return ofertasRepository.listarPorEmpresa(empresaId, estado);
 };
 

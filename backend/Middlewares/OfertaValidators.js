@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { MODALIDADES, CONTRATOS, EXPERIENCIAS, SECTORES } from '../Constants/ofertas.js';
-import { textoObligatorio, textoOpcional } from './Validators.js';
+import { MODALIDADES, CONTRATOS, EXPERIENCIAS, SECTORES, ESTADOS_CREACION_OFERTA, ESTADOS_OFERTA } from '../Constants/ofertas.js';
+import { esquemaId, textoObligatorio, textoOpcional } from './Validators.js';
 
 const lista = z.preprocess(
     (valor) => typeof valor === 'string' ? valor.split('\n').map((linea) => linea.trim()).filter(Boolean) : valor,
@@ -32,5 +32,10 @@ export const ofertaSchema = z.object(campos).refine(salarioCoherente, errorSalar
 
 export const crearOfertaSchema = z.object({
     ...campos,
-    estado: z.enum(['borrador', 'activa'], 'El estado debe ser borrador o activa').default('borrador'),
+    estado: z.enum(ESTADOS_CREACION_OFERTA, 'El estado debe ser borrador o activa').default(ESTADOS_OFERTA.BORRADOR),
 }).refine(salarioCoherente, errorSalario);
+
+export const estadoOfertaQuerySchema = z.object({
+    estado: z.enum(Object.values(ESTADOS_OFERTA)).optional(),
+});
+export const ofertaIdParamsSchema = z.object({ id: esquemaId });

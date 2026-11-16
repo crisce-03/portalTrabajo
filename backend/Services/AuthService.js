@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import * as usuariosRepository from '../Repositories/UsuariosRepository.js';
 import * as empresasRepository from '../Repositories/EmpresasRepository.js';
+import { ROLES } from '../Constants/roles.js';
 import * as candidatosRepository from '../Repositories/CandidatosRepository.js';
 import { signToken } from '../Utils/Token.js';
 import AppError from '../Utils/AppError.js';
@@ -12,7 +13,7 @@ const registrar = async datos => {
         throw AppError.conflict('Ya existe una cuenta con ese correo');
     }
 
-    if (datos.tipo === 'empresa' && await empresasRepository.buscarPorNombre(datos.empresa)) {
+    if (datos.tipo === ROLES.EMPRESA && await empresasRepository.buscarPorNombre(datos.empresa)) {
         throw AppError.conflict('Ya existe una empresa con ese nombre');
     }
 
@@ -20,7 +21,7 @@ const registrar = async datos => {
 
     const usuario = await usuariosRepository.crear({ ...datos, claveHash, rol: datos.tipo });
 
-    if (datos.tipo === 'empresa') {
+    if (datos.tipo === ROLES.EMPRESA) {
         await empresasRepository.crear({
             usuarioId: usuario.id,
             nombre: datos.empresa,
