@@ -4,6 +4,9 @@ function avisar(form, texto) {
   if (estado) estado.textContent = texto;
 }
 
+// Los campos del formulario como objeto para la API; los vacíos no se envían (la API los guarda como "sin dato")
+const datosFormulario = form => Object.fromEntries([...new FormData(form)].filter(([, valor]) => valor !== ''));
+
 // ---------- Formularios ----------
 
 // Ver u ocultar contraseñas

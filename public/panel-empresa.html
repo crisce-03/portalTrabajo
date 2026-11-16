@@ -32,30 +32,30 @@
     <section class="row g-3 mb-4" aria-label="Indicadores empresariales">
       <div class="col-6 col-lg-3">
         <div class="neo-card p-3 h-100">
-          <span class="small text-secondary">Ofertas publicadas</span>
-          <span class="metrica my-1">12</span>
-          <span class="small text-ocean">4 vacantes activas</span>
+          <span class="small text-secondary">Ofertas creadas</span>
+          <span class="metrica my-1" data-indicador="ofertasTotal">—</span>
+          <span class="small text-ocean"><span data-indicador="ofertasActivas">—</span> vacantes activas</span>
         </div>
       </div>
       <div class="col-6 col-lg-3">
         <div class="neo-card p-3 h-100">
           <span class="small text-secondary">Postulaciones recibidas</span>
-          <span class="metrica my-1">86</span>
-          <span class="small text-ocean">+18 esta semana</span>
+          <span class="metrica my-1" data-indicador="postulacionesRecibidas">—</span>
+          <span class="small text-ocean">+<span data-indicador="postulacionesEstaSemana">—</span> esta semana</span>
         </div>
       </div>
       <div class="col-6 col-lg-3">
         <div class="neo-card p-3 h-100">
           <span class="small text-secondary">En revisión</span>
-          <span class="metrica my-1">24</span>
+          <span class="metrica my-1" data-indicador="enRevision">—</span>
           <span class="small text-ocean">Candidaturas pendientes</span>
         </div>
       </div>
       <div class="col-6 col-lg-3">
         <div class="neo-card p-3 h-100">
           <span class="small text-secondary">Candidatos contactados</span>
-          <span class="metrica my-1">15</span>
-          <span class="small text-ocean">Últimos 30 días</span>
+          <span class="metrica my-1" data-indicador="contactados">—</span>
+          <span class="small text-ocean">En total</span>
         </div>
       </div>
     </section>
@@ -75,14 +75,9 @@
             <div class="table-responsive">
               <table class="table table-neo">
                 <thead>
-                  <tr><th scope="col">Oferta</th><th scope="col">Postulaciones</th><th scope="col">Estado</th></tr>
+                  <tr><th scope="col">Oferta</th><th scope="col">Postulaciones</th><th scope="col">Estado</th><th scope="col">Acciones</th></tr>
                 </thead>
-                <tbody>
-                  <tr><td><a class="fw-bold" href="detalle-oferta.html?id=302">Arquitecto de Software Cloud</a></td><td><a href="postulaciones.html">18 candidatos</a></td><td class="text-mar">Activa</td></tr>
-                  <tr><td><a class="fw-bold" href="detalle-oferta.html?id=305">Diseñador UI/UX</a></td><td>12 candidatos</td><td class="text-mar">Activa</td></tr>
-                  <tr><td><span class="fw-bold">QA Automation Engineer</span></td><td>9 candidatos</td><td class="text-secondary">Cerrada</td></tr>
-                  <tr><td><a class="fw-bold" href="detalle-oferta.html?id=311">Backend Developer .NET</a></td><td>22 candidatos</td><td class="text-mar">Activa</td></tr>
-                </tbody>
+                <tbody id="tabla-ofertas"></tbody>
               </table>
             </div>
           </div>
@@ -93,21 +88,17 @@
       <div class="col-lg-4 d-flex flex-column gap-4">
         <!-- Información de la empresa -->
         <section class="neo-card p-4">
-          <span class="badge-neo badge-neo-salary mb-2"><i class="bi bi-check-lg" aria-hidden="true"></i> Empresa Verificada</span>
-          <h2 class="h5 mb-1">InnovaTech S.A.</h2>
-          <p class="small text-secondary mb-1">Tecnología y desarrollo de software</p>
-          <p class="small text-secondary">San Salvador · rrhh@innovatech.com</p>
+          <span id="verificada" class="badge-neo badge-neo-salary mb-2" hidden><i class="bi bi-check-lg" aria-hidden="true"></i> Empresa Verificada</span>
+          <h2 class="h5 mb-1" data-empresa="nombre"></h2>
+          <p class="small text-secondary mb-1" data-empresa="sector"></p>
+          <p class="small text-secondary"><span data-empresa="ubicacion"></span> · <span data-empresa="correoContacto"></span></p>
           <a class="btn btn-neo-secondary" href="datos-empresa.html">Editar empresa</a>
         </section>
 
         <!-- Candidatos recientes -->
         <section class="neo-card p-4">
           <h2 class="h5">Candidatos recientes</h2>
-          <ul class="list-unstyled small d-grid gap-2">
-            <li><a href="perfil-candidato.html?id=1">Ana Martínez</a> · Arquitecto Cloud</li>
-            <li><a href="perfil-candidato.html?id=2">Carlos Gómez</a> · Backend Developer</li>
-            <li><a href="perfil-candidato.html?id=3">Sofía Ramírez</a> · Diseñador UI/UX</li>
-          </ul>
+          <ul id="candidatos-recientes" class="list-unstyled small d-grid gap-2"></ul>
           <a class="btn btn-neo-primary" href="postulaciones.html">Ver postulaciones</a>
         </section>
       </div>
