@@ -6,6 +6,7 @@ function fromPostgres(err) {
         case '23503': return new AppError('Referencia a un registro que no existe', 409); // FOREIGN KEY
         case '23502': return new AppError('Falta un dato obligatorio', 400);              // NOT NULL
         case '22P02': return new AppError('Formato de dato inválido', 400);               // tipo/ID inválido
+        case '23514': return new AppError('Los datos no cumplen las reglas de validación', 400); // CHECK
         default: return null;
     }
 }

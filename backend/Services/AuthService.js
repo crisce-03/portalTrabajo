@@ -12,6 +12,10 @@ const registrar = async datos => {
         throw AppError.conflict('Ya existe una cuenta con ese correo');
     }
 
+    if (datos.tipo === 'empresa' && await empresasRepository.buscarPorNombre(datos.empresa)) {
+        throw AppError.conflict('Ya existe una empresa con ese nombre');
+    }
+
     const claveHash = await bcrypt.hash(datos.clave, 10);
 
     const usuario = await usuariosRepository.crear({ ...datos, claveHash, rol: datos.tipo });

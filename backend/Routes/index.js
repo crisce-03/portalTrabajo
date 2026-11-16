@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import healthRoutes from '../Routes/HealthRoutes.js';
 import authRoutes from '../Routes/AuthRoutes.js';
+import empresaRoutes from './EmpresaRoutes.js';
 import candidatoRoutes from '../Routes/CandidatoRoutes.js';
 import valoracionRoutes from '../Routes/ValoracionRoutes.js';
 import recursoRoutes from '../Routes/RecursoRoutes.js';
@@ -9,7 +10,8 @@ import recursoRoutes from '../Routes/RecursoRoutes.js';
 const router = Router();
 
 router.use('/health', healthRoutes);
-router.use('/', authRoutes);
+router.use(authRoutes);
+router.use('/empresa', empresaRoutes);
 router.use('/candidatos/me', candidatoRoutes);
 router.use('/valoraciones', valoracionRoutes);
 router.use('/recursos', recursoRoutes);
