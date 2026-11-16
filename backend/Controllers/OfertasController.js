@@ -1,8 +1,9 @@
 import * as ofertasService from '../Services/OfertasService.js';
 import { success } from '../Utils/Response.js';
+import { ESTADOS_OFERTA } from '../Constants/ofertas.js';
 
 const listar = async (req, res) => {
-    const ofertas = await ofertasService.listar(req.empresa.id, req.query.estado);
+    const ofertas = await ofertasService.listar(req.empresa.id, req.consultaValidada.estado);
 
     return success(res, { ofertas });
 };
@@ -15,7 +16,7 @@ const obtener = async (req, res) => {
 
 const crear = async (req, res) => {
     const oferta = await ofertasService.crear(req.empresa.id, req.body);
-    const mensaje = oferta.estado === 'activa' ? 'Oferta publicada' : 'Borrador guardado';
+    const mensaje = oferta.estado === ESTADOS_OFERTA.ACTIVA ? 'Oferta publicada' : 'Borrador guardado';
 
     return success(res, { oferta }, { status: 201, message: mensaje });
 };

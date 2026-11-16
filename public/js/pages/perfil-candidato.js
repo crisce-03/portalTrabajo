@@ -55,17 +55,10 @@ document.getElementById('c-descargar').addEventListener('click', async evento =>
   const enlace = evento.currentTarget;
   enlace.classList.add('disabled');
   try {
-    const token = sessionStorage.getItem('token');
-    const response = await fetch(`/api/empresa/postulaciones/${encodeURIComponent(idPostulacion)}/cv`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({}));
-      throw new Error(error.message || 'No se pudo descargar el CV.');
-    }
-    const url = URL.createObjectURL(await response.blob());
+    const { blob, filename } = await apiDownload(`/empresa/postulaciones/${encodeURIComponent(idPostulacion)}/cv`);
+    const url = URL.createObjectURL(blob);
     const descarga = document.createElement('a');
-    descarga.href = url; descarga.download = document.getElementById('c-archivo').textContent || 'curriculum';
+    descarga.href = url; descarga.download = filename || document.getElementById('c-archivo').textContent || 'curriculum';
     descarga.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
   } catch (error) { avisarError(error); }
   finally { enlace.classList.remove('disabled'); }

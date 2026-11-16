@@ -4,3 +4,5 @@ export const ROLES = Object.freeze({
     EMPRESA: 'empresa',
     ADMIN: 'admin',
 });
+
+export const TIPOS_REGISTRO = [ROLES.CANDIDATO, ROLES.EMPRESA];
