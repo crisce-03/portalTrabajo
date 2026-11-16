@@ -1,4 +1,4 @@
-// Pruebas de la API de perfil de candidato, valoraciones y recursos.
+// Pruebas de la API de perfil de candidato, valoraciones, recursos y la parte de empresa que usa el front.
 // Necesita PostgreSQL con schema.sql cargado. Crea sus propios datos y los borra al terminar.
 // Uso: node pruebas/api.mjs
 import 'dotenv/config';
@@ -102,8 +102,25 @@ try {
     assert.equal((await pedir(`/valoraciones/${e.resenas[0].id}/reportes`, 'POST')).status, 201);
     assert.equal((await pool.query('SELECT COUNT(*)::int AS n FROM reportes WHERE valoracion_id = $1', [e.resenas[0].id])).rows[0].n, 1);
 
-    // ---------- Otros roles ----------
+    // ---------- Empresa y ofertas (punto 3, lo que usa el front) ----------
     token = signToken({ id: duenio, rol: 'empresa' });
+    const datosEmpresa = { nombre: `Empresa ${sello}`, sector: 'Tecnología', correoContacto: 'rrhh@prueba.test', ubicacion: 'San Salvador', acerca: 'Hacemos software.' };
+    r = await pedir('/empresa/perfil', 'PUT', datosEmpresa);
+    assert.deepEqual([r.status, r.data?.empresa?.correoContacto, r.data?.empresa?.ubicacion], [200, 'rrhh@prueba.test', 'San Salvador']);
+    const oferta = { titulo: 'QA', ubicacion: 'San Salvador', modalidad: 'Remoto', contrato: 'Tiempo completo', correoContacto: 'qa@prueba.test', descripcion: 'Pruebas.', salarioMin: 800 };
+    r = await pedir('/empresa/ofertas', 'POST', { titulo: 'QA' });
+    assert.deepEqual([r.status, r.data.oferta.estado], [201, 'borrador']);
+    const idOferta = r.data.oferta.id;
+    assert.equal((await pedir(`/empresa/ofertas/${idOferta}/publicar`, 'PATCH')).status, 400); // le faltan datos
+    r = await pedir(`/empresa/ofertas/${idOferta}`, 'PUT', { ...oferta, requisitos: 'Node\n\nSQL' });
+    assert.deepEqual([r.status, r.data.oferta.requisitos, r.data.oferta.salarioMin], [200, ['Node', 'SQL'], 800]);
+    assert.equal((await pedir(`/empresa/ofertas/${idOferta}/publicar`, 'PATCH')).data.oferta.estado, 'activa');
+    assert.equal((await pedir(`/empresa/ofertas/${idOferta}/cerrar`, 'PATCH')).data.oferta.estado, 'cerrada');
+    r = await pedir('/empresa/resumen');
+    assert.deepEqual([r.data.indicadores.ofertasTotal, r.data.indicadores.ofertasActivas], [1, 0]);
+    assert.equal((await pedir(`/empresa/ofertas/${idOferta}`, 'DELETE')).status, 409); // solo borradores
+
+    // ---------- Otros roles ----------
     assert.equal((await pedir('/candidatos/me')).status, 403);
     assert.equal((await pedir('/valoraciones', 'POST', { empresaId: empresa, calificacion: 5, comentario: 'Somos los mejores.' })).status, 403);
     // La alerta de otra persona no existe para este usuario

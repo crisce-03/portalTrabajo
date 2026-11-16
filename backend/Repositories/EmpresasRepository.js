@@ -96,7 +96,7 @@ const crear = async ({ usuarioId, nombre, sector, correoContacto }) => {
 
 const actualizar = async (id, datos) => {
     const query = 
-        `UPDATE empresas SET nombre = $1, sector = $2, tamano = $3, correo = $4, telefono = $5, ubicacion = $6, sitio_web = $7, acerca = $8 WHERE id = $9 RETURNING ${COLUMNAS}`;
+        `UPDATE empresas SET nombre = $1, sector = $2, tamano = $3, correo_contacto = $4, telefono = $5, ubicacion = $6, sitio_web = $7, acerca = $8 WHERE id = $9 RETURNING ${COLUMNAS}`;
 
     const result = await pool.query(query, [datos.nombre, datos.sector, datos.tamano, datos.correoContacto, datos.telefono || null, datos.ubicacion || null, datos.sitioWeb || null, datos.acerca || null, id]);
 
