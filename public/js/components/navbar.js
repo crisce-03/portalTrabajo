@@ -29,12 +29,19 @@ const ENLACES_POR_ROL = {
 };
 const INICIO_POR_ROL = { candidato: 'perfil-usuario.html', empresa: 'panel-empresa.html', admin: 'admin.html' };
 
-// shortcut: la sesión se simula en sessionStorage; cuando exista login real, el servidor decide el rol
-function leerSesion() { try { return sessionStorage.getItem('usuario'); } catch { return null; } }
-function guardarSesion(rol) { try { sessionStorage.setItem('usuario', rol); } catch { /* sin almacenamiento: solo dura esta página */ } }
+// La sesión vive en sessionStorage: el rol arma la navbar y api.js envía el token en cada petición
+function leerSesion(clave = 'usuario') { try { return sessionStorage.getItem(clave); } catch { return null; } }
+function iniciarSesion(datos) { // datos = { token, usuario } tal como responden /api/login y /api/registro
+  try {
+    sessionStorage.setItem('token', datos.token);
+    sessionStorage.setItem('usuario', datos.usuario.rol);
+    sessionStorage.setItem('nombre', `${datos.usuario.nombre} ${datos.usuario.apellidos[0]}.`);
+  } catch { /* sin almacenamiento: no queda sesión */ }
+}
+function cerrarSesion() { try { ['token', 'usuario', 'nombre'].forEach(clave => sessionStorage.removeItem(clave)); } catch { /* sin almacenamiento */ } }
 const ROLES = ['visitante', 'candidato', 'empresa', 'admin'];
 const rolGuardado = leerSesion();
-const usuario = ROLES.includes(rolGuardado) ? rolGuardado : 'visitante';
+const usuario = ROLES.includes(rolGuardado) && leerSesion('token') ? rolGuardado : 'visitante';
 
 // data-requiere protege visualmente las vistas privadas en este prototipo de frontend.
 const rolRequerido = document.body.dataset.requiere;
@@ -58,14 +65,7 @@ const ACCIONES = {
         <label class="form-label" for="login-correo">Correo electrónico</label>
         <input id="login-correo" name="correo" type="email" class="form-control mb-2" autocomplete="username" required>
         <label class="form-label" for="login-clave">Contraseña</label>
-        <input id="login-clave" name="clave" type="password" class="form-control mb-2" autocomplete="current-password" required>
-        <label class="form-label" for="login-rol">Perfil de demostración</label>
-        <select id="login-rol" name="rol" class="form-select mb-3">
-          <option value="candidato">Candidato</option>
-          <option value="empresa">Empresa</option>
-          <option value="admin">Administrador</option>
-        </select>
-        <div class="form-text mb-2">Elige el tipo de vista que quieres recorrer.</div>
+        <input id="login-clave" name="clave" type="password" class="form-control mb-3" autocomplete="current-password" required>
         <button type="submit" class="btn btn-neo-primary w-100">Entrar</button>
         <p class="small text-center mt-2 mb-0">¿No tienes cuenta? <a href="registro.html">Regístrate</a></p>
         <span role="status" class="small text-danger d-block text-center"></span>
@@ -73,7 +73,7 @@ const ACCIONES = {
     </div>
     <a class="btn btn-neo-primary btn-sm" href="registro.html">Registrarse</a>`,
   candidato: `
-    <a class="badge-neo badge-neo-ocean fs-6" href="perfil-usuario.html"><i class="bi bi-person-circle" aria-hidden="true"></i> Héctor G.</a>
+    <a class="badge-neo badge-neo-ocean fs-6" href="perfil-usuario.html"><i class="bi bi-person-circle" aria-hidden="true"></i> ${esc(leerSesion('nombre') || 'Mi perfil')}</a>
     <a class="btn btn-neo-secondary btn-sm" href="index.html" data-salir>Cerrar Sesión</a>`,
   empresa: `
     <a class="btn btn-neo-secondary btn-sm" href="panel-empresa.html">Mi empresa</a>
@@ -127,26 +127,32 @@ document.body.insertAdjacentHTML('afterbegin',
 
 // ---------- Sesión ----------
 
-document.getElementById('form-login')?.addEventListener('enviado', evento => {
-  const rol = evento.target.rol.value;
-  guardarSesion(rol);
-  // Páginas con data-tras-login="aqui" (p. ej. la postulación) se recargan para seguir donde iba el usuario
-  const destinoSolicitado = parametro('destino');
-  const rolSolicitado = parametro('requiere');
-  const destinoLocal = destinoSolicitado && !destinoSolicitado.includes('://') && !destinoSolicitado.startsWith('/')
-    ? destinoSolicitado
-    : null;
-  evento.target.dataset.destino = destinoLocal && rol === rolSolicitado
-    ? destinoLocal
-    : document.body.dataset.trasLogin === 'aqui'
-      ? location.pathname + location.search
-      : INICIO_POR_ROL[rol];
+document.getElementById('form-login')?.addEventListener('enviado', async evento => {
+  const form = evento.target;
+  try {
+    const { data } = await apiRequest('/login', { method: 'POST', body: JSON.stringify(Object.fromEntries(new FormData(form))) });
+    iniciarSesion(data);
+    const { rol } = data.usuario;
+    // Páginas con data-tras-login="aqui" (p. ej. la postulación) se recargan para seguir donde iba el usuario
+    const destinoSolicitado = parametro('destino');
+    const rolSolicitado = parametro('requiere');
+    const destinoLocal = destinoSolicitado && !destinoSolicitado.includes('://') && !destinoSolicitado.startsWith('/')
+      ? destinoSolicitado
+      : null;
+    location.href = destinoLocal && rol === rolSolicitado
+      ? destinoLocal
+      : document.body.dataset.trasLogin === 'aqui'
+        ? location.pathname + location.search
+        : INICIO_POR_ROL[rol];
+  } catch (error) {
+    avisar(form, error.message);
+  }
 });
 if (parametro('requiere') && usuario === 'visitante') {
   const nombreRol = { candidato: 'candidato', empresa: 'empresa', admin: 'administrador' }[parametro('requiere')];
   if (nombreRol) notificar(`Esta sección es para ${nombreRol}. Inicia sesión para continuar o crea una cuenta.`, 'info');
 }
-document.querySelectorAll('[data-salir]').forEach(link => link.addEventListener('click', () => guardarSesion('visitante')));
+document.querySelectorAll('[data-salir]').forEach(link => link.addEventListener('click', cerrarSesion));
 
 // Enlaces "Inicia sesión" fuera de la navbar abren el formulario del encabezado
 document.querySelectorAll('[data-abrir-login]').forEach(link => link.addEventListener('click', evento => {

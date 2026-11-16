@@ -31,50 +31,51 @@
     <div class="row g-4">
       <!-- Mantenimiento de la empresa -->
       <section class="col-lg-8">
-        <form id="form-empresa" class="neo-card p-4 needs-validation" novalidate data-exito="Cambios guardados.">
+        <form id="form-empresa" class="neo-card p-4 needs-validation" novalidate>
           <h2 class="h5 mb-1">Información general</h2>
           <p class="small text-secondary">Los campos marcados con * son obligatorios.</p>
           <div class="row g-3 mb-3">
             <div class="col-12">
               <label class="form-label" for="e-nombre">Nombre comercial *</label>
-              <input id="e-nombre" name="nombre" class="form-control" value="InnovaTech S.A." required>
+              <input id="e-nombre" name="nombre" class="form-control" required>
             </div>
             <div class="col-md-6">
               <label class="form-label" for="e-sector">Sector laboral *</label>
-              <input id="e-sector" name="sector" class="form-control" value="Tecnología y desarrollo de software" required>
+              <input id="e-sector" name="sector" class="form-control" required>
             </div>
             <div class="col-md-6">
               <label class="form-label" for="e-tamano">Tamaño de empresa</label>
               <select id="e-tamano" name="tamano" class="form-select">
+                <option value="">Sin indicar</option>
                 <option>1 a 10 empleados</option>
                 <option>11 a 50 empleados</option>
-                <option selected>51 a 200 empleados</option>
+                <option>51 a 200 empleados</option>
                 <option>201 a 500 empleados</option>
                 <option>Más de 500 empleados</option>
               </select>
             </div>
             <div class="col-md-6">
               <label class="form-label" for="e-correo">Correo de contacto *</label>
-              <input id="e-correo" name="correo" type="email" class="form-control" value="rrhh@innovatech.com" required>
+              <input id="e-correo" name="correoContacto" type="email" class="form-control" required>
               <div class="invalid-feedback">Escribe un correo válido.</div>
             </div>
             <div class="col-md-6">
               <label class="form-label" for="e-telefono">Teléfono</label>
-              <input id="e-telefono" name="telefono" type="tel" class="form-control" value="(+503) 2222-0000">
+              <input id="e-telefono" name="telefono" type="tel" class="form-control">
             </div>
             <div class="col-12">
               <label class="form-label" for="e-ubicacion">Ubicación principal *</label>
-              <input id="e-ubicacion" name="ubicacion" class="form-control" value="San Salvador, El Salvador" required>
+              <input id="e-ubicacion" name="ubicacion" class="form-control" required>
             </div>
             <div class="col-12">
               <label class="form-label" for="e-web">Sitio web</label>
-              <input id="e-web" name="web" type="url" class="form-control" value="https://innovatech.com">
+              <input id="e-web" name="sitioWeb" type="url" class="form-control">
               <div class="invalid-feedback">Escribe la dirección completa, por ejemplo https://empresa.com</div>
             </div>
           </div>
           <div class="neo-subbox p-3 mb-4">
             <label class="form-label" for="e-acerca">Acerca de la empresa *</label>
-            <textarea id="e-acerca" name="acerca" class="form-control" rows="3" required>Somos una compañía de soluciones tecnológicas especializada en desarrollo de software, arquitectura cloud y consultoría. Impulsamos el talento profesional mediante proyectos innovadores.</textarea>
+            <textarea id="e-acerca" name="acerca" class="form-control" rows="3" required></textarea>
           </div>
           <div class="d-flex flex-wrap align-items-center gap-2">
             <button type="reset" class="btn btn-neo-secondary px-4">Cancelar cambios</button>
@@ -88,18 +89,17 @@
         <!-- Vista previa pública -->
         <section class="neo-card p-4" aria-live="polite">
           <span class="badge-neo badge-neo-salary mb-2"><i class="bi bi-check-lg" aria-hidden="true"></i> Perfil empresarial activo</span>
-          <h2 class="h5 mb-1"><i class="bi bi-building me-1" aria-hidden="true"></i><span data-espejo="nombre" data-vacio="Nombre comercial">InnovaTech S.A.</span></h2>
-          <p class="small text-secondary mb-1" data-espejo="sector">Tecnología y desarrollo de software</p>
-          <p class="small text-secondary" data-espejo="ubicacion">San Salvador, El Salvador</p>
-          <p class="small">“Impulsamos talento y soluciones tecnológicas.”</p>
-          <a class="btn btn-neo-secondary btn-sm" href="valoraciones.html#innovatech-sa">Ver perfil público</a>
+          <h2 class="h5 mb-1"><i class="bi bi-building me-1" aria-hidden="true"></i><span data-espejo="nombre" data-vacio="Nombre comercial"></span></h2>
+          <p class="small text-secondary mb-1" data-espejo="sector"></p>
+          <p class="small text-secondary" data-espejo="ubicacion"></p>
+          <a class="btn btn-neo-secondary btn-sm" id="perfil-publico" href="valoraciones.html">Ver perfil público</a>
         </section>
 
         <!-- Estado -->
         <section class="neo-card p-4">
           <h2 class="h6">Estado de la empresa</h2>
-          <span class="badge-neo badge-neo-salary mb-2">Verificada</span>
-          <p class="small text-secondary mb-0">Última actualización: <span id="actualizado">20 de octubre de 2026</span></p>
+          <span id="verificada" class="badge-neo badge-neo-salary mb-2" hidden>Verificada</span>
+          <p class="small text-secondary mb-0">Última actualización: <span id="actualizado">—</span></p>
         </section>
       </div>
     </div>

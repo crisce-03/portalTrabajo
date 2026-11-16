@@ -31,16 +31,16 @@
     <div class="row g-4">
       <!-- Formulario de la vacante -->
       <section class="col-lg-8">
-        <form id="form-oferta" class="neo-card p-4 needs-validation" novalidate data-exito="Oferta publicada correctamente.">
+        <form id="form-oferta" class="neo-card p-4 needs-validation" novalidate>
           <span class="badge-neo badge-neo-ocean mb-3">Nueva vacante</span>
           <div class="row g-3 mb-3">
             <div class="col-12">
               <label class="form-label" for="o-titulo">Título del trabajo *</label>
-              <input id="o-titulo" name="titulo" class="form-control" value="Ingeniero de Desarrollo de Software" required>
+              <input id="o-titulo" name="titulo" class="form-control" placeholder="Ej.: Ingeniero de Desarrollo de Software" required>
             </div>
             <div class="col-md-6">
               <label class="form-label" for="o-ubicacion">Ubicación *</label>
-              <input id="o-ubicacion" name="ubicacion" class="form-control" value="San Salvador, El Salvador" required>
+              <input id="o-ubicacion" name="ubicacion" class="form-control" placeholder="Ej.: San Salvador, El Salvador" required>
             </div>
             <div class="col-md-6">
               <label class="form-label" for="o-modalidad">Modalidad *</label>
@@ -60,42 +60,55 @@
               </select>
             </div>
             <div class="col-md-6">
-              <label class="form-label" for="o-experiencia">Experiencia requerida</label>
-              <select id="o-experiencia" name="experiencia" class="form-select">
-                <option>Sin experiencia</option>
-                <option>Junior (0 a 2 años)</option>
-                <option selected>Intermedio (2 a 4 años)</option>
-                <option>Senior (5 años o más)</option>
+              <label class="form-label" for="o-sector">Sector laboral *</label>
+              <select id="o-sector" name="sector" class="form-select" required>
+                <option value="">Elige un sector</option>
+                <option>Tecnología</option>
+                <option>Diseño</option>
+                <option>Administración y finanzas</option>
+                <option>Marketing</option>
+                <option>Otro</option>
               </select>
             </div>
             <div class="col-md-6">
-              <label class="form-label" for="o-salario">Rango salarial (USD)</label>
-              <input id="o-salario" name="salario" class="form-control" value="$1,200 – $1,800">
+              <label class="form-label" for="o-experiencia">Experiencia requerida</label>
+              <select id="o-experiencia" name="experiencia" class="form-select">
+                <option>Sin experiencia</option>
+                <option value="Junior">Junior (0 a 2 años)</option>
+                <option value="Intermedio" selected>Intermedio (2 a 4 años)</option>
+                <option value="Senior">Senior (5 años o más)</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="o-salario-min">Rango salarial (USD)</label>
+              <div class="input-group">
+                <input id="o-salario-min" name="salarioMin" type="number" min="0" step="0.01" class="form-control" placeholder="Mínimo" aria-label="Rango salarial (USD), mínimo">
+                <span class="input-group-text">a</span>
+                <input id="o-salario-max" name="salarioMax" type="number" min="0" step="0.01" class="form-control" placeholder="Máximo" aria-label="Rango salarial (USD), máximo">
+              </div>
             </div>
             <div class="col-md-6">
               <label class="form-label" for="o-correo">Correo de contacto *</label>
-              <input id="o-correo" name="correo" type="email" class="form-control" value="talento@innovatech.com" required>
+              <input id="o-correo" name="correoContacto" type="email" class="form-control" placeholder="Ej.: talento@empresa.com" required>
               <div class="invalid-feedback">Escribe un correo válido.</div>
             </div>
           </div>
 
           <div class="neo-subbox p-3 mb-3">
             <label class="form-label" for="o-descripcion">Descripción del puesto *</label>
-            <textarea id="o-descripcion" name="descripcion" class="form-control" rows="3" required>Buscamos a un profesional apasionado por el desarrollo de aplicaciones web, la colaboración técnica y la mejora continua de nuestros productos.</textarea>
+            <textarea id="o-descripcion" name="descripcion" class="form-control" rows="3" required></textarea>
           </div>
           <div class="neo-subbox p-3 mb-3">
             <label class="form-label" for="o-requisitos">Requisitos *</label>
-            <textarea id="o-requisitos" name="requisitos" class="form-control" rows="3" required>• Experiencia con JavaScript y bases de datos.
-• Conocimiento de APIs REST y control de versiones.
-• Habilidades de comunicación y trabajo en equipo.</textarea>
+            <textarea id="o-requisitos" name="requisitos" class="form-control" rows="3" placeholder="Uno por línea" required></textarea>
           </div>
           <div class="neo-subbox p-3 mb-4">
             <label class="form-label" for="o-beneficios">Beneficios</label>
-            <textarea id="o-beneficios" name="beneficios" class="form-control" rows="2">Seguro médico, capacitaciones, horario flexible y oportunidades de crecimiento.</textarea>
+            <textarea id="o-beneficios" name="beneficios" class="form-control" rows="2" placeholder="Uno por línea"></textarea>
           </div>
 
           <div class="d-flex flex-wrap align-items-center gap-2">
-            <button type="button" class="btn btn-neo-secondary px-4" data-aviso="Borrador guardado.">Guardar borrador</button>
+            <button id="guardar-borrador" type="button" class="btn btn-neo-secondary px-4">Guardar borrador</button>
             <button type="submit" class="btn btn-neo-primary px-4">Publicar oferta</button>
             <span role="status" class="small fw-bold ms-2"></span>
           </div>
@@ -106,10 +119,10 @@
         <!-- Vista previa en vivo -->
         <section class="neo-card p-4" aria-live="polite">
           <span class="badge-neo badge-neo-ocean mb-2">Vista previa</span>
-          <h2 class="h5 mb-1" data-espejo="titulo" data-vacio="Título del trabajo">Ingeniero de Desarrollo de Software</h2>
-          <p class="fw-bold small mb-1">InnovaTech S.A.</p>
-          <p class="small text-secondary mb-1"><span data-espejo="ubicacion">San Salvador, El Salvador</span> · <span data-espejo="modalidad">Híbrido</span></p>
-          <p class="fw-bold text-mar" data-espejo="salario" data-vacio="Salario a convenir">$1,200 – $1,800</p>
+          <h2 class="h5 mb-1" data-espejo="titulo" data-vacio="Título del trabajo"></h2>
+          <p class="fw-bold small mb-1" data-nombre-empresa></p>
+          <p class="small text-secondary mb-1"><span data-espejo="ubicacion"></span> · <span data-espejo="modalidad">Híbrido</span></p>
+          <p class="fw-bold text-mar" data-salario>Salario a convenir</p>
           <button type="button" class="btn btn-neo-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modal-vista">Vista previa</button>
         </section>
 
@@ -136,13 +149,14 @@
         </div>
         <div class="modal-body">
           <div class="neo-card p-4">
-            <h3 class="h4 mb-1" data-espejo="titulo" data-vacio="Título del trabajo">Ingeniero de Desarrollo de Software</h3>
-            <p class="text-secondary mb-2">InnovaTech S.A. · <span data-espejo="ubicacion">San Salvador, El Salvador</span> · Contacto: <span data-espejo="correo">talento@innovatech.com</span></p>
+            <h3 class="h4 mb-1" data-espejo="titulo" data-vacio="Título del trabajo"></h3>
+            <p class="text-secondary mb-2"><span data-nombre-empresa></span> · <span data-espejo="ubicacion"></span> · Contacto: <span data-espejo="correoContacto"></span></p>
             <div class="d-flex flex-wrap gap-2 mb-3">
+              <span class="badge-neo badge-neo-ocean" data-espejo="sector" data-vacio="Sin sector"></span>
               <span class="badge-neo badge-neo-neutral" data-espejo="modalidad">Híbrido</span>
               <span class="badge-neo badge-neo-neutral" data-espejo="contrato">Tiempo completo</span>
               <span class="badge-neo badge-neo-warning" data-espejo="experiencia">Intermedio (2 a 4 años)</span>
-              <span class="badge-neo badge-neo-salary" data-espejo="salario" data-vacio="Salario a convenir">$1,200 – $1,800</span>
+              <span class="badge-neo badge-neo-salary" data-salario>Salario a convenir</span>
             </div>
             <h4 class="h6">Descripción del puesto</h4>
             <p class="small text-secondary" style="white-space:pre-line" data-espejo="descripcion"></p>

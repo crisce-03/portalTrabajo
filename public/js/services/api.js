@@ -7,7 +7,11 @@ async function apiRequest(route, options = {}) {
   if (options.body && !(options.body instanceof FormData) && !headers.has('Content-Type')) {
     headers.set('Content-Type', 'application/json');
   }
+  let token = null;
+  try { token = sessionStorage.getItem('token'); } catch { /* sin almacenamiento: va sin sesión */ }
+  if (token) headers.set('Authorization', `Bearer ${token}`);
   const response = await fetch(url, { ...options, headers });
+  if (response.status === 401 && token) cerrarSesion(); // token vencido: la próxima página pide iniciar sesión
 
   const payload = await response.json().catch(() => null);
   if (!response.ok) {

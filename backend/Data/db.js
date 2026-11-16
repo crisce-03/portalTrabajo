@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const { Pool } = pg;
+pg.types.setTypeParser(1700, Number);
 
 const pool = new Pool({
     user: process.env.DB_USER,
