@@ -60,6 +60,17 @@
               </select>
             </div>
             <div class="col-md-6">
+              <label class="form-label" for="o-sector">Sector laboral *</label>
+              <select id="o-sector" name="sector" class="form-select" required>
+                <option value="">Elige un sector</option>
+                <option>Tecnología</option>
+                <option>Diseño</option>
+                <option>Administración y finanzas</option>
+                <option>Marketing</option>
+                <option>Otro</option>
+              </select>
+            </div>
+            <div class="col-md-6">
               <label class="form-label" for="o-experiencia">Experiencia requerida</label>
               <select id="o-experiencia" name="experiencia" class="form-select">
                 <option>Sin experiencia</option>
@@ -141,6 +152,7 @@
             <h3 class="h4 mb-1" data-espejo="titulo" data-vacio="Título del trabajo"></h3>
             <p class="text-secondary mb-2"><span data-nombre-empresa></span> · <span data-espejo="ubicacion"></span> · Contacto: <span data-espejo="correoContacto"></span></p>
             <div class="d-flex flex-wrap gap-2 mb-3">
+              <span class="badge-neo badge-neo-ocean" data-espejo="sector" data-vacio="Sin sector"></span>
               <span class="badge-neo badge-neo-neutral" data-espejo="modalidad">Híbrido</span>
               <span class="badge-neo badge-neo-neutral" data-espejo="contrato">Tiempo completo</span>
               <span class="badge-neo badge-neo-warning" data-espejo="experiencia">Intermedio (2 a 4 años)</span>
