@@ -21,25 +21,59 @@ const avisarError = error => notificar(error.message, 'error');
       } catch (error) { avisarError(error); }
     });
 
-    // Solicitudes: las de ejemplo más las enviadas desde la postulación
-    // shortcut: con la API, GET /api/candidatos/me/postulaciones
-    const ESTADO_SOLICITUD = { recibida: ['Recibida', 'neutral'], ...ESTADOS };
-    const solicitudes = [
-      ...guardados('postulaciones').reverse().map(p => ({ oferta: p.oferta, fecha: p.fecha, estado: 'recibida' })),
-      { oferta: 302, fecha: '2026-10-20', estado: 'revision' },
-      { oferta: 318, fecha: '2026-10-15', estado: 'pendiente' },
-      { oferta: 320, fecha: '2026-10-02', estado: 'contactado' },
-    ];
-    document.getElementById('tabla-solicitudes').innerHTML = solicitudes.map(s => {
-      const o = OFERTAS.find(x => x.id === s.oferta);
-      const [texto, color] = ESTADO_SOLICITUD[s.estado];
-      return `<tr>
-        <td><a class="fw-bold" href="detalle-oferta.html?id=${o.id}">${esc(o.titulo)}</a></td>
-        <td>${esc(o.empresa)}</td>
-        <td>${formatoFecha(s.fecha)}</td>
-        <td><span class="badge-neo badge-neo-${color}">${texto}</span></td>
-      </tr>`;
-    }).join('');
+    // Las solicitudes y ofertas guardadas pertenecen a la cuenta y se cargan desde la API.
+    async function cargarPostulaciones() {
+      const { data } = await apiRequest('/candidatos/me/postulaciones');
+      const solicitudes = data.postulaciones;
+      document.getElementById('tabla-solicitudes').innerHTML = solicitudes.map(s => `
+        <tr>
+          <td><a class="fw-bold" href="detalle-oferta.html?id=${s.ofertaId}">${esc(s.titulo)}</a></td>
+          <td>${esc(s.empresa)}</td>
+          <td>${formatoFecha(String(s.fecha).slice(0, 10))}</td>
+          <td>${insigniaEstado(s.estado)}</td>
+          <td><div class="d-flex flex-column align-items-start gap-1">
+            <label class="btn btn-neo-secondary btn-sm" for="cv-postulacion-${s.id}">${s.tieneCv ? 'Cambiar CV' : 'Cargar CV'}</label>
+            <input id="cv-postulacion-${s.id}" class="visually-hidden" type="file" accept=".pdf,.docx" data-cv-postulacion="${s.id}" aria-label="${s.tieneCv ? 'Cambiar' : 'Cargar'} CV para ${esc(s.titulo)}">
+            <span class="small text-secondary">${esc(s.cvNombre || 'Sin CV')}</span>
+          </div></td>
+        </tr>`).join('') || '<tr><td colspan="5" class="text-secondary">Aún no has enviado postulaciones.</td></tr>';
+    }
+    cargarPostulaciones().catch(avisarError);
+
+    document.getElementById('tabla-solicitudes').addEventListener('change', async evento => {
+      const input = evento.target.closest('[data-cv-postulacion]');
+      const archivo = input?.files[0];
+      if (!archivo) return;
+      const extension = archivo.name.slice(archivo.name.lastIndexOf('.')).toLowerCase();
+      if (!['.pdf', '.docx'].includes(extension) || archivo.size > 5 * 1024 * 1024) {
+        input.value = '';
+        notificar(archivo.size > 5 * 1024 * 1024 ? 'El CV supera 5 MB.' : 'El CV debe ser PDF o DOCX.', 'error');
+        return;
+      }
+      input.disabled = true;
+      const datos = new FormData(); datos.set('cv', archivo);
+      try {
+        const { message } = await apiRequest(`/candidatos/me/postulaciones/${input.dataset.cvPostulacion}/cv`, { method: 'PUT', body: datos });
+        notificar(message);
+        await cargarPostulaciones();
+      } catch (error) {
+        input.value = '';
+        input.disabled = false;
+        avisarError(error);
+      }
+    });
+
+    apiRequest('/candidatos/me/guardadas').then(({ data }) => {
+      const lista = document.getElementById('lista-guardadas');
+      lista.innerHTML = data.ofertas.map(o => `
+        <article class="neo-subbox p-3 d-flex flex-wrap align-items-center justify-content-between gap-2" data-oferta-guardada="${o.id}">
+          <div><a class="fw-bold" href="detalle-oferta.html?id=${o.id}">${esc(o.titulo)}</a><div class="small text-secondary">${esc(o.empresa)} · ${esc(o.ubicacion || 'Ubicación no especificada')}</div></div>
+          <div class="d-flex align-items-center gap-2"><span class="small fw-bold text-mar">${esc(o.salarioMin != null && o.salarioMax != null ? `$${o.salarioMin} – $${o.salarioMax}` : 'Salario a convenir')}</span>
+            <button type="button" class="btn btn-neo-secondary btn-sm" data-guardar-oferta="${o.id}">Quitar</button></div>
+        </article>`).join('');
+      document.getElementById('sin-guardadas').hidden = data.ofertas.length > 0;
+      marcarGuardadas();
+    }).catch(avisarError);
 
     // Alertas: la apagada se ve en gris; las nuevas se agregan a la lista
     const listaAlertas = document.getElementById('lista-alertas');

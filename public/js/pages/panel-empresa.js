@@ -14,7 +14,7 @@ const filaOferta = o => {
     : `<a class="fw-bold" href="publicar-oferta.html?id=${o.id}">${esc(o.titulo)}</a>`;
   return `<tr>
     <td>${titulo}</td>
-    <td>${o.postulaciones} candidato${o.postulaciones === 1 ? '' : 's'}</td>
+    <td><a class="fw-bold" href="postulaciones.html?oferta=${o.id}">${o.postulaciones} candidato${o.postulaciones === 1 ? '' : 's'}</a></td>
     <td class="${clase}">${texto}</td>
     <td class="text-nowrap">${ACCIONES_OFERTA[o.estado].map(([accion, etiqueta]) =>
       `<button type="button" class="btn btn-neo-secondary btn-sm" data-accion="${accion}" data-oferta="${o.id}" aria-label="${etiqueta}: ${esc(o.titulo)}">${etiqueta}</button>`).join(' ')}</td>

@@ -77,13 +77,34 @@
             </div>
           </div>
 
+          <div class="neo-subbox p-3 mb-3">
+            <h3 class="h6">Perfil profesional para la empresa</h3>
+            <p class="small text-secondary">Estos datos se guardarán en tu perfil y la empresa podrá consultarlos al revisar tu candidatura.</p>
+            <label class="form-label" for="c-resumen">Resumen profesional</label>
+            <textarea id="c-resumen" name="resumen" class="form-control mb-3" rows="3" maxlength="2000" placeholder="Experiencia, especialidad y objetivo profesional"></textarea>
+            <label class="form-label" for="c-habilidades">Habilidades destacadas</label>
+            <textarea id="c-habilidades" name="habilidades" class="form-control mb-3" rows="2" placeholder="Una habilidad por línea"></textarea>
+            <label class="form-label" for="c-experiencia">Experiencia laboral</label>
+            <textarea id="c-experiencia" name="experiencia" class="form-control mb-3" rows="3" placeholder="Un puesto o experiencia por línea"></textarea>
+            <label class="form-label" for="c-formacion">Formación</label>
+            <textarea id="c-formacion" name="formacion" class="form-control" rows="2" maxlength="2000" placeholder="Estudios, títulos o certificaciones"></textarea>
+          </div>
+
           <div id="cv-presentacion">
             <div class="neo-subbox p-3 mb-3">
               <h3 class="h6">Currículum vitae (CV)</h3>
-              <p class="small mb-1">Archivo seleccionado: <span id="c-cv-nombre">Hector_Garcia_CV.pdf</span></p>
+              <div class="form-check mb-2">
+                <input class="form-check-input" type="radio" name="cvMode" id="c-cv-perfil" value="perfil">
+                <label class="form-check-label small" for="c-cv-perfil">Usar el CV de mi perfil: <span id="c-cv-nombre">Aún no hay un CV en tu perfil</span></label>
+              </div>
+              <div class="form-check mb-2">
+                <input class="form-check-input" type="radio" name="cvMode" id="c-cv-nuevo" value="nuevo" checked>
+                <label class="form-check-label small" for="c-cv-nuevo">Subir otro CV para esta postulación</label>
+              </div>
+              <p id="c-cv-seleccionado" class="small mb-1">Selecciona el archivo que enviarás.</p>
               <p class="small text-secondary">Formatos sugeridos: PDF o DOCX · Tamaño máximo: 5 MB</p>
               <label class="btn btn-neo-secondary btn-sm" for="c-cv">Cargar archivo</label>
-              <input id="c-cv" name="cv" type="file" accept=".pdf,.docx" class="visually-hidden" data-muestra="c-cv-nombre">
+              <input id="c-cv" name="cv" type="file" accept=".pdf,.docx" class="visually-hidden" data-muestra="c-cv-seleccionado" disabled required>
               <div class="invalid-feedback">El archivo supera 5 MB.</div>
             </div>
 

@@ -58,7 +58,8 @@ const obtenerIndicadores = async (empresaId) => {
             COUNT(p.id)::int AS postulaciones_recibidas,
             COUNT(p.id) FILTER (WHERE p.creado_en > NOW() - INTERVAL '7 days')::int AS postulaciones_esta_semana,
             COUNT(p.id) FILTER (WHERE p.estado = 'revision')::int AS en_revision,
-            COUNT(p.id) FILTER (WHERE p.estado = 'contactado')::int AS contactados
+            COUNT(p.id) FILTER (WHERE p.estado = 'contactado')::int AS contactados,
+            COUNT(p.id) FILTER (WHERE p.estado = 'aceptado')::int AS aceptados
         FROM postulaciones p
         JOIN ofertas o ON o.id = p.oferta_id
         WHERE o.empresa_id = $1`

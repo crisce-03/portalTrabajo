@@ -32,6 +32,7 @@
             <ul class="nav nav-pills nav-pills-neo flex-column text-start">
               <li class="nav-item"><a class="nav-link active" aria-current="true" href="#perfil"><i class="bi bi-person-fill" aria-hidden="true"></i> Mi perfil</a></li>
               <li class="nav-item"><a class="nav-link" href="#solicitudes"><i class="bi bi-file-earmark-check" aria-hidden="true"></i> Solicitudes</a></li>
+              <li class="nav-item"><a class="nav-link" href="#ofertas-guardadas"><i class="bi bi-bookmark" aria-hidden="true"></i> Ofertas guardadas</a></li>
               <li class="nav-item"><a class="nav-link" href="#alertas"><i class="bi bi-bell" aria-hidden="true"></i> Alertas</a></li>
               <li class="nav-item"><a class="nav-link" href="#valoraciones"><i class="bi bi-star" aria-hidden="true"></i> Valoraciones</a></li>
             </ul>
@@ -151,6 +152,13 @@
           </section>
 
           <!-- Solicitudes enviadas -->
+          <section id="ofertas-guardadas" class="col-12">
+            <div class="neo-card p-3">
+              <h2 class="h5">Ofertas guardadas</h2>
+              <div id="lista-guardadas" class="d-grid gap-2"></div>
+              <p id="sin-guardadas" class="small text-secondary mb-0" hidden>Aún no has guardado ofertas.</p>
+            </div>
+          </section>
           <section id="solicitudes" class="col-12">
             <div class="neo-card overflow-hidden">
               <div class="p-3 border-bottom border-dark d-flex flex-wrap justify-content-between align-items-center gap-2" style="background:var(--bg-canvas);">
@@ -160,7 +168,7 @@
               <div class="table-responsive">
                 <table class="table table-neo">
                   <thead>
-                    <tr><th scope="col">Vacante</th><th scope="col">Empresa</th><th scope="col">Fecha</th><th scope="col">Estado</th></tr>
+                    <tr><th scope="col">Vacante</th><th scope="col">Empresa</th><th scope="col">Fecha</th><th scope="col">Estado</th><th scope="col">Currículum</th></tr>
                   </thead>
                   <tbody id="tabla-solicitudes"></tbody>
                 </table>

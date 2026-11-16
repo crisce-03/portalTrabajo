@@ -26,3 +26,11 @@ export const updateAlerta = async (req, res) => {
 
     return success(res, alerta, { message: 'Alerta actualizada' });
 }
+
+export const getGuardadas = async (req, res) => success(res, { ofertas: await candidatoService.listarOfertasGuardadas(req.usuario.id) });
+
+export const saveGuardada = async (req, res) => success(res,
+    await candidatoService.guardarOferta(req.usuario.id, req.params.ofertaId), { message: 'Oferta guardada' });
+
+export const removeGuardada = async (req, res) => success(res,
+    await candidatoService.quitarOfertaGuardada(req.usuario.id, req.params.ofertaId), { message: 'Oferta quitada de guardadas' });

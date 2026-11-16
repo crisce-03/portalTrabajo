@@ -17,10 +17,10 @@ export default class AppError extends Error {
     static forbidden(message = 'No tienes permisos para esta acción') {
         return new AppError(message, 403);
     }
-    static notFound(message = 'Recurso no encontrado') {
+    static notFound(message = 'Registro no encontrado') {
         return new AppError(message, 404);
     }
-    static conflict(message = 'El recurso ya existe') {
+    static conflict(message = 'El registro ya existe') {
         return new AppError(message, 409);
     }
 }

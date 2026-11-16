@@ -5,6 +5,10 @@ dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+if (!JWT_SECRET) {
+    throw new Error('Falta JWT_SECRET en la configuración del entorno');
+}
+
 const signToken = usuario => {
     return jtw.sign({id: usuario.id, rol: usuario.rol}, JWT_SECRET, { expiresIn: "1h" });
 }

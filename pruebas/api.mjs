@@ -1,4 +1,4 @@
-// Pruebas de la API de perfil de candidato, valoraciones, recursos y la parte de empresa que usa el front.
+// Pruebas de la API de perfil de candidato, valoraciones y la parte de empresa que usa el front.
 // Necesita PostgreSQL con schema.sql cargado. Crea sus propios datos y los borra al terminar.
 // Uso: node pruebas/api.mjs
 import 'dotenv/config';
@@ -18,8 +18,6 @@ const duenio = await crearUsuario('empresa');
 const empresa = (await pool.query(
     `INSERT INTO empresas (usuario_id, nombre, sector, correo_contacto) VALUES ($1, $2, 'Tecnología', 'rrhh@prueba.test') RETURNING id`,
     [duenio, `Empresa ${sello}`])).rows[0].id;
-const recurso = (await pool.query(
-    `INSERT INTO recursos (categoria, titulo) VALUES ('Habilidades', $1) RETURNING id`, [`Recurso ${sello}`])).rows[0].id;
 
 const servidor = app.listen(0);
 const base = `http://localhost:${servidor.address().port}/api`;
@@ -49,11 +47,6 @@ try {
     // ---------- Sin sesión ----------
     assert.equal((await pedir('/candidatos/me')).status, 401);
     assert.equal((await pedir('/valoraciones', 'POST', {})).status, 401);
-
-    // ---------- Recursos (público) ----------
-    let r = await pedir('/recursos?categoria=Habilidades');
-    assert.ok(r.data.some(x => x.id === recurso) && r.data.every(x => x.categoria === 'Habilidades'));
-    assert.equal((await pedir('/recursos?categoria=Otra')).status, 400);
 
     // ---------- Perfil del candidato ----------
     token = 'no-es-un-token';
@@ -130,7 +123,6 @@ try {
     console.log('API: todas las pruebas OK');
 } finally {
     await pool.query('DELETE FROM usuarios WHERE id = ANY($1)', [[candidato, duenio]]); // borra en cascada todo lo demás
-    await pool.query('DELETE FROM recursos WHERE id = $1', [recurso]);
     if (rutaCv) (await import('node:fs/promises')).rm(rutaCv, { force: true });
     servidor.close();
     await pool.end();

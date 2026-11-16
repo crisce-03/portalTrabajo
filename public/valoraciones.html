@@ -29,25 +29,61 @@
 
     <!-- Búsqueda y orden -->
     <section id="herramientas" class="neo-card p-3 mb-4 row g-2 align-items-end mx-0">
-      <div class="col-md-6">
+      <div class="col-md-4">
         <label class="form-label" for="v-buscar">Buscar empresa</label>
         <input id="v-buscar" type="search" class="form-control" placeholder="Nombre, sector o ciudad">
       </div>
-      <div class="col-md-3">
+      <div class="col-md-2">
+        <label class="form-label" for="v-sector">Sector</label>
+        <select id="v-sector" class="form-select"><option value="">Todos</option></select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label" for="v-minimo">Calificación mínima</label>
+        <select id="v-minimo" class="form-select"><option value="">Cualquiera</option><option value="4">4 estrellas</option><option value="3">3 estrellas</option><option value="2">2 estrellas</option><option value="1">1 estrella</option></select>
+      </div>
+      <div class="col-md-2">
         <label class="form-label" for="v-orden">Ordenar por</label>
         <select id="v-orden" class="form-select">
           <option value="promedio">Mejor valoradas</option>
           <option value="opiniones">Más opiniones</option>
         </select>
       </div>
-      <div class="col-md-3">
-        <a class="btn btn-neo-primary w-100" href="perfil-usuario.html#valoraciones"><i class="bi bi-star me-1" aria-hidden="true"></i>Valorar una empresa</a>
+      <div class="col-md-2">
+        <button type="button" class="btn btn-neo-primary w-100" data-bs-toggle="modal" data-bs-target="#modal-valoracion"><i class="bi bi-star me-1" aria-hidden="true"></i>Valorar empresa</button>
       </div>
     </section>
 
     <div id="lista-empresas" class="d-grid gap-4"></div>
     <p id="sin-empresas" class="text-secondary" hidden>Ninguna empresa coincide con tu búsqueda.</p>
+    <nav id="paginacion" class="d-flex justify-content-between align-items-center gap-3 mt-4" aria-label="Paginación de empresas">
+      <button id="pagina-anterior" type="button" class="btn btn-neo-secondary">Anterior</button>
+      <span id="pagina-info" class="small text-secondary" aria-live="polite"></span>
+      <button id="pagina-siguiente" type="button" class="btn btn-neo-secondary">Siguiente</button>
+    </nav>
   </main>
+
+  <div class="modal fade" id="modal-valoracion" tabindex="-1" aria-labelledby="titulo-modal-valoracion" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered"><div class="modal-content">
+      <form id="form-valoracion-modal" class="needs-validation" novalidate>
+        <div class="modal-header"><h2 id="titulo-modal-valoracion" class="modal-title h5">Valorar una empresa</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button></div>
+        <div class="modal-body">
+          <label class="form-label" for="vm-empresa">Empresa donde has laborado</label>
+          <select id="vm-empresa" name="empresaId" class="form-select mb-3" required><option value="">Selecciona una empresa</option></select>
+          <fieldset class="estrellas mb-3"><legend class="form-label">Calificación</legend>
+            <input type="radio" class="btn-check" name="calificacion" id="vm-c-1" value="1" required><label for="vm-c-1"><i class="bi bi-star" aria-hidden="true"></i><span class="visually-hidden">1 estrella</span></label>
+            <input type="radio" class="btn-check" name="calificacion" id="vm-c-2" value="2"><label for="vm-c-2"><i class="bi bi-star" aria-hidden="true"></i><span class="visually-hidden">2 estrellas</span></label>
+            <input type="radio" class="btn-check" name="calificacion" id="vm-c-3" value="3"><label for="vm-c-3"><i class="bi bi-star" aria-hidden="true"></i><span class="visually-hidden">3 estrellas</span></label>
+            <input type="radio" class="btn-check" name="calificacion" id="vm-c-4" value="4"><label for="vm-c-4"><i class="bi bi-star" aria-hidden="true"></i><span class="visually-hidden">4 estrellas</span></label>
+            <input type="radio" class="btn-check" name="calificacion" id="vm-c-5" value="5"><label for="vm-c-5"><i class="bi bi-star" aria-hidden="true"></i><span class="visually-hidden">5 estrellas</span></label>
+          </fieldset>
+          <label class="form-label" for="vm-comentario">Tu experiencia</label>
+          <textarea id="vm-comentario" name="comentario" class="form-control" rows="4" placeholder="Escribe tu experiencia..." required minlength="10" maxlength="1000"></textarea>
+          <span role="status" class="small text-danger d-block mt-2"></span>
+        </div>
+        <div class="modal-footer"><button type="button" class="btn btn-neo-secondary" data-bs-dismiss="modal">Cancelar</button><button type="submit" class="btn btn-neo-primary">Enviar valoración</button></div>
+      </form>
+    </div></div>
+  </div>
 
   <footer id="pie"></footer>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

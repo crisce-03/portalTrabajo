@@ -1,15 +1,60 @@
 const campoBuscar = document.getElementById('v-buscar');
 const campoOrden = document.getElementById('v-orden');
+const campoSector = document.getElementById('v-sector');
+const campoMinimo = document.getElementById('v-minimo');
 const lista = document.getElementById('lista-empresas');
+const SECTORES_OFERTA = ['Tecnología', 'Diseño', 'Administración y finanzas', 'Marketing', 'Otro'];
+const POR_PAGINA = 6;
 let empresasValoradas = [];
+let pagina = 1;
+
+function leerUrl() {
+  const params = new URLSearchParams(location.search);
+  campoBuscar.value = params.get('q') || '';
+  campoOrden.value = ['promedio', 'opiniones'].includes(params.get('orden')) ? params.get('orden') : 'promedio';
+  campoSector.value = params.get('sector') || '';
+  campoMinimo.value = ['1', '2', '3', '4'].includes(params.get('min')) ? params.get('min') : '';
+  pagina = Math.max(1, Number.parseInt(params.get('page') || '1', 10) || 1);
+}
+
+function guardarUrl({ historial = 'replace' } = {}) {
+  const params = new URLSearchParams();
+  if (campoBuscar.value.trim()) params.set('q', campoBuscar.value.trim());
+  if (campoSector.value) params.set('sector', campoSector.value);
+  if (campoMinimo.value) params.set('min', campoMinimo.value);
+  if (campoOrden.value !== 'promedio') params.set('orden', campoOrden.value);
+  if (pagina > 1) params.set('page', String(pagina));
+  const url = `${location.pathname}${params.size ? `?${params}` : ''}${location.hash}`;
+  history[historial === 'push' ? 'pushState' : 'replaceState']({}, '', url);
+}
+
+function empresasFiltradas() {
+  const consulta = normalizar(campoBuscar.value);
+  const sector = normalizar(campoSector.value);
+  const minimo = Number(campoMinimo.value || 0);
+  return empresasValoradas.filter(e =>
+    normalizar(`${e.nombre} ${e.sector || ''} ${e.ubicacion || ''}`).includes(consulta)
+    && (!sector || normalizar(e.sector || '') === sector)
+    && (Number(e.promedio || 0) >= minimo))
+    .sort((a, b) => (Number(b[campoOrden.value] || 0) - Number(a[campoOrden.value] || 0))
+      || a.nombre.localeCompare(b.nombre, 'es'));
+}
 
 function pintar() {
-  const consulta = normalizar(campoBuscar.value);
-  const empresas = empresasValoradas
-    .filter(e => normalizar(`${e.nombre} ${e.sector} ${e.ubicacion ?? ''}`).includes(consulta))
-    .sort((a, b) => (b[campoOrden.value] ?? 0) - (a[campoOrden.value] ?? 0));
+  const empresas = empresasFiltradas();
+  const paginas = Math.max(1, Math.ceil(empresas.length / POR_PAGINA));
+  const paginaSolicitada = pagina;
+  pagina = Math.min(pagina, paginas);
+  if (pagina !== paginaSolicitada) guardarUrl();
+  const desde = (pagina - 1) * POR_PAGINA;
+  const visibles = empresas.slice(desde, desde + POR_PAGINA);
   document.getElementById('sin-empresas').hidden = empresas.length > 0;
-  lista.innerHTML = empresas.map(e => `
+  document.getElementById('paginacion').hidden = empresas.length <= POR_PAGINA;
+  document.getElementById('pagina-info').textContent = empresas.length
+    ? `Página ${pagina} de ${paginas} · ${empresas.length} empresas` : 'Sin resultados';
+  document.getElementById('pagina-anterior').disabled = pagina <= 1;
+  document.getElementById('pagina-siguiente').disabled = pagina >= paginas;
+  lista.innerHTML = visibles.map(e => `
     <article id="empresa-${e.id}" class="neo-card p-4 empresa">
       <div class="row g-4">
         <div class="col-md-4">
@@ -21,7 +66,7 @@ function pintar() {
             <span class="small text-secondary">${e.opiniones} opiniones</span>
           </div>
           <div class="d-flex flex-wrap gap-2">
-            <a class="btn btn-neo-primary btn-sm" href="perfil-usuario.html?empresa=${e.id}#valoraciones">Valorar</a>
+            <button type="button" class="btn btn-neo-primary btn-sm" data-valorar="${e.id}" data-bs-toggle="modal" data-bs-target="#modal-valoracion">Valorar</button>
             <a class="btn btn-neo-secondary btn-sm" href="resultados.html?q=${encodeURIComponent(e.nombre)}">Ver ofertas</a>
           </div>
         </div>
@@ -43,8 +88,31 @@ function pintar() {
     </article>`).join('');
 }
 
-// Reportar envía la reseña a la bandeja de moderación del administrador.
+function cambioFiltro() {
+  pagina = 1;
+  guardarUrl();
+  pintar();
+}
+
+let temporizadorBusqueda;
+campoBuscar.addEventListener('input', () => {
+  clearTimeout(temporizadorBusqueda);
+  temporizadorBusqueda = setTimeout(cambioFiltro, 250);
+});
+[campoSector, campoMinimo, campoOrden].forEach(control => control.addEventListener('change', cambioFiltro));
+document.getElementById('pagina-anterior').addEventListener('click', () => {
+  if (pagina <= 1) return;
+  pagina -= 1; guardarUrl({ historial: 'push' }); pintar();
+});
+document.getElementById('pagina-siguiente').addEventListener('click', () => {
+  if (pagina >= Math.ceil(empresasFiltradas().length / POR_PAGINA)) return;
+  pagina += 1; guardarUrl({ historial: 'push' }); pintar();
+});
+addEventListener('popstate', () => { clearTimeout(temporizadorBusqueda); leerUrl(); pintar(); });
+
 lista.addEventListener('click', async evento => {
+  const valorar = evento.target.closest('[data-valorar]');
+  if (valorar) document.getElementById('vm-empresa').value = valorar.dataset.valorar;
   const boton = evento.target.closest('[data-reportar]');
   if (!boton) return;
   boton.disabled = true;
@@ -58,9 +126,65 @@ lista.addEventListener('click', async evento => {
   }
 });
 
-[campoBuscar, campoOrden].forEach(control => control.addEventListener('input', pintar));
+const formValoracion = document.getElementById('form-valoracion-modal');
+const iconosEstrella = [...formValoracion.querySelectorAll('.estrellas label i')];
+const elegida = () => Number(formValoracion.querySelector('input[name="calificacion"]:checked')?.value || 0);
+const llenarEstrellas = numero => iconosEstrella.forEach((icono, indice) => { icono.className = indice < numero ? 'bi bi-star-fill' : 'bi bi-star'; });
+formValoracion.querySelectorAll('input[name="calificacion"]').forEach(radio => radio.addEventListener('change', () => llenarEstrellas(elegida())));
+formValoracion.querySelectorAll('.estrellas label').forEach((label, indice) => {
+  label.addEventListener('mouseenter', () => llenarEstrellas(indice + 1));
+  label.addEventListener('mouseleave', () => llenarEstrellas(elegida()));
+});
+formValoracion.addEventListener('reset', () => setTimeout(() => llenarEstrellas(0)));
+formValoracion.addEventListener('enviado', async () => {
+  const boton = formValoracion.querySelector('[type="submit"]');
+  boton.disabled = true;
+  try {
+    await apiRequest('/valoraciones', { method: 'POST', body: JSON.stringify({
+      empresaId: formValoracion.elements.empresaId.value,
+      calificacion: elegida(),
+      comentario: formValoracion.elements.comentario.value.trim(),
+    }) });
+    formValoracion.reset();
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('modal-valoracion')).hide();
+    const { data } = await apiRequest('/valoraciones');
+    empresasValoradas = data;
+    llenarSectores();
+    pintar();
+    notificar('¡Gracias! Tu valoración fue enviada.');
+  } catch (error) {
+    const estado = formValoracion.querySelector('[role="status"]');
+    estado.textContent = error.message === 'No autenticado' ? 'Inicia sesión con una cuenta de candidato para valorar.' : error.message;
+  } finally { boton.disabled = false; }
+});
+
+function llenarSectores() {
+  const seleccionado = campoSector.value;
+  const sectores = [...new Set([...SECTORES_OFERTA, ...empresasValoradas.map(e => e.sector).filter(Boolean)])]
+    .sort((a, b) => a.localeCompare(b, 'es'));
+  campoSector.innerHTML = '<option value="">Todos</option>' + sectores.map(sector => `<option value="${esc(sector)}">${esc(sector)}</option>`).join('');
+  campoSector.value = sectores.includes(seleccionado) ? seleccionado : '';
+  document.getElementById('vm-empresa').innerHTML = '<option value="">Selecciona una empresa</option>'
+    + empresasValoradas.map(e => `<option value="${e.id}">${esc(e.nombre)}</option>`).join('');
+}
+
+leerUrl();
 apiRequest('/valoraciones').then(({ data }) => {
   empresasValoradas = data;
+  llenarSectores();
+  // Reaplica la opción de sector leída antes de cargar la lista de filtros.
+  const sectorUrl = new URLSearchParams(location.search).get('sector');
+  campoSector.value = sectorUrl && [...campoSector.options].some(o => o.value === sectorUrl) ? sectorUrl : '';
+  if (location.hash.startsWith('#empresa-')) {
+    const empresaId = location.hash.slice('#empresa-'.length);
+    const posicion = empresasFiltradas().findIndex(e => String(e.id) === empresaId);
+    if (posicion >= 0) { pagina = Math.floor(posicion / POR_PAGINA) + 1; guardarUrl(); }
+  }
   pintar();
-  document.getElementById(location.hash.slice(1))?.scrollIntoView(); // la tarjeta se pinta después de cargar
+  if (location.hash.startsWith('#empresa-')) document.getElementById(location.hash.slice(1))?.scrollIntoView();
+  const empresaPreseleccionada = new URLSearchParams(location.search).get('empresa');
+  if (empresaPreseleccionada && empresasValoradas.some(e => String(e.id) === empresaPreseleccionada)) {
+    document.getElementById('vm-empresa').value = empresaPreseleccionada;
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('modal-valoracion')).show();
+  }
 }).catch(error => notificar(error.message, 'error'));
