@@ -32,11 +32,14 @@
     <section id="oferta-seleccionada" class="neo-card p-3 mb-4 d-flex flex-wrap justify-content-between align-items-center gap-2">
       <div>
         <h2 class="h6 mb-1">Oferta seleccionada</h2>
-        <p class="fw-bold small mb-0">Arquitecto de Software Cloud · #JOB-302 · InnovaTech S.A.</p>
+        <label class="form-label small mb-0" for="seleccionar-oferta">Oferta</label>
+        <select id="seleccionar-oferta" class="form-select form-select-sm mt-1" aria-label="Filtrar postulaciones por oferta">
+          <option value="">Todas mis ofertas</option>
+        </select>
       </div>
       <div class="d-flex align-items-center gap-2">
-        <a class="btn btn-neo-secondary btn-sm" href="detalle-oferta.html?id=302">Ver oferta publicada</a>
-        <span class="badge-neo badge-neo-salary">Activa</span>
+        <a id="ver-oferta-seleccionada" class="btn btn-neo-secondary btn-sm" href="resultados.html">Ver oferta</a>
+        <span id="estado-oferta-seleccionada" class="badge-neo badge-neo-salary">Todas</span>
       </div>
     </section>
 
@@ -45,7 +48,7 @@
       <div class="col-6 col-lg-3"><div class="neo-card p-3 h-100"><span class="small text-secondary">Total de candidatos</span><span id="i-total" class="metrica my-1"></span><span class="small text-ocean">Para esta oferta</span></div></div>
       <div class="col-6 col-lg-3"><div class="neo-card p-3 h-100"><span class="small text-secondary">Pendientes</span><span id="i-pendiente" class="metrica my-1"></span><span class="small text-ocean">Sin revisión</span></div></div>
       <div class="col-6 col-lg-3"><div class="neo-card p-3 h-100"><span class="small text-secondary">En evaluación</span><span id="i-revision" class="metrica my-1"></span><span class="small text-ocean">Perfiles revisados</span></div></div>
-      <div class="col-6 col-lg-3"><div class="neo-card p-3 h-100"><span class="small text-secondary">Contactados</span><span id="i-contactado" class="metrica my-1"></span><span class="small text-ocean">En proceso</span></div></div>
+      <div class="col-6 col-lg-3"><div class="neo-card p-3 h-100"><span class="small text-secondary">Aceptados</span><span id="i-aceptado" class="metrica my-1"></span><span class="small text-ocean">Candidaturas aceptadas</span></div></div>
     </section>
 
     <!-- Lista de postulantes -->
@@ -63,7 +66,8 @@
             <option value="pendiente">Pendiente</option>
             <option value="revision">En revisión</option>
             <option value="contactado">Contactado</option>
-            <option value="descartado">Descartado</option>
+            <option value="aceptado">Aceptado</option>
+            <option value="descartado">Denegado</option>
           </select>
         </div>
         <div class="col-md-3">
@@ -87,6 +91,79 @@
       </div>
     </section>
   </main>
+
+  <div class="modal fade" id="modal-postulacion" tabindex="-1" aria-labelledby="modal-postulacion-titulo" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div>
+            <span class="small text-secondary">Detalle de candidatura</span>
+            <h2 id="modal-postulacion-titulo" class="modal-title h5 mb-0">Candidato</h2>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div id="modal-postulacion-cargando" class="text-secondary py-4 text-center" hidden>Cargando candidatura…</div>
+          <div id="modal-postulacion-contenido" class="application-detail" hidden>
+            <div class="application-detail__top">
+              <div>
+                <div id="detalle-contacto" class="text-secondary"></div>
+                <div id="detalle-oferta" class="small mt-1"></div>
+              </div>
+              <div class="text-md-end">
+                <span id="detalle-estado"></span>
+                <div id="detalle-fecha" class="small text-secondary mt-1"></div>
+              </div>
+            </div>
+            <div class="row g-3 mt-1">
+              <div class="col-lg-7 d-grid gap-3">
+                <section class="neo-subbox p-3">
+                  <h3 class="h6">Resumen profesional</h3>
+                  <p id="detalle-resumen" class="small text-secondary mb-0"></p>
+                </section>
+                <section class="neo-subbox p-3">
+                  <h3 class="h6">Experiencia laboral</h3>
+                  <div id="detalle-experiencia" class="small text-secondary"></div>
+                </section>
+                <section class="neo-subbox p-3">
+                  <h3 class="h6">Formación</h3>
+                  <p id="detalle-formacion" class="small text-secondary mb-0"></p>
+                </section>
+              </div>
+              <div class="col-lg-5 d-grid gap-3 align-content-start">
+                <section class="neo-subbox p-3">
+                  <h3 class="h6">Habilidades</h3>
+                  <div id="detalle-habilidades" class="d-flex flex-wrap gap-2"></div>
+                </section>
+                <section class="neo-subbox p-3">
+                  <h3 class="h6">Mensaje de presentación</h3>
+                  <p id="detalle-mensaje" class="small text-secondary mb-0" style="white-space:pre-line"></p>
+                </section>
+                <section class="neo-subbox p-3 d-flex align-items-center justify-content-between gap-2">
+                  <span id="detalle-cv-nombre" class="small text-secondary text-break"></span>
+                  <button id="descargar-cv-modal" type="button" class="btn btn-neo-secondary btn-sm" data-descargar-cv="" hidden>Descargar CV</button>
+                </section>
+              </div>
+            </div>
+            <section class="application-detail__status mt-3">
+              <div>
+                <label class="form-label mb-1" for="estado-postulacion-modal">Actualizar estado</label>
+                <select id="estado-postulacion-modal" class="form-select">
+                  <option value="pendiente">Pendiente</option>
+                  <option value="revision">En revisión</option>
+                  <option value="contactado">Contactado</option>
+                  <option value="aceptado">Aceptado</option>
+                  <option value="descartado">Denegado</option>
+                </select>
+              </div>
+              <button id="guardar-estado-modal" type="button" class="btn btn-neo-primary">Guardar estado</button>
+              <span id="estado-modal-mensaje" class="small text-secondary" role="status"></span>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <footer id="pie"></footer>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

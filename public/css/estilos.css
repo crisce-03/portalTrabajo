@@ -70,6 +70,49 @@ h1, h2, h3, h4, h5, h6, .font-inter {
 .neo-subbox { background: var(--bg-canvas); box-shadow: var(--shadow-neo-sm); }
 .neo-border { border: var(--border-neo) !important; }
 
+/* Resumen compacto de cada candidatura */
+.applicant-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: .75rem 1.25rem;
+  min-width: 0;
+  padding: .9rem 1rem;
+  background: var(--surface-card);
+  border-radius: var(--radius-neo);
+  box-shadow: var(--shadow-neo-sm);
+}
+.applicant-identity { display: flex; align-items: center; gap: .75rem; min-width: 0; }
+.applicant-avatar {
+  display: inline-flex; flex: 0 0 38px; width: 38px; height: 38px;
+  align-items: center; justify-content: center; border-radius: 50%;
+  background: var(--color-primary-soft); color: var(--color-primary); font-weight: 700;
+}
+.applicant-identity__body { min-width: 0; }
+.applicant-name { margin: 0; font-size: .96rem; line-height: 1.35; overflow-wrap: anywhere; }
+.applicant-contact, .applicant-offer { margin: .1rem 0 0; color: var(--ink-muted); font-size: .8rem; overflow-wrap: anywhere; }
+.applicant-contact a { overflow-wrap: anywhere; }
+.applicant-offer { color: var(--ink-main); }
+.applicant-summary { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: .5rem .85rem; }
+.applicant-compact { display: inline-flex; align-items: center; gap: .35rem; color: var(--ink-muted); font-size: .8rem; white-space: nowrap; }
+.applicant-actions { display: flex; justify-content: flex-end; }
+.application-detail__top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem 1.5rem; padding-bottom: .9rem; border-bottom: 1px solid var(--bs-border-color); }
+.application-detail__status { display: flex; flex-wrap: wrap; align-items: end; gap: .75rem; padding-top: 1rem; border-top: 1px solid var(--bs-border-color); }
+.application-detail__status > div { width: min(100%, 300px); }
+#detalle-experiencia { white-space: pre-line; }
+@media (max-width: 767.98px) {
+  .applicant-card { grid-template-columns: minmax(0, 1fr) auto; gap: .75rem; }
+  .applicant-identity { grid-column: 1 / -1; }
+  .applicant-summary { grid-column: 1; justify-content: flex-start; }
+  .applicant-actions { grid-column: 2; grid-row: 2; }
+  .application-detail__status > div { flex: 1 1 100%; }
+}
+@media (max-width: 459.98px) {
+  .applicant-card { grid-template-columns: minmax(0, 1fr); }
+  .applicant-identity, .applicant-summary, .applicant-actions { grid-column: 1; }
+  .applicant-actions { grid-row: auto; justify-content: flex-start; }
+}
+
 /* Navbar */
 .navbar-neo {
   background: var(--surface-card);
@@ -213,7 +256,12 @@ h1, h2, h3, h4, h5, h6, .font-inter {
 }
 
 /* Tablas */
-.table-neo { --bs-table-bg: #fff; margin-bottom: 0; }
+.table-neo {
+  --bs-table-bg: var(--surface-card);
+  --bs-table-color: var(--ink-main);
+  --bs-table-border-color: var(--bs-border-color);
+  margin-bottom: 0;
+}
 .table-neo thead th {
   background: var(--bg-canvas);
   font-family: 'Inter', sans-serif;
@@ -296,6 +344,13 @@ h1, h2, h3, h4, h5, h6, .font-inter {
   --bs-link-hover-color-rgb: 178, 224, 255;
 }
 :root[data-theme="dark"] .border-dark { border-color: transparent !important; }
+
+:root[data-theme="dark"] .table-neo thead th {
+  color: #fff;
+  background: #203B55;
+  border-bottom-color: #35536B;
+}
+:root[data-theme="dark"] .table-neo tbody td { color: var(--ink-main); }
 
 
 :root[data-theme="dark"] .form-control,

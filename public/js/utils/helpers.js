@@ -14,16 +14,12 @@ const estrellas = valor => [1, 2, 3, 4, 5].map(n =>
 
 const ESTADOS = {
   pendiente: ['Pendiente', 'warning'], revision: ['En revisión', 'ocean'],
-  contactado: ['Contactado', 'salary'], descartado: ['Descartado', 'danger'],
-};
-// Color e ícono de cada categoría de recursos
-const ESTILO_RECURSO = {
-  Entrevistas: ['ocean', 'play-btn-fill'], 'Currículum': ['community', 'file-earmark-text'],
-  Habilidades: ['salary', 'graph-up-arrow'], Actualidad: ['warning', 'newspaper'],
+  contactado: ['Contactado', 'salary'], aceptado: ['Aceptado', 'salary'],
+  descartado: ['Denegado', 'danger'],
 };
 const insigniaEstado = estado => `<span class="badge-neo badge-neo-${ESTADOS[estado][1]}">${ESTADOS[estado][0]}</span>`;
 
-// shortcut: lo que el usuario crea (temas, respuestas, alertas) se guarda en sessionStorage; con la API, en el servidor
+// shortcut: los datos temporales del usuario se guardan en sessionStorage; con la API, en el servidor
 function guardados(clave) { try { return JSON.parse(sessionStorage.getItem(clave)) ?? []; } catch { return []; } }
 function guardarEn(clave, elemento) {
   try { sessionStorage.setItem(clave, JSON.stringify([...guardados(clave), elemento])); } catch { /* solo dura esta página */ }

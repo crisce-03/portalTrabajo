@@ -4,16 +4,16 @@ const ENLACES_PIE = {
   visitante: [
     ['Explorar empleos', [['Buscar empleo', 'resultados.html'], ['Crear cuenta', 'registro.html']]],
     ['Para empresas', [['Registrar empresa', 'registro.html?tipo=empresa']]],
-    ['Comunidad', [['Recursos', 'recursos.html'], ['Noticias', 'noticias.html'], ['Foros', 'foros.html'], ['Valoraciones', 'valoraciones.html']]],
+    ['Comunidad', [['Valoraciones', 'valoraciones.html']]],
   ],
   candidato: [
     ['Mi espacio', [['Mi perfil', 'perfil-usuario.html'], ['Mis solicitudes', 'perfil-usuario.html#solicitudes'], ['Alertas', 'perfil-usuario.html#alertas']]],
     ['Empleo', [['Buscar empleo', 'resultados.html'], ['Ofertas guardadas', 'perfil-usuario.html#guardadas']]],
-    ['Comunidad', [['Recursos', 'recursos.html'], ['Foros', 'foros.html'], ['Valoraciones', 'valoraciones.html']]],
+    ['Comunidad', [['Valoraciones', 'valoraciones.html']]],
   ],
   empresa: [
     ['Mi empresa', [['Panel empresarial', 'panel-empresa.html'], ['Publicar oferta', 'publicar-oferta.html'], ['Postulaciones', 'postulaciones.html'], ['Datos de empresa', 'datos-empresa.html']]],
-    ['Portal público', [['Ver empleos', 'resultados.html'], ['Recursos', 'recursos.html']]],
+    ['Portal público', [['Ver empleos', 'resultados.html']]],
   ],
   admin: [
     ['Administración', [['Consola administrativa', 'admin.html']]],

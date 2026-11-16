@@ -18,7 +18,7 @@ const app = express();
 app.use(helmet({ contentSecurityPolicy: false }));
 
 app.use(cors());
-app.use(morgan()); // log de cada petición
+app.use(morgan('dev')); // log de cada petición
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

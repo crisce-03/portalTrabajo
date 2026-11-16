@@ -121,54 +121,6 @@ const EMPRESAS = [
 ];
 
 // sector: software | diseno | finanzas · nivel: junior | senior · tipo: remoto | completo
-const HILOS = [
-  {
-    id: 1, titulo: '¿Qué tecnologías y pruebas técnicas están pidiendo para Desarrollador Web este año?',
-    resumen: 'Compartamos experiencias reales sobre entrevistas técnicas en React, Node.js y bases de datos SQL para ayudar a otros candidatos.',
-    contenido: 'En mis últimas tres entrevistas me pidieron una prueba práctica con React y una API en Node.js, además de preguntas de SQL. ¿Qué les han pedido a ustedes? Así podemos prepararnos mejor.',
-    autor: 'Carlos Méndez', cargo: 'Ingeniero de Software', fecha: 'Hace 2 horas', respuestas: 34,
-    sector: 'software', nivel: 'junior', tipo: 'remoto', salarios: false,
-    etiquetas: [['ocean', 'code-slash', 'Sector: Tecnología'], ['community', 'wifi', 'Modalidad: Remoto'], ['salary', 'cash', 'Nivel: Junior / Mid']],
-    comentarios: [
-      { autor: 'Ana Martínez', cargo: 'Desarrolladora de Software', fecha: 'Hace 1 hora', texto: 'A mí me pidieron un CRUD con Express y PostgreSQL en 48 horas, y luego explicarlo en una llamada.' },
-      { autor: 'Kevin Alvarado', cargo: 'Desarrollador Frontend', fecha: 'Hace 40 minutos', texto: 'Practiquen hooks de React y manejo de estado; casi siempre preguntan por eso.' },
-    ],
-  },
-  {
-    id: 2, titulo: 'Consejos para negociar salario y prestaciones en tu primera oferta formal de trabajo',
-    resumen: 'Guía práctica sobre cómo evaluar el rango salarial ofrecido por la empresa antes de firmar contrato.',
-    contenido: 'Antes de aceptar, compara el salario con otras ofertas del mismo puesto, pregunta por prestaciones adicionales y negocia con datos, no con suposiciones.',
-    autor: 'Ana Martínez', cargo: 'Especialista RRHH', fecha: 'Ayer', respuestas: 52,
-    sector: 'finanzas', nivel: 'junior', tipo: 'completo', salarios: true,
-    etiquetas: [['warning', 'briefcase', 'Contrato Indefinido'], ['ocean', 'geo-alt', 'Ubicación: Santa Ana / San Salvador']],
-    comentarios: [
-      { autor: 'Diego Portillo', cargo: 'Contador Junior', fecha: 'Ayer', texto: 'Me sirvió preguntar por el seguro médico y el aguinaldo antes de firmar.' },
-      { autor: 'Gabriela Flores', cargo: 'Analista de RRHH', fecha: 'Hace 20 horas', texto: 'Siempre pidan la oferta por escrito con el detalle de prestaciones.' },
-    ],
-  },
-  {
-    id: 3, titulo: '¿Cómo armar un portafolio de UI/UX sin experiencia laboral?',
-    resumen: 'Ideas para crear casos de estudio que muestren tu proceso de diseño aunque todavía no hayas trabajado en una empresa.',
-    contenido: 'Estoy terminando la carrera y quiero aplicar a puestos de diseño. ¿Qué proyectos recomiendan incluir en el portafolio para que lo tomen en cuenta?',
-    autor: 'Sofía Ramírez', cargo: 'Diseñadora UI/UX', fecha: 'Hace 3 días', respuestas: 18,
-    sector: 'diseno', nivel: 'junior', tipo: 'remoto', salarios: false,
-    etiquetas: [['ocean', 'palette', 'Sector: Diseño'], ['community', 'wifi', 'Modalidad: Remoto'], ['salary', 'mortarboard', 'Nivel: Junior']],
-    comentarios: [
-      { autor: 'Natalia Cruz', cargo: 'Product Designer', fecha: 'Hace 2 días', texto: 'Rediseña una app que uses a diario y documenta cada decisión; eso pesa más que pantallas bonitas.' },
-    ],
-  },
-  {
-    id: 4, titulo: 'Experiencias trabajando en modalidad híbrida en San Salvador',
-    resumen: '¿Cómo organizan sus días de oficina y de casa? Compartan qué les ha funcionado en equipos de tecnología.',
-    contenido: 'Mi empresa pasó a modalidad híbrida y quiero saber cómo organizan las reuniones y la comunicación para no perder productividad.',
-    autor: 'José Hernández', cargo: 'Líder Técnico', fecha: 'Hace 5 días', respuestas: 9,
-    sector: 'software', nivel: 'senior', tipo: 'completo', salarios: false,
-    etiquetas: [['ocean', 'code-slash', 'Sector: Tecnología'], ['community', 'building', 'Modalidad: Híbrido'], ['salary', 'award', 'Nivel: Senior']],
-    comentarios: [
-      { autor: 'Óscar Lemus', cargo: 'Scrum Master', fecha: 'Hace 4 días', texto: 'Dejamos los días de oficina para planificación y revisiones; lo demás es remoto.' },
-    ],
-  },
-];
 
 // estado: pendiente | revision | contactado | descartado
 const POSTULANTES = [
@@ -200,37 +152,4 @@ const REGISTROS = [
   { id: 4, tipo: 'vacante', nombre: 'Arquitecto de Software Cloud', detalle: 'InnovaTech S.A.', estado: 'Activa', oferta: 302 },
   { id: 5, tipo: 'usuario', nombre: 'Carlos Alfredo V.', detalle: 'Candidato Registrado', estado: 'Habilitado', correo: 'carlos.v@correo.com' },
   { id: 6, tipo: 'usuario', nombre: 'María Fernanda Ruiz', detalle: 'Candidata Registrada', estado: 'Habilitado', correo: 'mf.ruiz@correo.com' },
-];
-
-const RECURSOS = [
-  {
-    id: 'entrevistas', categoria: 'Entrevistas', clase: 'ocean', icono: 'play-btn-fill', tipo: 'Video tutorial & guía CV',
-    titulo: 'Cómo destacar tus proyectos en entrevistas técnicas', lectura: 'Video de 8 min · Gratuito',
-    resumen: 'Estrategias para explicar tu experiencia y demostrar tus habilidades.',
-    secciones: [
-      { titulo: 'Elige dos o tres proyectos', texto: 'No hace falta contar todo: escoge los proyectos que más se relacionan con la vacante.', puntos: ['Un proyecto con trabajo en equipo.', 'Uno donde resolviste un problema difícil.', 'Uno relacionado con la tecnología del puesto.'] },
-      { titulo: 'Usa el método STAR', texto: 'Explica la Situación, la Tarea, la Acción que tomaste y el Resultado medible.', puntos: ['Sé concreto con números.', 'Habla de tu aporte, no solo del equipo.'] },
-      { titulo: 'Prepara una demostración', texto: 'Ten a mano el repositorio o un video corto del proyecto funcionando.', puntos: [] },
-    ],
-  },
-  {
-    id: 'curriculum', categoria: 'Currículum', clase: 'community', icono: 'file-earmark-text', tipo: 'Plantilla y artículo',
-    titulo: 'Guía para organizar tu currículum', lectura: 'Lectura de 6 min',
-    resumen: 'Aprende qué información priorizar y cómo presentar tus logros.',
-    secciones: [
-      { titulo: 'Estructura recomendada', texto: 'Un currículum claro cabe en una o dos páginas.', puntos: ['Datos de contacto y perfil breve.', 'Experiencia con logros.', 'Formación y certificaciones.', 'Habilidades técnicas y blandas.'] },
-      { titulo: 'Logros antes que tareas', texto: 'Cambia "encargado de reportes" por "automaticé reportes y reduje 5 horas de trabajo semanal".', puntos: [] },
-      { titulo: 'Adáptalo a cada oferta', texto: 'Usa las palabras clave de la vacante para que tu perfil coincida en las búsquedas.', puntos: [] },
-    ],
-  },
-  {
-    id: 'habilidades', categoria: 'Habilidades', clase: 'salary', icono: 'graph-up-arrow', tipo: 'Consejos de carrera',
-    titulo: 'Competencias que fortalecen tu perfil', lectura: 'Lectura de 5 min',
-    resumen: 'Comunicación, organización y herramientas digitales aplicadas al trabajo.',
-    secciones: [
-      { titulo: 'Comunicación efectiva', texto: 'Explicar ideas con claridad es la habilidad más pedida por las empresas.', puntos: ['Escucha activa.', 'Mensajes escritos breves.'] },
-      { titulo: 'Organización del tiempo', texto: 'Planifica tu semana y prioriza por impacto.', puntos: ['Listas de tareas.', 'Bloques de trabajo sin interrupciones.'] },
-      { titulo: 'Herramientas digitales', texto: 'Domina hojas de cálculo, herramientas colaborativas y videollamadas.', puntos: [] },
-    ],
-  },
 ];

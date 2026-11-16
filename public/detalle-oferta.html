@@ -30,14 +30,14 @@
     <!-- Información de la oferta -->
     <section id="info-oferta" class="neo-card p-4 mb-4">
       <div class="d-flex align-items-center gap-3 mb-2">
-        <span class="badge-neo badge-neo-salary"><i class="bi bi-check-lg" aria-hidden="true"></i> Vacante Verificada</span>
+        <span id="o-verificada" class="badge-neo badge-neo-salary"><i class="bi bi-check-lg" aria-hidden="true"></i> Vacante Verificada</span>
         <span id="o-id" class="small text-secondary"></span>
       </div>
       <h2 id="o-titulo" class="h3 mb-1"></h2>
       <p id="o-meta" class="text-secondary mb-3"></p>
       <div class="d-flex flex-wrap align-items-center gap-2">
         <span id="o-etiquetas" class="d-flex flex-wrap gap-2"></span>
-        <button type="button" class="btn btn-neo-secondary ms-sm-2" data-bs-toggle="button" aria-pressed="false"><i class="bi bi-bookmark me-1" aria-hidden="true"></i>Guardar oferta</button>
+        <button id="o-guardar" type="button" class="btn btn-neo-secondary ms-sm-2" data-guardar-oferta=""><i class="bi bi-bookmark me-1" aria-hidden="true"></i>Guardar oferta</button>
         <a id="o-aplicar" class="btn btn-neo-primary px-4" href="postulacion.html">Aplicar al Trabajo</a>
       </div>
     </section>
@@ -72,6 +72,10 @@
           <p class="small mb-2">Contacto: <span id="e-contacto"></span></p>
           <p class="small mb-2">Ubicación: <span id="e-ubicacion"></span></p>
           <p class="small text-secondary mb-3">Sitio web: <span id="e-web"></span></p>
+          <div class="neo-subbox p-3 mb-3">
+            <h3 class="h6">Acerca de la empresa</h3>
+            <p id="e-acerca" class="small text-secondary mb-0" style="white-space:pre-line"></p>
+          </div>
           <a id="e-perfil" class="btn btn-neo-secondary btn-sm" href="valoraciones.html">Ver perfil de la empresa</a>
         </section>
 

@@ -39,7 +39,6 @@
               <li class="nav-item"><a class="nav-link" href="#control" data-filtro="vacante"><i class="bi bi-briefcase-fill" aria-hidden="true"></i> Gestión de vacantes</a></li>
               <li class="nav-item"><a class="nav-link" href="#moderacion"><i class="bi bi-shield-exclamation" aria-hidden="true"></i> Moderación de contenido</a></li>
               <li class="nav-item"><a class="nav-link" href="#estadisticas"><i class="bi bi-bar-chart-fill" aria-hidden="true"></i> Estadísticas del sistema</a></li>
-              <li class="nav-item"><a class="nav-link" href="#configuracion"><i class="bi bi-gear-fill" aria-hidden="true"></i> Otros / Configuración</a></li>
             </ul>
           </nav>
           <div class="mt-auto pt-3 border-top border-dark">
@@ -54,46 +53,50 @@
           <div class="col-6 col-md-3">
             <div class="neo-card p-3 h-100">
               <span class="small text-secondary d-block">Total Usuarios</span>
-              <span class="metrica my-1">68,920</span>
-              <span class="badge-neo badge-neo-salary">+4.2%</span>
+              <span id="kpi-usuarios" class="metrica my-1">—</span>
+              <span class="badge-neo badge-neo-neutral">Registrados</span>
             </div>
           </div>
           <div class="col-6 col-md-3">
             <div class="neo-card p-3 h-100">
-              <span class="small text-secondary d-block">Empresas Activas</span>
-              <span class="metrica my-1">2,450</span>
-              <span class="badge-neo badge-neo-ocean">14 nuevas</span>
+              <span class="small text-secondary d-block">Empresas Registradas</span>
+              <span id="kpi-empresas" class="metrica my-1">—</span>
+              <span class="badge-neo badge-neo-ocean">Registradas</span>
             </div>
           </div>
           <div class="col-6 col-md-3">
             <div class="neo-card p-3 h-100">
               <span class="small text-secondary d-block">Vacantes Vigentes</span>
-              <span class="metrica my-1">14,820</span>
-              <span class="badge-neo badge-neo-community">Verificadas</span>
+              <span id="kpi-ofertas" class="metrica my-1">—</span>
+              <span class="badge-neo badge-neo-community">Activas</span>
             </div>
           </div>
           <div class="col-6 col-md-3">
             <div class="neo-card p-3 h-100">
               <span class="small text-secondary d-block">Reportes / Moderar</span>
               <span class="d-flex align-items-center gap-2 my-1">
-                <span id="total-reportes" class="metrica" style="color:var(--color-danger);">9</span>
-                <span class="badge-neo badge-neo-danger">Urgente</span>
+                <span id="total-reportes" class="metrica" style="color:var(--color-danger);">—</span>
+                <span class="badge-neo badge-neo-danger">Pendientes</span>
               </span>
             </div>
           </div>
         </section>
 
-        <!-- CRUD de usuarios, empresas y vacantes -->
+        <!-- Administración de usuarios, empresas y vacantes -->
         <section id="control" class="neo-card overflow-hidden mb-4">
           <div class="p-3 border-bottom border-dark d-flex flex-wrap justify-content-between align-items-center gap-2" style="background:var(--bg-canvas);">
             <div>
               <h2 class="h5 mb-0">Control de Usuarios, Empresas y Vacantes</h2>
-              <span class="subtitulo">CRUD administrativo</span>
+              <span class="subtitulo">Estados, verificación y eliminación de registros</span>
             </div>
             <div class="d-flex gap-2">
               <button id="exportar" type="button" class="btn btn-neo-secondary btn-sm">Exportar</button>
-              <button id="nuevo-registro" type="button" class="btn btn-neo-primary btn-sm">+ Nuevo Registro</button>
+              <button id="recargar-admin" type="button" class="btn btn-neo-primary btn-sm">Actualizar lista</button>
             </div>
+          </div>
+          <div id="filtro-activo" class="px-3 pt-2 d-flex align-items-center gap-2" hidden>
+            <span class="small text-secondary"></span>
+            <button type="button" class="btn btn-link btn-sm p-0" data-ver-todos>Ver todos</button>
           </div>
           <div class="table-responsive">
             <table id="tabla-control" class="table table-neo">
@@ -111,134 +114,39 @@
           <p id="estado-control" class="small text-mar fw-bold px-3 py-2 mb-0" role="status"></p>
         </section>
 
-        <!-- Moderación de foros y reseñas -->
+        <!-- Moderación de valoraciones -->
         <section id="moderacion" class="neo-card p-3 mb-4">
           <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
             <div>
-              <h2 class="h5 mb-0">Bandeja de Moderación de Contenido (Foros y Reseñas)</h2>
-              <span class="subtitulo">Supervisión de comunidad</span>
+              <h2 class="h5 mb-0">Valoraciones reportadas</h2>
+              <span class="subtitulo">Moderación de opiniones sobre empresas</span>
             </div>
-            <span id="pendientes" class="badge-neo badge-neo-warning fs-6">2 Pendientes de Revisión</span>
+            <span id="pendientes" class="badge-neo badge-neo-warning fs-6">— pendientes</span>
           </div>
-          <div id="bandeja" class="d-flex flex-column gap-3">
-            <div class="neo-subbox p-3 reporte">
-              <p class="mb-2">
-                <span class="badge-neo badge-neo-danger me-1">Reporte #108</span>
-                <strong>Valoración en empresa "InnovaTech":</strong>
-                <span class="text-secondary">"Comentario marcado para verificación de políticas de respeto en reseñas..."</span>
-              </p>
-              <div class="d-flex flex-wrap gap-2">
-                <button type="button" class="btn btn-neo-primary btn-sm" data-decision="aprobar"><i class="bi bi-check-lg me-1" aria-hidden="true"></i>Aprobar</button>
-                <button type="button" class="btn btn-neo-danger btn-sm" data-decision="eliminar"><i class="bi bi-trash3-fill me-1" aria-hidden="true"></i>Eliminar</button>
-              </div>
-            </div>
-            <div class="neo-subbox p-3 reporte">
-              <p class="mb-2">
-                <span class="badge-neo badge-neo-danger me-1">Reporte #109</span>
-                <strong>Respuesta en foro "Consejos para negociar salario":</strong>
-                <span class="text-secondary">"Publicación con enlaces externos marcada como posible spam..."</span>
-              </p>
-              <div class="d-flex flex-wrap gap-2">
-                <button type="button" class="btn btn-neo-primary btn-sm" data-decision="aprobar"><i class="bi bi-check-lg me-1" aria-hidden="true"></i>Aprobar</button>
-                <button type="button" class="btn btn-neo-danger btn-sm" data-decision="eliminar"><i class="bi bi-trash3-fill me-1" aria-hidden="true"></i>Eliminar</button>
-              </div>
-            </div>
-          </div>
+          <div id="bandeja" class="d-flex flex-column gap-3"></div>
           <p id="bandeja-vacia" class="text-secondary mb-0" hidden>No hay contenido pendiente de revisión.</p>
         </section>
 
         <div class="row g-4">
           <!-- Estadísticas del sistema -->
-          <section id="estadisticas" class="col-md-7">
+          <section id="estadisticas" class="col-12">
             <div class="neo-card p-3 h-100">
               <h2 class="h5 mb-0">Estadísticas del sistema</h2>
-              <span class="subtitulo mb-3">Postulaciones por mes (2026)</span>
-              <div class="grafico mb-3">
-                <div><span>6,200</span><span class="barra" style="height:64%"></span><span>Jun</span></div>
-                <div><span>7,100</span><span class="barra" style="height:74%"></span><span>Jul</span></div>
-                <div><span>6,800</span><span class="barra" style="height:70%"></span><span>Ago</span></div>
-                <div><span>8,300</span><span class="barra" style="height:86%"></span><span>Sep</span></div>
-                <div><span>9,100</span><span class="barra" style="height:94%"></span><span>Oct</span></div>
-                <div><span>9,640</span><span class="barra" style="height:100%;background:var(--color-secondary);"></span><span>Nov</span></div>
-              </div>
+              <span class="subtitulo mb-3">Postulaciones por mes</span>
+              <div class="grafico mb-3"></div>
               <div class="row g-2 small">
-                <div class="col-6"><div class="neo-subbox p-2"><strong class="d-block">66,470</strong>Candidatos</div></div>
-                <div class="col-6"><div class="neo-subbox p-2"><strong class="d-block">2,450</strong>Empresas</div></div>
-                <div class="col-6"><div class="neo-subbox p-2"><strong class="d-block">92 %</strong>Vacantes verificadas</div></div>
-                <div class="col-6"><div class="neo-subbox p-2"><strong class="d-block">1.8 días</strong>Tiempo medio de moderación</div></div>
+                <div class="col-6"><div class="neo-subbox p-2"><strong id="stat-candidatos" class="d-block">—</strong>Candidatos</div></div>
+                <div class="col-6"><div class="neo-subbox p-2"><strong id="stat-verificadas" class="d-block">—</strong>Empresas verificadas</div></div>
+                <div class="col-6"><div class="neo-subbox p-2"><strong id="stat-deshabilitadas" class="d-block">—</strong>Cuentas deshabilitadas</div></div>
+                <div class="col-6"><div class="neo-subbox p-2"><strong id="stat-pendientes" class="d-block">—</strong>Reportes pendientes</div></div>
               </div>
             </div>
           </section>
 
-          <!-- Otros / Configuración -->
-          <section id="configuracion" class="col-md-5">
-            <form class="neo-card p-3 h-100 needs-validation" novalidate data-exito="Configuración guardada.">
-              <h2 class="h5 mb-0">Otros / Configuración</h2>
-              <span class="subtitulo mb-3">Reglas generales del portal</span>
-              <div class="form-check form-switch mb-2">
-                <input class="form-check-input" type="checkbox" role="switch" id="cfg-verificar" name="verificarEmpresas" checked>
-                <label class="form-check-label small" for="cfg-verificar">Verificar empresas antes de que publiquen</label>
-              </div>
-              <div class="form-check form-switch mb-2">
-                <input class="form-check-input" type="checkbox" role="switch" id="cfg-moderar" name="moderarResenas" checked>
-                <label class="form-check-label small" for="cfg-moderar">Revisar reseñas reportadas antes de publicarlas</label>
-              </div>
-              <div class="form-check form-switch mb-3">
-                <input class="form-check-input" type="checkbox" role="switch" id="cfg-registro" name="registroAbierto" checked>
-                <label class="form-check-label small" for="cfg-registro">Permitir registro de nuevas cuentas</label>
-              </div>
-              <label class="form-label" for="cfg-correo">Correo de soporte *</label>
-              <input id="cfg-correo" name="correoSoporte" type="email" class="form-control mb-3" value="soporte@portaltrabajo.com" required>
-              <div class="d-flex justify-content-between align-items-center gap-2">
-                <span role="status" class="small text-mar fw-bold"></span>
-                <button type="submit" class="btn btn-neo-primary btn-sm">Guardar</button>
-              </div>
-            </form>
-          </section>
         </div>
       </div>
     </div>
   </main>
-
-  <!-- Crear / editar registro -->
-  <div class="modal fade" id="modal-registro" tabindex="-1" aria-labelledby="t-modal-registro" aria-hidden="true">
-    <div class="modal-dialog">
-      <form id="form-registro-admin" class="modal-content needs-validation" novalidate>
-        <div class="modal-header">
-          <h2 id="t-modal-registro" class="modal-title h5">Nuevo registro</h2>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-        </div>
-        <div class="modal-body d-grid gap-3">
-          <input type="hidden" name="registro">
-          <div>
-            <label class="form-label" for="m-tipo">Tipo</label>
-            <select id="m-tipo" name="tipo" class="form-select">
-              <option value="empresa">Empresa</option>
-              <option value="vacante">Vacante</option>
-              <option value="usuario">Usuario</option>
-            </select>
-          </div>
-          <div>
-            <label class="form-label" for="m-nombre">Nombre *</label>
-            <input id="m-nombre" name="nombre" class="form-control" maxlength="80" required>
-          </div>
-          <div>
-            <label class="form-label" for="m-detalle">Detalle *</label>
-            <input id="m-detalle" name="detalle" class="form-control" maxlength="120" required>
-          </div>
-          <div>
-            <label class="form-label" for="m-estado">Estado</label>
-            <select id="m-estado" name="estado" class="form-select"></select>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <span role="status" class="small text-danger me-auto"></span>
-          <button type="button" class="btn btn-neo-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-neo-primary">Guardar</button>
-        </div>
-      </form>
-    </div>
-  </div>
 
   <!-- Confirmación de acciones destructivas -->
   <div class="modal fade" id="modal-confirmar" tabindex="-1" aria-labelledby="t-confirmar" aria-hidden="true">

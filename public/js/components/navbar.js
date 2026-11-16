@@ -4,15 +4,11 @@
 const ENLACES_POR_ROL = {
   visitante: [
     ['busqueda', 'index.html', 'Buscar empleo'],
-    ['recursos', 'recursos.html', 'Recursos'],
-    ['foros', 'foros.html', 'Foros'],
     ['valoraciones', 'valoraciones.html', 'Valoraciones'],
     ['empresa', 'registro.html?tipo=empresa', 'Soy empresa'],
   ],
   candidato: [
     ['busqueda', 'index.html', 'Buscar empleo'],
-    ['recursos', 'recursos.html', 'Recursos'],
-    ['foros', 'foros.html', 'Foros'],
     ['valoraciones', 'valoraciones.html', 'Valoraciones'],
     ['perfil', 'perfil-usuario.html', 'Mi perfil'],
   ],

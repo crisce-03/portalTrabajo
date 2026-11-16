@@ -82,9 +82,9 @@
         <!-- Vacante relacionada -->
         <section id="vacante" class="neo-card p-4">
           <h2 class="h6">Vacante relacionada</h2>
-          <p class="fw-bold small mb-1"><a href="detalle-oferta.html?id=302">Arquitecto de Software Cloud</a></p>
-          <p class="small text-secondary mb-2">InnovaTech S.A. · #JOB-302</p>
-          <span class="badge-neo badge-neo-salary">Activa</span>
+          <p class="fw-bold small mb-1"><a id="c-oferta-titulo" href="resultados.html"></a></p>
+          <p id="c-oferta-meta" class="small text-secondary mb-2"></p>
+          <span id="c-oferta-estado" class="badge-neo badge-neo-salary"></span>
         </section>
 
         <!-- Evaluación -->
@@ -92,9 +92,10 @@
           <h2 class="h6">Evaluar postulación</h2>
           <p class="small text-secondary" role="status">Estado actual: <span id="estado-texto"></span></p>
           <div class="d-grid gap-2">
-            <button type="button" class="btn btn-neo-primary" data-estado="contactado">Marcar como contactada</button>
+            <button type="button" class="btn btn-neo-primary" data-estado="aceptado">Aceptar candidatura</button>
+            <button type="button" class="btn btn-neo-secondary" data-estado="contactado">Marcar como contactada</button>
             <button type="button" class="btn btn-neo-secondary" data-estado="revision">Mantener en revisión</button>
-            <button type="button" class="btn btn-neo-secondary" data-estado="descartado">Descartar candidatura</button>
+            <button type="button" class="btn btn-neo-danger" data-estado="descartado">Denegar candidatura</button>
           </div>
         </section>
       </div>
@@ -106,7 +107,6 @@
   
   
   
-    <script src="js/services/mock-data.js"></script>
     <script src="js/services/api.js"></script>
     <script src="js/utils/helpers.js"></script>
     <script src="js/components/notifications.js"></script>

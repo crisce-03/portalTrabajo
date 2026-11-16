@@ -3,6 +3,7 @@ import { z } from 'zod';
 import * as candidatoRepository from '../Repositories/CandidatoRepository.js';
 import AppError from '../Utils/AppError.js';
 import { validar, esquemaId } from '../Utils/Validar.js';
+import * as ofertasRepository from '../Repositories/OfertasRepository.js';
 
 const esquemaPerfil = z.object({
     nombre: z.string().trim().min(1).max(100),
@@ -22,7 +23,11 @@ export const updatePerfil = async (usuarioId, datos, archivo) => {
             // multer entrega el nombre en latin1; así se conservan tildes y eñes
             const nombre = Buffer.from(archivo.originalname, 'latin1').toString('utf8').slice(-200);
             const anterior = await candidatoRepository.saveCv(usuarioId, nombre, archivo.path);
-            if (anterior) await rm(anterior, { force: true });
+            if (anterior) {
+                try {
+                    if (!await candidatoRepository.cvUsadoEnPostulaciones(anterior)) await rm(anterior, { force: true });
+                } catch { /* Se conserva el archivo anterior si no se puede confirmar que esté libre. */ }
+            }
         }
     } catch (err) {
         if (archivo) await rm(archivo.path, { force: true }); // no dejar archivos sin dueño
@@ -43,3 +48,18 @@ export const updateAlerta = async (usuarioId, id, datos) => {
 
     return alerta;
 }
+
+export const listarOfertasGuardadas = usuarioId => candidatoRepository.listarOfertasGuardadas(usuarioId);
+
+export const guardarOferta = async (usuarioId, ofertaId) => {
+    const id = validar(esquemaId, ofertaId);
+    if (!await ofertasRepository.buscarPublicaPorId(id)) throw AppError.notFound('Oferta no encontrada o ya no está disponible');
+    await candidatoRepository.guardarOferta(usuarioId, id);
+    return { ofertaId: id, guardada: true };
+};
+
+export const quitarOfertaGuardada = async (usuarioId, ofertaId) => {
+    const id = validar(esquemaId, ofertaId);
+    await candidatoRepository.quitarOfertaGuardada(usuarioId, id);
+    return { ofertaId: id, guardada: false };
+};

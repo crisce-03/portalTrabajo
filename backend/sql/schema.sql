@@ -26,7 +26,7 @@ CREATE TABLE usuarios (
     correo         VARCHAR(150) NOT NULL,
     clave_hash     VARCHAR(100) NOT NULL,           -- contraseña cifrada con bcrypt, nunca en texto plano
     telefono       VARCHAR(30),
-    cargo          VARCHAR(120),                    -- puesto profesional (se muestra en foros y postulaciones)
+    cargo          VARCHAR(120),                    -- puesto profesional del candidato
     rol            VARCHAR(20) NOT NULL CHECK (rol IN ('candidato', 'empresa', 'admin')),
     activo         BOOLEAN NOT NULL DEFAULT TRUE,   -- el admin puede deshabilitar cuentas
     creado_en      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -146,7 +146,7 @@ CREATE TABLE postulaciones (
     cv_nombre      VARCHAR(200),
     cv_ruta        VARCHAR(300),
     estado         VARCHAR(20) NOT NULL DEFAULT 'pendiente'
-                   CHECK (estado IN ('pendiente', 'revision', 'contactado', 'descartado')),
+                   CHECK (estado IN ('pendiente', 'revision', 'contactado', 'aceptado', 'descartado')),
     creado_en      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     actualizado_en TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     UNIQUE (oferta_id, candidato_id)
@@ -156,7 +156,7 @@ CREATE TRIGGER postulaciones_fecha BEFORE UPDATE ON postulaciones FOR EACH ROW E
 
 
 -- ---------------------------------------------------------------------
--- 4. VALORACIONES, FOROS Y MODERACIÓN
+-- 4. VALORACIONES Y MODERACIÓN
 -- ---------------------------------------------------------------------
 
 -- Opinión de un usuario sobre una empresa (una por usuario y empresa).
@@ -171,62 +171,18 @@ CREATE TABLE valoraciones (
     UNIQUE (empresa_id, usuario_id)
 );
 
--- Tema de discusión del foro.
-CREATE TABLE hilos (
-    id         INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
-    titulo     VARCHAR(200) NOT NULL,
-    resumen    VARCHAR(300),
-    contenido  TEXT NOT NULL,
-    sector     VARCHAR(20) NOT NULL CHECK (sector IN ('software', 'diseno', 'finanzas')),
-    nivel      VARCHAR(20) NOT NULL CHECK (nivel IN ('junior', 'senior')),
-    tipo       VARCHAR(20) NOT NULL CHECK (tipo IN ('remoto', 'completo')),
-    salarios   BOOLEAN NOT NULL DEFAULT FALSE,      -- marca los hilos de "Debates de Salarios"
-    creado_en  TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-CREATE INDEX hilos_fecha_idx ON hilos (creado_en DESC);
-
--- Respuesta a un tema (el contador "34 Respuestas" se calcula con COUNT()).
-CREATE TABLE respuestas (
-    id         INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    hilo_id    INTEGER NOT NULL REFERENCES hilos(id) ON DELETE CASCADE,
-    usuario_id INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
-    contenido  TEXT NOT NULL,
-    creado_en  TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-CREATE INDEX respuestas_hilo_idx ON respuestas (hilo_id);
-
--- Reporte de contenido para la bandeja de moderación del admin.
--- Apunta a UNA sola cosa: una valoración, un hilo o una respuesta.
--- Si el admin elimina el contenido, el reporte desaparece con él (ON DELETE CASCADE).
+-- Reports moderate company reviews.
 CREATE TABLE reportes (
     id            INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     reportado_por INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
-    valoracion_id INTEGER REFERENCES valoraciones(id) ON DELETE CASCADE,
-    hilo_id       INTEGER REFERENCES hilos(id) ON DELETE CASCADE,
-    respuesta_id  INTEGER REFERENCES respuestas(id) ON DELETE CASCADE,
+    valoracion_id INTEGER NOT NULL REFERENCES valoraciones(id) ON DELETE CASCADE,
     motivo        TEXT NOT NULL,
     estado        VARCHAR(20) NOT NULL DEFAULT 'pendiente' CHECK (estado IN ('pendiente', 'aprobado')),
-    creado_en     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    CHECK (num_nonnulls(valoracion_id, hilo_id, respuesta_id) = 1)
+    creado_en     TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 
 -- ---------------------------------------------------------------------
--- 5. RECURSOS Y NOTICIAS
--- ---------------------------------------------------------------------
 
--- Artículos, guías y noticias del centro de recursos.
-CREATE TABLE recursos (
-    id        INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    categoria VARCHAR(30) NOT NULL CHECK (categoria IN ('Entrevistas', 'Currículum', 'Habilidades', 'Actualidad')),
-    tipo      VARCHAR(60),                          -- ej. "Plantilla y artículo"
-    titulo    VARCHAR(200) NOT NULL,
-    resumen   TEXT,
-    lectura   VARCHAR(60),                          -- ej. "Lectura de 6 min"
-    secciones JSONB NOT NULL DEFAULT '[]',          -- [{ "titulo": "", "texto": "", "puntos": [] }]
-    publicado BOOLEAN NOT NULL DEFAULT TRUE,
-    creado_en TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
 
 COMMIT;

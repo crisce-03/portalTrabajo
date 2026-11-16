@@ -1,12 +1,18 @@
-const oferta = OFERTAS.find(o => o.id === Number(parametro('id'))) ?? OFERTAS[0];
-    const enviadas = guardados('postulaciones');
-    const enviada = enviadas.findLast(p => p.oferta === oferta.id)
-      ?? { candidato: 'Héctor Alejandro García Guevara', cv: 'Hector_Garcia_CV.pdf' };
-    const seguimiento = `POST-${String(enviadas.length || 1).padStart(3, '0')}`;
+async function cargarConfirmacion() {
+  const ofertaId = parametro('id');
+  const postulacionId = parametro('postulacion');
+  const { data } = await apiRequest('/candidatos/me/postulaciones');
+  const postulacion = data.postulaciones.find(p => String(p.id) === postulacionId && String(p.ofertaId) === String(ofertaId));
+  if (!postulacion) throw new Error('No encontramos la postulación enviada.');
+  document.getElementById('miga-oferta').href = `detalle-oferta.html?id=${postulacion.ofertaId}`;
+  document.getElementById('miga-postulacion').href = `postulacion.html?id=${postulacion.ofertaId}`;
+  document.getElementById('mensaje').textContent = `${postulacion.empresa} recibió tu solicitud para ${postulacion.titulo}. Puedes consultar el estado desde tu perfil.`;
+  document.getElementById('linea-vacante').textContent = `Vacante: ${postulacion.titulo} · Empresa: ${postulacion.empresa}`;
+  document.getElementById('linea-candidato').textContent = `Postulación #${postulacion.id}`;
+  document.getElementById('linea-estado').textContent = `Estado inicial: ${postulacion.estado} · Seguimiento: POST-${String(postulacion.id).padStart(3, '0')}`;
+}
 
-    document.getElementById('miga-oferta').href = `detalle-oferta.html?id=${oferta.id}`;
-    document.getElementById('miga-postulacion').href = `postulacion.html?id=${oferta.id}`;
-    document.getElementById('mensaje').textContent = `${oferta.empresa} ha recibido tu solicitud para la vacante ${oferta.titulo}. Ahora podrás consultar el estado desde tu perfil de candidato.`;
-    document.getElementById('linea-vacante').textContent = `Vacante: ${oferta.titulo} · Empresa: ${oferta.empresa}`;
-    document.getElementById('linea-candidato').textContent = `Candidato: ${enviada.candidato} · CV: ${enviada.cv}`;
-    document.getElementById('linea-estado').textContent = `Estado inicial: Recibida · Número de seguimiento: ${seguimiento}`;
+cargarConfirmacion().catch(error => {
+  document.getElementById('mensaje').textContent = error.message;
+  notificar(error.message, 'error');
+});
