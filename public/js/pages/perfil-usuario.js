@@ -75,45 +75,6 @@ const avisarError = error => notificar(error.message, 'error');
       marcarGuardadas();
     }).catch(avisarError);
 
-    // Alertas: la apagada se ve en gris; las nuevas se agregan a la lista
-    const listaAlertas = document.getElementById('lista-alertas');
-    const filaAlerta = (id, texto) => `
-      <div class="neo-subbox py-2 px-3 d-flex align-items-center justify-content-between alerta">
-        <label class="form-check-label fw-medium" for="${id}"><i class="bi bi-bell-fill text-ocean me-1" aria-hidden="true"></i> ${esc(texto)}</label>
-        <div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" role="switch" id="${id}" checked></div>
-      </div>`;
-    const pintarEstado = (fila, activa) => {
-      fila.classList.toggle('text-secondary', !activa);
-      fila.querySelector('.bi').className = activa ? 'bi bi-bell-fill text-ocean me-1' : 'bi bi-bell me-1';
-    };
-    const agregarAlerta = alerta => {
-      listaAlertas.insertAdjacentHTML('beforeend', filaAlerta(`a-${alerta.id}`, alerta.termino));
-      const interruptor = document.getElementById(`a-${alerta.id}`);
-      interruptor.dataset.alerta = alerta.id;
-      interruptor.checked = alerta.activa;
-      pintarEstado(interruptor.closest('.alerta'), alerta.activa);
-    };
-    apiRequest('/candidatos/me/alertas').then(({ data }) => data.forEach(agregarAlerta)).catch(avisarError);
-    listaAlertas.addEventListener('change', async evento => {
-      const interruptor = evento.target;
-      try {
-        await apiRequest(`/candidatos/me/alertas/${interruptor.dataset.alerta}`, { method: 'PATCH', body: JSON.stringify({ activa: interruptor.checked }) });
-      } catch (error) {
-        interruptor.checked = !interruptor.checked; // no se guardó: el interruptor vuelve a como estaba
-        avisarError(error);
-      }
-      pintarEstado(interruptor.closest('.alerta'), interruptor.checked);
-    });
-    const formAlerta = document.getElementById('form-alerta');
-    formAlerta.addEventListener('enviado', async () => {
-      try {
-        const { data } = await apiRequest('/candidatos/me/alertas', { method: 'POST', body: JSON.stringify({ termino: formAlerta.alerta.value }) });
-        agregarAlerta(data);
-        formAlerta.reset();
-        notificar(`Alerta «${data.termino}» creada.`);
-      } catch (error) { avisarError(error); }
-    });
-
     // Valoraciones: empresas disponibles y la que venga en ?empresa=
     const selectEmpresa = document.getElementById('v-empresa');
     apiRequest('/valoraciones').then(({ data }) => {

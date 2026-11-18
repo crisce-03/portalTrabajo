@@ -24,7 +24,7 @@ const valores = datos => [
 const listarPorEmpresa = async (empresaId, estado) => {
     const query = `
             SELECT o.id, o.titulo, o.ubicacion, o.modalidad, o.contrato, o.estado, o.publicada_en, o.creado_en,
-            (SELECT COUNT(*) FROM postulaciones p WHERE p.oferta_id = o.id)::int AS postulaciones
+            (SELECT COUNT(*) FROM postulaciones p WHERE p.oferta_id = o.id) AS postulaciones
             FROM ofertas o
             WHERE o.empresa_id = $1 AND ($2::varchar IS NULL OR o.estado = $2)
             ORDER BY o.creado_en DESC`;
@@ -126,7 +126,7 @@ const buscarPublicaPorId = async id => {
                e.correo_contacto AS empresa_contacto, e.telefono AS empresa_telefono,
                e.ubicacion AS empresa_ubicacion, e.sitio_web, e.acerca, e.verificada,
                COALESCE((SELECT AVG(v.calificacion)::numeric(3,1) FROM valoraciones v WHERE v.empresa_id = e.id), 0) AS promedio,
-               (SELECT COUNT(*)::int FROM valoraciones v WHERE v.empresa_id = e.id) AS opiniones,
+               (SELECT COUNT(*) FROM valoraciones v WHERE v.empresa_id = e.id) AS opiniones,
                COALESCE((SELECT json_agg(json_build_object(
                    'autor', COALESCE(u.cargo, 'Candidato'), 'calificacion', v.calificacion, 'texto', v.comentario
                ) ORDER BY v.creado_en DESC) FROM valoraciones v JOIN usuarios u ON u.id = v.usuario_id

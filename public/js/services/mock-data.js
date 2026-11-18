@@ -1,5 +1,3 @@
-// Datos de ejemplo del prototipo.
-// shortcut: todo vive aquí en memoria; cuando exista la API, cada lista se reemplaza por un fetch (p. ej. GET /api/ofertas)
 
 const OFERTAS = [
   {

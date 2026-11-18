@@ -2,16 +2,15 @@ import { pool } from '../Data/db.js';
 
 // Empresas con su promedio, total de opiniones y reseñas (las más recientes primero).
 // El autor se muestra por su cargo, nunca por su nombre.
-// shortcut: trae todas las reseñas de cada empresa; con muchas, paginarlas en una ruta aparte
 export const findEmpresasConValoraciones = async () => {
     const result = await pool.query(`
         SELECT e.id, e.nombre, e.sector, e.ubicacion,
                ROUND(AVG(v.calificacion), 1)::float AS promedio,
-               COUNT(v.id)::int AS opiniones,
-               COALESCE(json_agg(json_build_object(
+               COUNT(v.id) AS opiniones,
+               CASE WHEN COUNT(v.id) = 0 THEN '[]'::json ELSE json_agg(json_build_object(
                    'id', v.id, 'autor', COALESCE(u.cargo, 'Candidato'),
                    'calificacion', v.calificacion, 'texto', v.comentario
-               ) ORDER BY v.creado_en DESC) FILTER (WHERE v.id IS NOT NULL), '[]') AS resenas
+               ) ORDER BY v.creado_en DESC) END AS resenas
         FROM empresas e
         LEFT JOIN valoraciones v ON v.empresa_id = e.id
         LEFT JOIN usuarios u ON u.id = v.usuario_id

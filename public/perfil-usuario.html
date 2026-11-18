@@ -13,7 +13,6 @@
   <link href="css/estilos.css" rel="stylesheet">
   <script src="js/components/theme.js"></script>
 </head>
-<!-- MOD-02-USER-DASH · Candidato / Buscador de empleo registrado -->
 <body data-requiere="candidato" data-activo="perfil">
   <header id="navbar" class="container-xl pt-3"></header>
 
@@ -33,7 +32,6 @@
               <li class="nav-item"><a class="nav-link active" aria-current="true" href="#perfil"><i class="bi bi-person-fill" aria-hidden="true"></i> Mi perfil</a></li>
               <li class="nav-item"><a class="nav-link" href="#solicitudes"><i class="bi bi-file-earmark-check" aria-hidden="true"></i> Solicitudes</a></li>
               <li class="nav-item"><a class="nav-link" href="#ofertas-guardadas"><i class="bi bi-bookmark" aria-hidden="true"></i> Ofertas guardadas</a></li>
-              <li class="nav-item"><a class="nav-link" href="#alertas"><i class="bi bi-bell" aria-hidden="true"></i> Alertas</a></li>
               <li class="nav-item"><a class="nav-link" href="#valoraciones"><i class="bi bi-star" aria-hidden="true"></i> Valoraciones</a></li>
             </ul>
           </nav>
@@ -106,22 +104,6 @@
                   <span class="small text-secondary">Total de solicitudes enviadas</span>
                 </div>
               </div>
-            </div>
-          </section>
-
-          <!-- Panel de alertas -->
-          <section id="alertas" class="col-md-6">
-            <div class="neo-card p-3 h-100 d-flex flex-column">
-              <h2 class="h5 mb-3">Panel de Alertas</h2>
-              <div id="lista-alertas" class="d-flex flex-column gap-2 mb-3"></div>
-              <form id="form-alerta" class="mt-auto needs-validation" novalidate>
-                <label class="form-label" for="a-nueva">Nueva alerta (puesto o palabra clave)</label>
-                <div class="d-flex gap-2">
-                  <input id="a-nueva" name="alerta" class="form-control" maxlength="150" required placeholder="Ej.: Analista de Datos (San Salvador)">
-                  <button type="submit" class="btn btn-neo-primary">Agregar</button>
-                </div>
-                <span role="status" class="small text-mar"></span>
-              </form>
             </div>
           </section>
 

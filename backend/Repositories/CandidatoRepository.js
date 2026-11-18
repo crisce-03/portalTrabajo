@@ -6,7 +6,7 @@ export const findPerfil = async (usuarioId) => {
                COALESCE(p.habilidades, '{}') AS habilidades, COALESCE(p.experiencia, '{}') AS experiencia,
                p.formacion, p.cv_nombre AS "cvNombre",
                COALESCE(p.visitas, 0) AS visitas,
-               (SELECT COUNT(*)::int FROM postulaciones WHERE candidato_id = u.id) AS solicitudes
+               (SELECT COUNT(*) FROM postulaciones WHERE candidato_id = u.id) AS solicitudes
         FROM usuarios u
         LEFT JOIN perfiles_candidato p ON p.usuario_id = u.id
         WHERE u.id = $1`, [usuarioId]);

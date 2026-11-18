@@ -4,19 +4,19 @@ import { aCamelCase } from '../Utils/CamelCase.js';
 export const obtenerIndicadores = async () => {
     const result = await pool.query(`
         SELECT
-            (SELECT COUNT(*)::int FROM usuarios) AS usuarios,
-            (SELECT COUNT(*)::int FROM usuarios WHERE rol = 'candidato') AS candidatos,
-            (SELECT COUNT(*)::int FROM empresas) AS empresas,
-            (SELECT COUNT(*)::int FROM empresas WHERE verificada) AS empresas_verificadas,
-            (SELECT COUNT(*)::int FROM usuarios WHERE NOT activo) AS cuentas_deshabilitadas,
-            (SELECT COUNT(*)::int FROM ofertas WHERE estado = 'activa') AS ofertas_activas,
-            (SELECT COUNT(*)::int FROM reportes WHERE estado = 'pendiente') AS reportes_pendientes`);
+            (SELECT COUNT(*) FROM usuarios) AS usuarios,
+            (SELECT COUNT(*) FROM usuarios WHERE rol = 'candidato') AS candidatos,
+            (SELECT COUNT(*) FROM empresas) AS empresas,
+            (SELECT COUNT(*) FROM empresas WHERE verificada) AS empresas_verificadas,
+            (SELECT COUNT(*) FROM usuarios WHERE NOT activo) AS cuentas_deshabilitadas,
+            (SELECT COUNT(*) FROM ofertas WHERE estado = 'activa') AS ofertas_activas,
+            (SELECT COUNT(*) FROM reportes WHERE estado = 'pendiente') AS reportes_pendientes`);
     return aCamelCase(result.rows[0]);
 };
 
 export const obtenerPostulacionesMensuales = async () => {
     const result = await pool.query(`
-        SELECT EXTRACT(MONTH FROM creado_en)::int AS mes, COUNT(*)::int AS total
+        SELECT EXTRACT(MONTH FROM creado_en) AS mes, COUNT(*) AS total
         FROM postulaciones
         WHERE creado_en >= date_trunc('month', NOW()) - INTERVAL '5 months'
         GROUP BY EXTRACT(MONTH FROM creado_en)
@@ -97,7 +97,7 @@ export const cambiarEmpresa = async (id, datos) => {
 };
 
 export const cambiarEstadoOferta = async (id, estado) => {
-    const result = await pool.query('UPDATE ofertas SET estado = $2, publicada_en = CASE WHEN $2 = \'activa\' THEN COALESCE(publicada_en, NOW()) ELSE publicada_en END WHERE id = $1 RETURNING id, estado', [id, estado]);
+    const result = await pool.query('UPDATE ofertas SET estado = CAST($2 AS VARCHAR), publicada_en = CASE WHEN CAST($2 AS VARCHAR) = \'activa\' THEN COALESCE(publicada_en, NOW()) ELSE publicada_en END WHERE id = $1 RETURNING id, estado', [id, estado]);
     return aCamelCase(result.rows[0]);
 };
 
