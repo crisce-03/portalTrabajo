@@ -34,7 +34,7 @@ export const listarPorEmpresa = async (empresaId, { ofertaId, estado, buscar }) 
         JOIN usuarios u ON u.id = p.candidato_id
         LEFT JOIN perfiles_candidato pc ON pc.usuario_id = u.id
         WHERE o.empresa_id = $1
-          AND ($2::int IS NULL OR o.id = $2)
+          AND (CAST($2 AS INTEGER) IS NULL OR o.id = CAST($2 AS INTEGER))
           AND ($3::varchar IS NULL OR p.estado = $3)
           AND ($4 = '' OR CONCAT_WS(' ', u.nombre, u.apellidos, u.correo) ILIKE '%' || $4 || '%')
         ORDER BY p.creado_en DESC`, [empresaId, ofertaId || null, estado || null, buscar || '']);

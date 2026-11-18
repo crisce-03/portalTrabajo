@@ -75,7 +75,6 @@ function marcarCampo(campo) {
 
 // Formularios con class="needs-validation": validan con HTML5; si todo está bien disparan el evento
 // "enviado" (para la lógica de cada página) y luego van a data-destino o muestran data-exito.
-// shortcut: todavía no envían nada al servidor; cuando exista la API, hacer el fetch en "enviado"
 document.querySelectorAll('form.needs-validation').forEach(form => {
   form.addEventListener('submit', evento => {
     evento.preventDefault();

@@ -311,7 +311,6 @@ h1, h2, h3, h4, h5, h6, .font-inter {
 .tarjeta-accion { position: relative; transition: box-shadow .15s ease; }
 .tarjeta-accion:hover, .tarjeta-accion:focus-within { box-shadow: 0 4px 14px rgba(30, 41, 59, .1); }
 
-/* Oculta las l?neas oscuras heredadas del prototipo. */
 .border-dark { border-color: transparent !important; }
 
 :root[data-theme="dark"] {

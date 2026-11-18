@@ -39,7 +39,6 @@ const ROLES = ['visitante', 'candidato', 'empresa', 'admin'];
 const rolGuardado = leerSesion();
 const usuario = ROLES.includes(rolGuardado) && leerSesion('token') ? rolGuardado : 'visitante';
 
-// data-requiere protege visualmente las vistas privadas en este prototipo de frontend.
 const rolRequerido = document.body.dataset.requiere;
 if (rolRequerido && usuario !== rolRequerido) {
   if (usuario === 'visitante') {

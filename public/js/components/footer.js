@@ -7,7 +7,7 @@ const ENLACES_PIE = {
     ['Comunidad', [['Valoraciones', 'valoraciones.html']]],
   ],
   candidato: [
-    ['Mi espacio', [['Mi perfil', 'perfil-usuario.html'], ['Mis solicitudes', 'perfil-usuario.html#solicitudes'], ['Alertas', 'perfil-usuario.html#alertas']]],
+    ['Mi espacio', [['Mi perfil', 'perfil-usuario.html'], ['Mis solicitudes', 'perfil-usuario.html#solicitudes']]],
     ['Empleo', [['Buscar empleo', 'resultados.html'], ['Ofertas guardadas', 'perfil-usuario.html#guardadas']]],
     ['Comunidad', [['Valoraciones', 'valoraciones.html']]],
   ],

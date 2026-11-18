@@ -19,14 +19,12 @@ const ESTADOS = {
 };
 const insigniaEstado = estado => `<span class="badge-neo badge-neo-${ESTADOS[estado][1]}">${ESTADOS[estado][0]}</span>`;
 
-// shortcut: los datos temporales del usuario se guardan en sessionStorage; con la API, en el servidor
 function guardados(clave) { try { return JSON.parse(sessionStorage.getItem(clave)) ?? []; } catch { return []; } }
 function guardarEn(clave, elemento) {
   try { sessionStorage.setItem(clave, JSON.stringify([...guardados(clave), elemento])); } catch { /* solo dura esta página */ }
 }
 
 // Ofertas guardadas: preferencia de cada visitante en su navegador
-// shortcut: localStorage; con la API, POST/DELETE /api/candidatos/me/guardadas
 function ofertasGuardadas() { try { return JSON.parse(localStorage.getItem('ofertasGuardadas')) ?? []; } catch { return []; } }
 function guardarOfertas(lista) { try { localStorage.setItem('ofertasGuardadas', JSON.stringify(lista)); } catch { /* sin almacenamiento */ } }
 function pintarBotonGuardar(boton, guardada) {

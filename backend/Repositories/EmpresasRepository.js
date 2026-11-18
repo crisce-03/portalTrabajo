@@ -53,13 +53,13 @@ const buscarPorNombre = async nombre => {
 const obtenerIndicadores = async (empresaId) => {
     const query = 
         `SELECT
-            (SELECT COUNT(*) FROM ofertas WHERE empresa_id = $1)::int AS ofertas_total,
-            (SELECT COUNT(*) FROM ofertas WHERE empresa_id = $1 AND estado = 'activa')::int AS ofertas_activas,
-            COUNT(p.id)::int AS postulaciones_recibidas,
-            COUNT(p.id) FILTER (WHERE p.creado_en > NOW() - INTERVAL '7 days')::int AS postulaciones_esta_semana,
-            COUNT(p.id) FILTER (WHERE p.estado = 'revision')::int AS en_revision,
-            COUNT(p.id) FILTER (WHERE p.estado = 'contactado')::int AS contactados,
-            COUNT(p.id) FILTER (WHERE p.estado = 'aceptado')::int AS aceptados
+            (SELECT COUNT(*) FROM ofertas WHERE empresa_id = $1) AS ofertas_total,
+            (SELECT COUNT(*) FROM ofertas WHERE empresa_id = $1 AND estado = 'activa') AS ofertas_activas,
+            COUNT(p.id) AS postulaciones_recibidas,
+            COUNT(CASE WHEN p.creado_en > NOW() - INTERVAL '7 days' THEN 1 END) AS postulaciones_esta_semana,
+            COUNT(CASE WHEN p.estado = 'revision' THEN 1 END) AS en_revision,
+            COUNT(CASE WHEN p.estado = 'contactado' THEN 1 END) AS contactados,
+            COUNT(CASE WHEN p.estado = 'aceptado' THEN 1 END) AS aceptados
         FROM postulaciones p
         JOIN ofertas o ON o.id = p.oferta_id
         WHERE o.empresa_id = $1`
